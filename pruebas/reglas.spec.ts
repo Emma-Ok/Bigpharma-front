@@ -134,3 +134,52 @@ test('el carrusel de anuncios se desliza con el gesto', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Ver anuncio 2 de 3' })).toHaveAttribute('aria-current', 'true');
   await expect(page).toHaveURL(/\/$/);
 });
+
+test('los carruseles avanzan solos y se pueden pausar', async ({ page }) => {
+  await page.clock.install();
+  await page.goto('/');
+  await page.waitForFunction(() => !document.querySelector('astro-island[component-url*="CarruselAnuncios"][ssr]'));
+  await page.mouse.move(5, 600);
+  const avisoActivo = () =>
+    page.evaluate(() => [...document.querySelector('[data-aviso-pista]')!.children].findIndex((c) => !(c as HTMLElement).inert));
+  expect(await avisoActivo()).toBe(0);
+  await page.clock.runFor(6100);
+  await expect.poll(avisoActivo).toBe(1);
+  await expect(page.getByRole('button', { name: 'Ver anuncio 2 de 3' })).toHaveAttribute('aria-current', 'true');
+
+  await page.getByRole('button', { name: 'Pausar avisos' }).click();
+  await expect(page.getByRole('button', { name: 'Reanudar avisos' })).toBeVisible();
+  await page.mouse.move(5, 600);
+  await page.clock.runFor(13000);
+  expect(await avisoActivo()).toBe(1);
+});
+
+test('en celular el menú y los filtros se superponen y se cierran con Esc', async ({ page }, info) => {
+  test.skip(info.project.name !== 'celular', 'Celular');
+  await page.goto('/catalogo');
+  const contenido = page.getByRole('heading', { level: 1 });
+  const antes = (await contenido.boundingBox())!.y;
+  await page.getByRole('button', { name: 'Menú' }).click();
+  await expect(page.locator('#menu-movil')).toBeVisible();
+  expect((await contenido.boundingBox())!.y).toBe(antes);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#menu-movil')).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Menú' })).toBeFocused();
+
+  await page.waitForFunction(() => !document.querySelector('astro-island[component-url*="Catalogo"][ssr]'));
+  const resultados = page.locator('#resultados');
+  const y = (await resultados.boundingBox())!.y;
+  await page.getByRole('button', { name: /^Filtros/ }).click();
+  await expect(page.locator('#panel-filtros')).toBeVisible();
+  expect((await resultados.boundingBox())!.y).toBe(y);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#panel-filtros')).toBeHidden();
+  await expect(page.getByRole('button', { name: /^Filtros/ })).toBeFocused();
+});
+
+test('«Ver catálogo» del inicio lleva a la página del catálogo', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#inicio').getByRole('link', { name: 'Ver catálogo' }).click();
+  await expect(page).toHaveURL(/\/catalogo$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Catálogo de productos' })).toBeVisible();
+});

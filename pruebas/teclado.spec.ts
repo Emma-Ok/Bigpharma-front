@@ -74,6 +74,8 @@ test('el pedido completo se puede hacer solo con teclado', async ({ page }, info
   await tabularHasta(page, { contiene: 'Enviar pedido por WhatsApp' });
   await page.keyboard.press('Enter');
 
+  // WhatsApp se abre después de la celebración (650 ms).
+  await expect.poll(() => ventanasAbiertas(page)).toHaveLength(1);
   const [url] = await ventanasAbiertas(page);
   expect(url).toMatch(/^https:\/\/wa\.me\/\d*\?text=/);
   expect(decodeURIComponent(url.split('?text=')[1])).toBe(

@@ -1,6 +1,7 @@
 /**
- * Pista de carrusel con scroll-snap: desliza con flechas, puntos y el gesto de deslizar.
- * Sin rotación automática (CLAUDE.md). Con movimiento reducido el cambio es instantáneo.
+ * Pista de carrusel con scroll-snap: desliza con flechas, puntos y el gesto de deslizar, y avanza
+ * sola cada 6 s (WCAG 2.2.2: se pausa con el puntero encima, con el foco dentro y con su botón; con
+ * movimiento reducido arranca pausada). Con movimiento reducido el cambio es instantáneo.
  * La usan la barra de avisos (script de Astro) y el carrusel de anuncios (Preact).
  */
 
@@ -95,5 +96,77 @@ export function conGesto(pista: HTMLElement, mover: (direccion: 1 | -1) => void)
     pista.removeEventListener('pointerup', arriba);
     pista.removeEventListener('pointercancel', cancelar);
     pista.removeEventListener('click', clic, true);
+  };
+}
+
+export const INTERVALO_CARRUSEL = 6000;
+
+export interface Autoplay {
+  /** Reinicia la cuenta (después de que la persona cambia de diapositiva). */
+  reiniciar: () => void;
+  destruir: () => void;
+}
+
+/**
+ * Rotación automática. `boton` alterna pausar y reanudar; `alCambiar(pausado)` actualiza su ícono
+ * y etiqueta. Mientras rota, los cambios no se anuncian (aria-live «off», patrón de carrusel de la APG).
+ */
+export function autoReproducir(
+  region: HTMLElement,
+  avanzar: () => void,
+  boton: HTMLButtonElement | null,
+  alCambiar: (pausado: boolean) => void,
+): Autoplay {
+  let pausadoPorPersona = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let encima = false;
+  let foco = false;
+  let temporizador = 0;
+  const activo = () => !pausadoPorPersona && !encima && !foco && !document.hidden;
+  const programar = () => {
+    window.clearInterval(temporizador);
+    if (activo()) temporizador = window.setInterval(avanzar, INTERVALO_CARRUSEL);
+  };
+  const entrar = () => {
+    encima = true;
+    programar();
+  };
+  const salir = () => {
+    encima = false;
+    programar();
+  };
+  const conFoco = () => {
+    foco = true;
+    programar();
+  };
+  const sinFoco = (e: FocusEvent) => {
+    if (!region.contains(e.relatedTarget as Node | null)) {
+      foco = false;
+      programar();
+    }
+  };
+  const alternar = () => {
+    pausadoPorPersona = !pausadoPorPersona;
+    alCambiar(pausadoPorPersona);
+    programar();
+  };
+  region.addEventListener('pointerenter', entrar);
+  region.addEventListener('pointerleave', salir);
+  region.addEventListener('focusin', conFoco);
+  region.addEventListener('focusout', sinFoco);
+  boton?.addEventListener('click', alternar);
+  document.addEventListener('visibilitychange', programar);
+  alCambiar(pausadoPorPersona);
+  programar();
+  return {
+    reiniciar: programar,
+    destruir() {
+      window.clearInterval(temporizador);
+      region.removeEventListener('pointerenter', entrar);
+      region.removeEventListener('pointerleave', salir);
+      region.removeEventListener('focusin', conFoco);
+      region.removeEventListener('focusout', sinFoco);
+      boton?.removeEventListener('click', alternar);
+      document.removeEventListener('visibilitychange', programar);
+    },
   };
 }

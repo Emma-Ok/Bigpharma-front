@@ -32,3 +32,14 @@ export const RELLENO_CATEGORIA: Record<CategoriaId, string> = {
   auxilios: 'fill-cat-auxilios',
   formula: 'fill-cat-formula',
 };
+
+/** Los mismos colores en hex, para las escenas 3D (WebGL no lee variables de CSS). */
+export const HEX_CATEGORIA: Record<CategoriaId, { color: string; fondo: string }> = {
+  dolor: { color: '#D9963F', fondo: '#FBEBD6' },
+  gripa: { color: '#6E9FC4', fondo: '#E4EEF6' },
+  estomago: { color: '#7FB08F', fondo: '#E5F0E8' },
+  piel: { color: '#E7B9A0', fondo: '#FBE8DE' },
+  bebes: { color: '#B9A6D8', fondo: '#EEE9F7' },
+  auxilios: { color: '#1E5AA0', fondo: '#EAF2FB' },
+  formula: { color: '#7B3F5E', fondo: '#F6E9EF' },
+};

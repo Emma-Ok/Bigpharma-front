@@ -1,6 +1,5 @@
 ---
 import Icono from './Icono.astro';
-import ContadorPedido from './ContadorPedido';
 import { enlaceWhatsApp, MENSAJE_GENERAL } from '../lib/whatsapp';
 
 interface Props {
@@ -18,7 +17,7 @@ const enlaces = [
 const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
 ---
 
-<header class="border-b border-borde-suave bg-blanco" data-encabezado>
+<header class="relative z-40 border-b border-borde-suave bg-blanco" data-encabezado>
   <div class="mx-auto flex max-w-sitio items-center justify-between gap-3 px-margen py-2.5">
     <a href="/" class="flex min-h-11 items-center gap-2.5 text-tinta no-underline">
       <span aria-hidden="true" class="flex size-9.5 shrink-0 items-center justify-center rounded-[11px] bg-azul text-blanco">
@@ -51,7 +50,20 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
       >
         <Icono nombre="lupa" />
       </a>
-      <ContadorPedido client:load variante="encabezado" />
+      <a
+        href="/pedido"
+        data-contador-enlace
+        aria-label="Tu pedido: 0 productos"
+        class="relative ml-1 inline-flex size-11 items-center justify-center rounded-boton border border-texto-2 text-tinta"
+      >
+        <Icono nombre="bolsa" />
+        <span
+          data-contador-pedido
+          aria-hidden="true"
+          class="invisible absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-azul px-1 text-xs font-bold text-blanco"
+          >0</span
+        >
+      </a>
       <a
         href={whatsappUrl}
         class="ml-2 inline-flex min-h-11 items-center rounded-boton bg-azul px-4.5 text-[15px] font-semibold text-blanco no-underline"
@@ -83,7 +95,13 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
     </div>
   </div>
 
-  <nav id="menu-movil" aria-label="Principal" class="px-margen pb-3 lg:hidden" hidden data-menu>
+  <nav
+    id="menu-movil"
+    aria-label="Principal"
+    class="absolute inset-x-0 top-full max-h-[calc(100dvh-80px)] overflow-y-auto rounded-b-panel border-b border-borde bg-blanco px-margen pb-3 shadow-flotante lg:hidden"
+    hidden
+    data-menu
+  >
     <ul class="m-0 flex list-none flex-col p-0">
       {
         enlaces.map((e) => (
@@ -113,7 +131,27 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
 </header>
 
 <script>
-  // Menú de celular: aria-expanded, cierre con Esc y retorno del foco al botón.
+  // Contador del pedido (escritorio): enlace a /pedido con el número de unidades. Es un script y no una
+  // isla para que el runtime de islas no quede en medio de la navegación (evita un salto de diseño al cargar).
+  import { carritoNavegador, contarUnidades } from '../lib/carrito';
+
+  document.addEventListener('astro:page-load', () => {
+    const enlace = document.querySelector<HTMLAnchorElement>('[data-contador-enlace]');
+    const insignia = enlace?.querySelector<HTMLElement>('[data-contador-pedido]');
+    if (!enlace || !insignia) return;
+    const pintar = (unidades: number) => {
+      insignia.textContent = String(unidades);
+      insignia.classList.toggle('invisible', unidades === 0);
+      enlace.setAttribute('aria-label', `Tu pedido: ${unidades === 1 ? '1 producto' : `${unidades} productos`}`);
+    };
+    const almacen = carritoNavegador();
+    pintar(contarUnidades(almacen.leer()));
+    const cancelar = almacen.suscribir((c) => pintar(contarUnidades(c)));
+    document.addEventListener('astro:before-swap', cancelar, { once: true });
+  });
+
+  // Menú de celular: panel superpuesto (no empuja la página), aria-expanded, se cierra con Esc,
+  // con un toque fuera o al elegir un enlace; Esc devuelve el foco al botón.
   document.addEventListener('astro:page-load', () => {
     const boton = document.querySelector<HTMLButtonElement>('[data-menu-boton]');
     const menu = document.querySelector<HTMLElement>('[data-menu]');
@@ -132,5 +170,15 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
         boton.focus();
       }
     });
+    const fuera = new AbortController();
+    document.addEventListener(
+      'pointerdown',
+      (e) => {
+        const objetivo = e.target as Node;
+        if (!menu.hidden && !menu.contains(objetivo) && !boton.contains(objetivo)) fijar(false);
+      },
+      { signal: fuera.signal },
+    );
+    document.addEventListener('astro:before-swap', () => fuera.abort(), { once: true });
   });
 </script>

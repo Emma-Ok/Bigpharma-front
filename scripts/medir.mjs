@@ -59,7 +59,7 @@ for (const [nombre, perfil] of Object.entries(perfiles)) {
         setTimeout(() => r(Math.round(total * 1000) / 1000), 100);
       }),
   );
-  const canvas = await pagina.locator('[data-escena-capsulas] canvas').count();
+  const canvas = await pagina.locator('[data-escena] canvas').count();
   const kb = (n) => `${(n / 1024).toFixed(1)} KB`;
   const sinThree = scripts.filter((s) => !s.esThree).reduce((n, s) => n + s.gzip, 0);
   const three = scripts.filter((s) => s.esThree).reduce((n, s) => n + s.gzip, 0);

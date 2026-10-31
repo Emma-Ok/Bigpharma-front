@@ -1,4 +1,5 @@
 /** Movimiento que responde a acciones del cliente (docs/MOVIMIENTO-Y-3D.md). */
+import { puedeCargar3d } from '../scripts/3d/cargador';
 
 export function prefiereMenosMovimiento(): boolean {
   return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -89,4 +90,16 @@ export function animarAgregado(origen: HTMLElement) {
       easing: curva,
     });
   };
+}
+
+/**
+ * Celebración 3D (cápsulas que saltan) desde un elemento. Devuelve true si se lanzó; con movimiento
+ * reducido, ahorro de datos o sin WebGL no hace nada.
+ */
+export function celebrarDesde(elemento: Element): boolean {
+  if (!puedeCargar3d()) return false;
+  const r = elemento.getBoundingClientRect();
+  const origen = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  import('../scripts/3d/celebracion').then((m) => m.celebrar(origen)).catch(() => undefined);
+  return true;
 }

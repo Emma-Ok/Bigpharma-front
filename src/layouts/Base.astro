@@ -67,5 +67,11 @@ const aJson = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
     {!sinBarraPedido && <BarraPedidoMovil client:load umbral={configuracion.domicilioGratisDesde} />}
     <Buscador client:idle whatsapp={configuracion.whatsapp} />
     <div id="anuncios-pedido" aria-live="polite" class="visualmente-oculto"></div>
+    <script>
+      // Escenas 3D de la página ([data-escena]): se montan cuando conviene y se limpian al navegar.
+      import { desmontarEscenas, montarEscenasDeLaPagina } from '../scripts/3d/cargador';
+      document.addEventListener('astro:page-load', montarEscenasDeLaPagina);
+      document.addEventListener('astro:before-swap', desmontarEscenas);
+    </script>
   </body>
 </html>

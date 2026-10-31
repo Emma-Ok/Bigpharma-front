@@ -1,5 +1,39 @@
 @import "tailwindcss";
 
+/*
+ * Respaldo con las métricas de Lexend (medidas en Chromium contra Arial / Liberation Sans): mientras
+ * Lexend carga, el texto ocupa el mismo ancho y alto, y no hay saltos de diseño (CLS) al cambiar.
+ */
+@font-face {
+  font-family: "Lexend Fallback";
+  src: local("Arial"), local("Liberation Sans"), local("Helvetica");
+  font-weight: 100 450;
+  size-adjust: 109.1%;
+  ascent-override: 91.7%;
+  descent-override: 22.9%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Lexend Fallback";
+  src: local("Arial"), local("Liberation Sans"), local("Helvetica");
+  font-weight: 451 550;
+  size-adjust: 111.2%;
+  ascent-override: 89.9%;
+  descent-override: 22.5%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Lexend Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("Helvetica Bold");
+  font-weight: 551 900;
+  size-adjust: 105.9%;
+  ascent-override: 94.4%;
+  descent-override: 23.6%;
+  line-gap-override: 0%;
+}
+
 /* Tokens: docs/ESPECIFICACION.md, sección 6. No usar colores arbitrarios. */
 @theme {
   --color-*: initial;
@@ -36,7 +70,7 @@
   --color-cat-todo: #52606F;
   --color-cat-todo-fondo: #F1F4F8;
 
-  --font-sans: "Lexend Variable", "Lexend", system-ui, sans-serif;
+  --font-sans: "Lexend Variable", "Lexend Fallback", "Lexend", system-ui, sans-serif;
 
   --breakpoint-sm: 37.5rem;
   --breakpoint-md: 56.25rem;
@@ -80,6 +114,13 @@
 }
 
 @layer base {
+  /* Astro aplica esto con el JavaScript de las islas; desde el CSS inicial evita un salto en la navegación. */
+  astro-island,
+  astro-slot,
+  astro-static-slot {
+    display: contents;
+  }
+
   html {
     color: var(--color-tinta);
     background: var(--color-blanco);
@@ -108,6 +149,12 @@
   [id] {
     scroll-margin-top: 16px;
   }
+}
+
+/* Escenas 3D listas: el dibujo estático que reemplazan se desvanece. */
+:where(div):has(> .escena-empaque[data-escena-lista]) > [data-vt] {
+  opacity: 0;
+  transition: opacity var(--transition-duration-lenta);
 }
 
 /* Pistas de carrusel: el desplazamiento vertical de la página sigue funcionando sobre ellas. */

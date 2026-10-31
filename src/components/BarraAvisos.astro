@@ -68,6 +68,17 @@ const varios = avisos.length > 1;
             <Icono nombre="siguiente" tamano={18} grosor={2.4} />
           </button>
         )}
+        {varios && (
+          <button
+            type="button"
+            data-aviso-pausa
+            aria-label="Pausar avisos"
+            class="group flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[10px] text-blanco"
+          >
+            <Icono nombre="pausa" tamano={16} grosor={2.6} class="group-data-[pausado=true]:hidden" />
+            <Icono nombre="reproducir" tamano={16} grosor={2.2} class="hidden group-data-[pausado=true]:block" />
+          </button>
+        )}
         <a
           href={enlaceWhatsApp(whatsapp, MENSAJE_GENERAL)}
           class="ml-2 hidden min-h-11 shrink-0 items-center gap-2 border-l border-blanco/40 pl-4 text-[14.5px] font-medium text-blanco no-underline lg:inline-flex"
@@ -81,9 +92,9 @@ const varios = avisos.length > 1;
 }
 
 <script>
-  import { alDetenerse, conGesto, irA, marcarActual } from './carrusel';
+  import { alDetenerse, autoReproducir, conGesto, irA, marcarActual } from './carrusel';
 
-  // Carrusel de avisos: flechas y gesto de deslizar, sin rotación automática.
+  // Carrusel de avisos: avanza solo cada 6 s (se pausa con el puntero, el foco o su botón), flechas y gesto.
   document.addEventListener('astro:page-load', () => {
     const barra = document.querySelector<HTMLElement>('[data-avisos]');
     const pista = barra?.querySelector<HTMLElement>('[data-aviso-pista]');
@@ -106,11 +117,21 @@ const varios = avisos.length > 1;
     };
 
     // El índice cambia en el momento del clic (no al terminar de deslizar): dos clics seguidos avanzan dos.
-    const mover = (paso: number) => {
+    const ir = (paso: number, anunciar: boolean) => {
       const destino = (actual + paso + avisos.length) % avisos.length;
-      mostrar(destino, true);
+      mostrar(destino, anunciar);
       irA(pista, destino);
     };
+    const pausa = barra.querySelector<HTMLButtonElement>('[data-aviso-pausa]');
+    const auto = autoReproducir(barra, () => ir(1, false), pausa, (pausado) => {
+      pausa?.setAttribute('data-pausado', String(pausado));
+      pausa?.setAttribute('aria-label', pausado ? 'Reanudar avisos' : 'Pausar avisos');
+    });
+    const mover = (paso: number) => {
+      ir(paso, true);
+      auto.reiniciar();
+    };
+    document.addEventListener('astro:before-swap', () => auto.destruir(), { once: true });
     alDetenerse(pista, (i) => {
       if (i !== actual) mostrar(i, true);
     });

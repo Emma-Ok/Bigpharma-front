@@ -4,6 +4,7 @@ import type { ProductoResumen } from '../lib/catalogo';
 import { formatearPrecio } from '../lib/formato';
 import { enlaceWhatsApp, FORMAS_DE_PAGO, mensajePedido, type FormaDePago } from '../lib/whatsapp';
 import { cambiarCantidad } from './acciones';
+import { celebrarDesde } from './movimiento';
 import Icono from './Icono';
 import ProgresoDomicilio from './ProgresoDomicilio';
 import VaciarPedido from './VaciarPedido';
@@ -74,8 +75,14 @@ export default function PaginaPedido({ productos, whatsapp, umbral }: Props) {
     }
     const url = enlaceWhatsApp(whatsapp, mensajePedido(lineas, { nombre, direccion, pago }));
     setEnviado(url);
-    const ventana = window.open(url, '_blank', 'noopener');
-    if (!ventana) window.location.href = url;
+    const abrir = () => {
+      const ventana = window.open(url, '_blank', 'noopener');
+      if (!ventana) window.location.href = url;
+    };
+    // Celebración breve desde el botón y luego WhatsApp (sin animación, se abre de una vez).
+    const boton = (e.currentTarget as HTMLFormElement).querySelector('button[type="submit"]');
+    if (boton && celebrarDesde(boton)) setTimeout(abrir, 650);
+    else abrir();
   };
 
   if (!lineas.length) {

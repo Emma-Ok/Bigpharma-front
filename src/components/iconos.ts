@@ -15,6 +15,8 @@ export const ICONOS = {
   mas: '<path d="M12 5v14M5 12h14"/>',
   menos: '<path d="M5 12h14"/>',
   check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
+  pausa: '<path d="M9 6v12M15 6v12"/>',
+  reproducir: '<path d="M8 5.5v13l11-6.5z"/>',
   papelera: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/>',
   bolsa: '<path d="M6 8h12l-1 12H7z"/><path d="M9 8a3 3 0 0 1 6 0"/>',
   camion: '<path d="M3 6h11v10H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',

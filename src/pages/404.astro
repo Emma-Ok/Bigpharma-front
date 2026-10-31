@@ -1,13 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
+import EscenaCapsulas from '../components/EscenaCapsulas.astro';
 ---
 
 <Base titulo="Página no encontrada" descripcion="La página que buscas no existe." noindex>
-  <div class="mx-auto flex w-full max-w-sitio flex-col items-start gap-4 px-margen py-16">
+  <div class="relative isolate flex-1 overflow-hidden bg-azul-claro">
+  <EscenaCapsulas variante="banda" />
+  <div class="relative z-10 mx-auto flex w-full max-w-sitio flex-col items-start gap-4 px-margen py-16">
     <h1 class="m-0 text-[clamp(28px,3vw,38px)] leading-tight font-semibold">No encontramos esta página</h1>
     <p class="m-0 max-w-[52ch] text-texto-cuerpo">Puede que el producto ya no esté en el catálogo o que el enlace tenga un error.</p>
     <a href="/catalogo" class="inline-flex min-h-12 items-center rounded-boton bg-azul px-5 font-semibold text-blanco no-underline">
       Ver catálogo
     </a>
+  </div>
   </div>
 </Base>

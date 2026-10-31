@@ -70,6 +70,23 @@ interface Props {
 export default function Catalogo({ productos, whatsapp, entrega }: Props) {
   const [estado, setEstado] = useState<Estado>(INICIAL);
   const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
+  const botonFiltros = useRef<HTMLButtonElement>(null);
+  const panelFiltros = useRef<HTMLDivElement>(null);
+  const cerrarFiltros = (devolverFoco: boolean) => {
+    setFiltrosAbiertos(false);
+    if (devolverFoco) botonFiltros.current?.focus();
+  };
+
+  // En celular el panel de filtros se superpone: se cierra con Esc o con un toque fuera de él.
+  useEffect(() => {
+    if (!filtrosAbiertos) return;
+    const alTocar = (e: PointerEvent) => {
+      const objetivo = e.target as Node;
+      if (!panelFiltros.current?.contains(objetivo) && !botonFiltros.current?.contains(objetivo)) cerrarFiltros(false);
+    };
+    document.addEventListener('pointerdown', alTocar);
+    return () => document.removeEventListener('pointerdown', alTocar);
+  }, [filtrosAbiertos]);
   const [vista, setVista] = useState<{ producto: ProductoResumen; origen: HTMLElement } | null>(null);
   const [mostrando, setMostrando] = useState<string | null>(null);
   const rango = useRef<HTMLParagraphElement>(null);
@@ -163,10 +180,14 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
 
       <div class="flex flex-wrap items-end justify-between gap-3">
         <button
+          ref={botonFiltros}
           type="button"
           aria-expanded={filtrosAbiertos}
           aria-controls="panel-filtros"
           onClick={() => setFiltrosAbiertos((v) => !v)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape' && filtrosAbiertos) cerrarFiltros(true);
+          }}
           class="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-boton border-2 border-azul bg-blanco px-4 text-[15px] font-semibold text-azul lg:hidden"
         >
           <Icono nombre="menu" tamano={18} />
@@ -191,10 +212,16 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
         </div>
       </div>
 
-      <div class="flex flex-col gap-6 lg:flex-row lg:items-start">
+      <div class="relative flex flex-col gap-6 lg:flex-row lg:items-start">
+        {/* En celular se superpone a los resultados; en escritorio es la columna lateral. */}
+        {/* eslint-disable-next-line jsx-a11y-x/no-static-element-interactions -- Esc cierra el panel abierto */}
         <div
+          ref={panelFiltros}
           id="panel-filtros"
-          class={`${filtrosAbiertos ? 'flex' : 'hidden'} flex-col gap-5 rounded-panel border border-borde p-5 lg:sticky lg:top-6 lg:flex lg:w-65 lg:shrink-0`}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape' && filtrosAbiertos) cerrarFiltros(true);
+          }}
+          class={`${filtrosAbiertos ? 'flex' : 'hidden'} absolute inset-x-0 top-0 z-30 max-h-[75dvh] flex-col gap-5 overflow-y-auto rounded-panel border border-borde bg-blanco p-5 shadow-flotante lg:sticky lg:top-6 lg:flex lg:max-h-none lg:w-65 lg:shrink-0 lg:overflow-visible lg:shadow-none`}
         >
           <fieldset class="m-0 border-0 p-0">
             <legend class="mb-2 p-0 text-base font-semibold">Categoría</legend>
@@ -258,6 +285,13 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
               Borrar filtros
             </button>
           )}
+          <button
+            type="button"
+            onClick={() => cerrarFiltros(true)}
+            class="min-h-12 cursor-pointer rounded-boton border-0 bg-azul px-5 text-[15px] font-semibold text-blanco lg:hidden"
+          >
+            {lista.length === 1 ? 'Ver 1 producto' : `Ver ${lista.length} productos`}
+          </button>
         </div>
 
         <div id="resultados" class="flex min-w-0 flex-1 flex-col gap-6">

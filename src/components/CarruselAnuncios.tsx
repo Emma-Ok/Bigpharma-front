@@ -1,32 +1,38 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Anuncio } from '../lib/datos';
-import { alDetenerse, conGesto, irA, marcarActual } from './carrusel';
+import { alDetenerse, autoReproducir, conGesto, irA, marcarActual, type Autoplay } from './carrusel';
 import Icono from './Icono';
 import type { NombreIcono } from './iconos';
 import { FONDO_CATEGORIA } from './estilosCategoria';
 
 /**
- * Carrusel principal: pista que desliza con flechas, puntos o el dedo; en celular asoma el
- * siguiente anuncio. Sin rotación automática. Texto en HTML, nunca dentro de la foto.
+ * Carrusel principal: avanza solo cada 6 s (se pausa con el puntero, el foco o su botón) y desliza con
+ * flechas, puntos o el dedo; en celular asoma el siguiente anuncio. Texto en HTML, nunca dentro de la foto.
  */
 export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) {
   const [actual, setActual] = useState(0);
   const actualRef = useRef(0);
   const pista = useRef<HTMLDivElement>(null);
   const [anuncio, setAnuncio] = useState('');
+  const [pausado, setPausado] = useState(false);
+  const region = useRef<HTMLDivElement>(null);
+  const botonPausa = useRef<HTMLButtonElement>(null);
+  const auto = useRef<Autoplay | null>(null);
   const n = anuncios.length;
 
   /** Marca el anuncio en el momento del clic (no al terminar de deslizar): dos clics seguidos avanzan dos. */
-  const marcar = (i: number) => {
+  const marcar = (i: number, anunciar = true) => {
     actualRef.current = i;
     setActual(i);
     if (pista.current) marcarActual(pista.current, i);
-    setAnuncio(`Anuncio ${i + 1} de ${n}: ${anuncios[i].titulo}`);
+    if (anunciar) setAnuncio(`Anuncio ${i + 1} de ${n}: ${anuncios[i].titulo}`);
   };
-  const ir = (destino: number) => {
+  /** Cambio pedido por la persona: se anuncia y reinicia la cuenta de la rotación automática. */
+  const ir = (destino: number, anunciar = true) => {
     const i = ((destino % n) + n) % n;
-    marcar(i);
+    marcar(i, anunciar);
     if (pista.current) irA(pista.current, i);
+    if (anunciar) auto.current?.reiniciar();
   };
 
   useEffect(() => {
@@ -37,9 +43,13 @@ export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) 
       if (i !== actualRef.current) marcar(i);
     });
     const quitarGesto = conGesto(p, (d) => ir(actualRef.current + d));
+    if (region.current && n > 1) {
+      auto.current = autoReproducir(region.current, () => ir(actualRef.current + 1, false), botonPausa.current, setPausado);
+    }
     return () => {
       quitarDetenerse();
       quitarGesto();
+      auto.current?.destruir();
     };
   }, [anuncios, n]);
 
@@ -47,6 +57,7 @@ export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) 
 
   return (
     <div
+      ref={region}
       role="region"
       aria-roledescription="carrusel"
       aria-label="Anuncios principales"
@@ -127,6 +138,14 @@ export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) 
             class="flex size-11 cursor-pointer items-center justify-center rounded-full border border-texto-2 bg-blanco text-tinta"
           >
             <Icono nombre="siguiente" tamano={18} grosor={2.4} />
+          </button>
+          <button
+            ref={botonPausa}
+            type="button"
+            aria-label={pausado ? 'Reanudar anuncios' : 'Pausar anuncios'}
+            class="ml-1 flex size-11 cursor-pointer items-center justify-center rounded-full border border-texto-2 bg-blanco text-tinta"
+          >
+            <Icono nombre={pausado ? 'reproducir' : 'pausa'} tamano={16} grosor={pausado ? 2.2 : 2.6} />
           </button>
         </div>
       )}

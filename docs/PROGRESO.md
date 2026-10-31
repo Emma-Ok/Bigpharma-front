@@ -5,11 +5,33 @@ Bitácora del trabajo autónomo de las fases 1 a 7 (`docs/PROMPT-INICIAL.md`). S
 ## Qué revisar primero
 
 1. **El sitio está corriendo** en http://localhost:4321 (`docker compose up -d`). Recorre `/`, `/catalogo`, una ficha (clic en el nombre abre la vista rápida), agrega productos y envía un pedido en `/pedido` (abre `wa.me`).
-2. **Una desviación de la especificación que necesita tu visto bueno:** la imagen estática de las cápsulas es un SVG en línea, no `hero-capsulas.webp` (ver «Decisiones», fase 6). Con la `.webp`, el elemento LCP pasaba a ser la imagen y se rompía el criterio de aceptación. Si te parece bien, hay que actualizar la sección 1 de `docs/MOVIMIENTO-Y-3D.md`.
+2. **Desviaciones que necesitan tu visto bueno** (ver también «Ronda 2»): la imagen estática de las cápsulas es un SVG en línea, no `hero-capsulas.webp` (ver «Decisiones», fase 6). Con la `.webp`, el elemento LCP pasaba a ser la imagen y se rompía el criterio de aceptación. Si te parece bien, hay que actualizar la sección 1 de `docs/MOVIMIENTO-Y-3D.md`.
 3. **Datos por llenar** (`docs/OPERACION.md`, sección 1): la hoja todavía tiene textos `[entre corchetes]`, el WhatsApp es un marcador y faltan 4 claves nuevas en Configuracion (`barrio`, `autoridad_salud`, `razon_social`, `nit`). Cuando estén, activa `DATOS_ESTRICTOS=1`.
 4. **Textos legales** (`/politica-de-datos`, `/terminos`): son base y dicen «pendiente de revisión legal».
 5. **Despliegue:** no se hizo. Para el *deploy hook* de Cloudflare Pages hace falta un repositorio Git (ver `docs/OPERACION.md`, sección 2).
 6. **Decisiones** (abajo): todas las elecciones que no estaban en CLAUDE.md ni en `docs/`.
+
+## Ronda 2 (después de las 7 fases, 2026-10-31)
+
+Hecho:
+- **Repositorio y despliegue:** `.gitignore`, adaptador `@astrojs/cloudflare` (Workers) con `prerenderEnvironment: 'node'`, `session: false` e `imageService: 'passthrough'` (sin KV ni Cloudflare Images), `wrangler.jsonc`, push a `Emma-Ok/Bigpharma-front` (`main`). La imagen de Docker suma `ca-certificates` (workerd los necesita) y el servidor de desarrollo arranca con `--ignore-lock`. `docs/OPERACION.md` describe Workers Builds y su deploy hook.
+- **`npm audit`:** 0 vulnerabilidades (`overrides.minimatch: ^11.0.1`).
+- **Vaciar el pedido:** en el panel del carrito y en `/pedido`, con confirmación en dos pasos, Esc y foco controlado.
+- **Vista rápida:** ya no se ve el fondo antes que la ficha. Los nombres de View Transition dependen del tipo de transición (solo la imagen elegida crece; el panel entra como bloque) y la ficha se precarga al pasar el puntero o enfocar.
+- **Carruseles (avisos y anuncios):** pista con scroll-snap que desliza (flechas, puntos, gesto), avanza sola cada 6 s y se pausa con el puntero encima, con el foco dentro y con un botón visible; con movimiento reducido arranca pausada. En celular asoma el anuncio siguiente.
+- **3D en más vistas y en celular** (`src/scripts/3d/`): motor común, hero (22 cápsulas + 10 tabletas, niebla, luz de contorno, entrada volando, piezas que se apartan del puntero), banda en la cabecera del catálogo y en la 404, jeringa y frasco en servicios, empaque 3D en la ficha cuando no hay foto, y celebración de cápsulas al enviar el pedido y al alcanzar el domicilio gratis. Se carga con la primera interacción y cada escena cuando está cerca de la pantalla.
+- **Celular:** menú y filtros se superponen (no empujan la página) y se cierran con Esc, tocando fuera o con su botón. «Ver catálogo» del hero lleva a `/catalogo`.
+- **CLS 0:** fuente de respaldo con las métricas de Lexend («Lexend Fallback») y el contador del pedido pasó de isla a script (el runtime de islas quedaba en medio de la navegación y la hacía saltar).
+- Clases de Tailwind canónicas (`gap-[18px]` → `gap-4.5`, etc.).
+
+Decisiones de esta ronda:
+- **Rotación automática** (pedida): contradice «Sin autoplay en carruseles» de CLAUDE.md; se hizo cumpliendo WCAG 2.2.2 (pausa con puntero, foco y botón; movimiento reducido = pausada; los cambios automáticos no se anuncian).
+- **3D fuera de la portada y en celular** (pedido): contradice «un solo momento 3D» y la regla de no cargar three.js en celular. Para no perder rendimiento, three.js se carga con la primera interacción (puntero, toque, scroll o teclado) en todos los dispositivos; con movimiento reducido, ahorro de datos, menos de 2 GB de memoria o sin WebGL nunca se carga.
+- **En celular las piezas solo asoman por los bordes** del hero y de las bandas: el texto ocupa todo el ancho y no puede quedar detrás de una pieza.
+- **La celebración retrasa 650 ms la apertura de WhatsApp** para que se vea; sin 3D, WhatsApp se abre de inmediato.
+- Pendiente de tu aprobación: actualizar CLAUDE.md, `docs/ESPECIFICACION.md` y `docs/MOVIMIENTO-Y-3D.md` con estas reglas nuevas (diff en la respuesta del chat).
+
+Calidad: `check`, 46 pruebas de Vitest, 59 de Playwright (axe con y sin movimiento, teclado, carruseles, menú y filtros superpuestos, vaciar pedido, 3D). Lighthouse: 100 en Rendimiento, Accesibilidad y Buenas prácticas en todas las páginas (99 en `/pedido` celular), SEO 100 salvo `/pedido` (66 por `noindex`), CLS 0.
 
 ## Resultado de calidad (fase 7)
 
