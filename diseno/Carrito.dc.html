@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Tu pedido | [Nombre de la droguería]</title>
+<meta name="robots" content="noindex">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+a{color:#1E5AA0}a:hover{color:#173F72}
+:focus-visible{outline:3px solid #1B2A3A;outline-offset:3px}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 1650px; display: flex; flex-direction: column; background: #FFFFFF; color: #1B2A3A; font-family: 'Lexend', system-ui, sans-serif; font-size: 16px; line-height: 1.55;">
+
+  <header style="background: #EAF2FB;">
+    <div style="max-width: 640px; margin: 0 auto; box-sizing: border-box; padding: 10px clamp(16px, 4vw, 32px) 24px; display: flex; flex-direction: column; gap: 6px;">
+      <a href="Main.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: #1E5AA0; font-size: 15.5px; font-weight: 600; text-decoration: none;">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>
+        Seguir comprando
+      </a>
+      <h1 style="margin: 0; font-size: clamp(30px, 4vw, 40px); font-weight: 600; line-height: 1.1;">Tu pedido</h1>
+    </div>
+  </header>
+
+  <main style="max-width: 640px; width: 100%; margin: 0 auto; box-sizing: border-box; padding: 24px clamp(16px, 4vw, 32px) 48px; display: flex; flex-direction: column; gap: 30px;">
+
+    <section aria-labelledby="prod-pedido">
+      <h2 id="prod-pedido" style="margin: 0; padding-bottom: 8px; border-bottom: 1px solid #C5D3E2; font-size: 20px; font-weight: 600;">2 productos</h2>
+      <ul style="list-style: none; margin: 0; padding: 0;">
+        <li style="display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 0; border-bottom: 1px solid #E4EAF1;">
+          <div style="min-width: 0; display: flex; flex-direction: column; gap: 3px;">
+            <p style="margin: 0; font-size: 16px; font-weight: 600; line-height: 1.3;">Acetaminofén 500 mg</p>
+            <p style="margin: 0; font-size: 13.5px; color: #52606F;">Caja × 10 tabletas, $3.500 c/u</p>
+            <p style="margin: 2px 0 0; font-size: 17px; font-weight: 700;">$7.000</p>
+          </div>
+          <div role="group" aria-label="Cantidad de Acetaminofén 500 mg" style="flex: none; display: flex; align-items: center; border-radius: 12px; background: #EAF2FB; border: 2px solid #1E5AA0;">
+            <button type="button" aria-label="Quitar una unidad: Acetaminofén 500 mg" style="width: 44px; height: 40px; border: 0; background: transparent; color: #1E5AA0; font-family: inherit; font-size: 22px; font-weight: 600; cursor: pointer;">−</button>
+            <span style="min-width: 24px; text-align: center; font-size: 16px; font-weight: 700;">2</span>
+            <button type="button" aria-label="Agregar una unidad: Acetaminofén 500 mg" style="width: 44px; height: 40px; border: 0; background: transparent; color: #1E5AA0; font-family: inherit; font-size: 22px; font-weight: 600; cursor: pointer;">+</button>
+          </div>
+        </li>
+        <li style="display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 0; border-bottom: 1px solid #E4EAF1;">
+          <div style="min-width: 0; display: flex; flex-direction: column; gap: 3px;">
+            <p style="margin: 0; font-size: 16px; font-weight: 600; line-height: 1.3;">Suero oral</p>
+            <p style="margin: 0; font-size: 13.5px; color: #52606F;">Botella × 500 ml, $6.200 c/u</p>
+            <p style="margin: 2px 0 0; font-size: 17px; font-weight: 700;">$6.200</p>
+          </div>
+          <div role="group" aria-label="Cantidad de Suero oral" style="flex: none; display: flex; align-items: center; border-radius: 12px; background: #EAF2FB; border: 2px solid #1E5AA0;">
+            <button type="button" aria-label="Quitar una unidad: Suero oral" style="width: 44px; height: 40px; border: 0; background: transparent; color: #1E5AA0; font-family: inherit; font-size: 22px; font-weight: 600; cursor: pointer;">−</button>
+            <span style="min-width: 24px; text-align: center; font-size: 16px; font-weight: 700;">1</span>
+            <button type="button" aria-label="Agregar una unidad: Suero oral" style="width: 44px; height: 40px; border: 0; background: transparent; color: #1E5AA0; font-family: inherit; font-size: 22px; font-weight: 600; cursor: pointer;">+</button>
+          </div>
+        </li>
+      </ul>
+      <dl style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; margin: 18px 0 0; font-size: 15.5px;">
+        <dt style="font-weight: 600;">Subtotal</dt>
+        <dd style="margin: 0; text-align: right; font-size: 19px; font-weight: 700;">$13.200</dd>
+        <dt style="color: #52606F;">Domicilio</dt>
+        <dd style="margin: 0; text-align: right; color: #52606F;">Te faltan $46.800 para que sea gratis</dd>
+      </dl>
+    </section>
+
+    <form style="display: flex; flex-direction: column; gap: 28px;">
+      <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 16px;">
+        <legend style="padding: 0; margin-bottom: 12px; font-size: 20px; font-weight: 600;">Datos de entrega</legend>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label for="nombre" style="font-size: 15px; font-weight: 600;">Nombre</label>
+          <input id="nombre" name="nombre" type="text" autocomplete="name" required style="height: 52px; box-sizing: border-box; padding: 0 16px; border: 2px solid #52606F; border-radius: 12px; font-family: inherit; font-size: 16.5px; color: #1B2A3A; background: #FFFFFF;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label for="direccion" style="font-size: 15px; font-weight: 600;">Barrio y dirección</label>
+          <input id="direccion" name="direccion" type="text" autocomplete="street-address" required aria-describedby="direccion-ayuda" style="height: 52px; box-sizing: border-box; padding: 0 16px; border: 2px solid #52606F; border-radius: 12px; font-family: inherit; font-size: 16.5px; color: #1B2A3A; background: #FFFFFF;">
+          <span id="direccion-ayuda" style="font-size: 13.5px; line-height: 1.45; color: #52606F;">Incluye torre, apartamento o un punto de referencia.</span>
+        </div>
+      </fieldset>
+
+      <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 8px;">
+        <legend style="padding: 0; margin-bottom: 10px; font-size: 20px; font-weight: 600;">¿Cómo vas a pagar?</legend>
+        <label style="display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; border: 2px solid #1E5AA0; border-radius: 12px; background: #EAF2FB; font-size: 15.5px; font-weight: 500; cursor: pointer;">
+          <input type="radio" name="pago" value="nequi" checked style="width: 22px; height: 22px; margin: 0; accent-color: #1E5AA0;">
+          Nequi
+        </label>
+        <label style="display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; border: 1px solid #A9BCD0; border-radius: 12px; background: #FFFFFF; font-size: 15.5px; font-weight: 500; cursor: pointer;">
+          <input type="radio" name="pago" value="breb" style="width: 22px; height: 22px; margin: 0; accent-color: #1E5AA0;">
+          Llave Bre-B
+        </label>
+        <label style="display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; border: 1px solid #A9BCD0; border-radius: 12px; background: #FFFFFF; font-size: 15.5px; font-weight: 500; cursor: pointer;">
+          <input type="radio" name="pago" value="tarjeta" style="width: 22px; height: 22px; margin: 0; accent-color: #1E5AA0;">
+          Tarjeta, con link de pago
+        </label>
+        <label style="display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; border: 1px solid #A9BCD0; border-radius: 12px; background: #FFFFFF; font-size: 15.5px; font-weight: 500; cursor: pointer;">
+          <input type="radio" name="pago" value="efectivo" style="width: 22px; height: 22px; margin: 0; accent-color: #1E5AA0;">
+          Efectivo al recibir
+        </label>
+      </fieldset>
+
+      <label style="display: flex; align-items: flex-start; gap: 12px; font-size: 15px; line-height: 1.5; cursor: pointer;">
+        <input type="checkbox" name="datos" required style="flex: none; width: 24px; height: 24px; margin: 0; accent-color: #1E5AA0;">
+        <span>Autorizo el tratamiento de mis datos según la <a href="Main.dc.html" style="color: #1E5AA0; font-weight: 600;">política de tratamiento de datos</a>.</span>
+      </label>
+
+      <section aria-labelledby="vista-previa" style="display: flex; flex-direction: column; gap: 10px;">
+        <h2 id="vista-previa" style="margin: 0; font-size: 20px; font-weight: 600;">Así llega tu mensaje</h2>
+        <div style="padding: 16px 18px; border-radius: 16px 16px 16px 4px; background: #EAF2FB; border: 1px solid #C5D3E2; font-size: 15px; line-height: 1.65; color: #1B2A3A; white-space: pre-line;">Hola, quiero hacer este pedido:
+• 2 × Acetaminofén 500 mg: $7.000
+• 1 × Suero oral: $6.200
+Subtotal: $13.200
+Nombre: [nombre]
+Dirección: [barrio y dirección]
+Pago: Nequi</div>
+        <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #52606F;">Se abre WhatsApp con tu pedido listo. Te confirmamos el total con domicilio antes de cobrar.</p>
+      </section>
+
+      <button type="submit" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 58px; border: 0; border-radius: 14px; background: #1E5AA0; color: #FFFFFF; font-family: inherit; font-size: 17px; font-weight: 600; cursor: pointer;">
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"></path></svg>
+        Enviar pedido por WhatsApp
+      </button>
+    </form>
+
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1650}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

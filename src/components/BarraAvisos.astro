@@ -1,0 +1,121 @@
+---
+import Icono from './Icono.astro';
+import { enlaceWhatsApp, MENSAJE_GENERAL, numeroVisible } from '../lib/whatsapp';
+
+interface Props {
+  avisos: string[];
+  whatsapp: string;
+}
+
+const { avisos, whatsapp } = Astro.props;
+const varios = avisos.length > 1;
+---
+
+{
+  avisos.length > 0 && (
+    <div
+      role="region"
+      aria-roledescription="carrusel"
+      aria-label="Avisos y promociones"
+      class="foco-claro bg-azul-oscuro text-blanco"
+      data-avisos
+    >
+      <div class="mx-auto flex max-w-sitio items-center gap-1 px-1 py-0.5 sm:px-margen">
+        {varios && (
+          <button
+            type="button"
+            data-aviso-anterior
+            aria-label="Aviso anterior"
+            class="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[10px] text-blanco"
+          >
+            <Icono nombre="anterior" tamano={18} grosor={2.4} />
+          </button>
+        )}
+        <div class="flex min-w-0 flex-1 flex-col items-center gap-1 py-1.5">
+          <div
+            class="carrusel-pista flex w-full snap-x snap-mandatory overflow-x-hidden"
+            data-aviso-pista
+          >
+            {avisos.map((aviso, i) => (
+              <p
+                role="group"
+                aria-roledescription="aviso"
+                aria-label={`Aviso ${i + 1} de ${avisos.length}`}
+                aria-hidden={i > 0 ? 'true' : undefined}
+                inert={i > 0}
+                class="m-0 w-full shrink-0 snap-start px-1 text-center text-[14.5px] leading-snug font-medium"
+              >
+                {aviso}
+              </p>
+            ))}
+          </div>
+          {varios && (
+            <div aria-hidden="true" class="flex gap-1.5" data-aviso-puntos>
+              {avisos.map((_, i) => (
+                <span class={`h-1.5 rounded-full bg-blanco transition-[width,opacity] duration-media ${i === 0 ? 'w-4 opacity-100' : 'w-1.5 opacity-50'}`} />
+              ))}
+            </div>
+          )}
+          <p class="visualmente-oculto" aria-live="polite" data-aviso-anuncio />
+        </div>
+        {varios && (
+          <button
+            type="button"
+            data-aviso-siguiente
+            aria-label="Aviso siguiente"
+            class="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[10px] text-blanco"
+          >
+            <Icono nombre="siguiente" tamano={18} grosor={2.4} />
+          </button>
+        )}
+        <a
+          href={enlaceWhatsApp(whatsapp, MENSAJE_GENERAL)}
+          class="ml-2 hidden min-h-11 shrink-0 items-center gap-2 border-l border-blanco/40 pl-4 text-[14.5px] font-medium text-blanco no-underline lg:inline-flex"
+        >
+          <Icono nombre="chat" tamano={18} />
+          WhatsApp {numeroVisible(whatsapp)}
+        </a>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  import { alDetenerse, conGesto, irA, marcarActual } from './carrusel';
+
+  // Carrusel de avisos: flechas y gesto de deslizar, sin rotación automática.
+  document.addEventListener('astro:page-load', () => {
+    const barra = document.querySelector<HTMLElement>('[data-avisos]');
+    const pista = barra?.querySelector<HTMLElement>('[data-aviso-pista]');
+    if (!barra || !pista) return;
+    const avisos = [...pista.children] as HTMLElement[];
+    const puntos = [...(barra.querySelector('[data-aviso-puntos]')?.children ?? [])] as HTMLElement[];
+    const anuncio = barra.querySelector<HTMLElement>('[data-aviso-anuncio]');
+    let actual = 0;
+
+    const mostrar = (i: number, anunciar: boolean) => {
+      actual = i;
+      marcarActual(pista, i);
+      puntos.forEach((p, j) => {
+        p.classList.toggle('w-4', j === i);
+        p.classList.toggle('opacity-100', j === i);
+        p.classList.toggle('w-1.5', j !== i);
+        p.classList.toggle('opacity-50', j !== i);
+      });
+      if (anunciar && anuncio) anuncio.textContent = `Aviso ${i + 1} de ${avisos.length}: ${avisos[i].textContent?.trim()}`;
+    };
+
+    // El índice cambia en el momento del clic (no al terminar de deslizar): dos clics seguidos avanzan dos.
+    const mover = (paso: number) => {
+      const destino = (actual + paso + avisos.length) % avisos.length;
+      mostrar(destino, true);
+      irA(pista, destino);
+    };
+    alDetenerse(pista, (i) => {
+      if (i !== actual) mostrar(i, true);
+    });
+    conGesto(pista, mover);
+    barra.querySelector('[data-aviso-anterior]')?.addEventListener('click', () => mover(-1));
+    barra.querySelector('[data-aviso-siguiente]')?.addEventListener('click', () => mover(1));
+  });
+</script>

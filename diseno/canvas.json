@@ -1,0 +1,124 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Main.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "radius": 28,
+      "title": "Celular: inicio (interactivo)",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "Contenido.dc.html": {
+      "h": 5200,
+      "is_interactive": true,
+      "title": "Celular: inicio completo",
+      "w": 390,
+      "x": 470,
+      "y": 0,
+      "expand": "fill"
+    },
+    "Carrito.dc.html": {
+      "h": 1650,
+      "title": "Pedido a WhatsApp",
+      "w": 396,
+      "x": 940,
+      "y": 0,
+      "expand": "fill"
+    },
+    "CatalogoMovil.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "radius": 28,
+      "title": "Celular: catálogo (interactivo)",
+      "w": 390,
+      "x": 1416,
+      "y": 0
+    },
+    "Tarjeta.dc.html": {
+      "h": 380,
+      "is_interactive": true,
+      "title": "Componente: tarjeta de producto",
+      "w": 200,
+      "x": 1416,
+      "y": 964
+    },
+    "Web.dc.html": {
+      "h": 3600,
+      "is_interactive": true,
+      "title": "Escritorio: inicio (interactivo)",
+      "w": 1440,
+      "x": 1966,
+      "y": 0,
+      "expand": "fill"
+    },
+    "Catalogo.dc.html": {
+      "h": 2500,
+      "is_interactive": true,
+      "title": "Escritorio: catálogo (interactivo)",
+      "w": 1440,
+      "x": 3486,
+      "y": 0,
+      "expand": "fill"
+    },
+    "Ficha.dc.html": {
+      "h": 1180,
+      "is_interactive": true,
+      "title": "Componente: detalle del producto",
+      "w": 980,
+      "x": 3486,
+      "y": 2620
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-31T06:05:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "noteOrder": [
+    "t1",
+    "t2",
+    "n1"
+  ],
+  "notes": {
+    "n1": {
+      "color": "blue",
+      "text": "Dale Play: toca el buscador del catálogo para abrir el panel de búsqueda. Ver más productos lleva a la página del catálogo, con filtros y páginas.",
+      "w": 390,
+      "x": 0,
+      "y": 924
+    },
+    "t1": {
+      "kind": "title1",
+      "maxW": 1806,
+      "text": "Celular",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "t2": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Escritorio",
+      "x": 1966,
+      "y": -300
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Contenido.dc.html",
+    "Carrito.dc.html",
+    "CatalogoMovil.dc.html",
+    "Tarjeta.dc.html",
+    "Web.dc.html",
+    "Catalogo.dc.html",
+    "Ficha.dc.html"
+  ],
+  "pages": [],
+  "title": "Farmacia a domicilio — mockup"
+}

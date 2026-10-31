@@ -1,0 +1,45 @@
+---
+import type { Configuracion } from '../lib/datos';
+import { formatearPrecio } from '../lib/formato';
+
+interface Props {
+  config: Configuracion;
+}
+
+const { config } = Astro.props;
+const menores = config.costoDomicilio
+  ? `En pedidos menores, el domicilio cuesta ${formatearPrecio(config.costoDomicilio)}.`
+  : 'En pedidos menores, te confirmamos el valor del domicilio por WhatsApp.';
+const preguntas = [
+  {
+    pregunta: '¿Cuándo es gratis el domicilio?',
+    respuesta: `En compras desde ${formatearPrecio(config.domicilioGratisDesde)} dentro de ${config.zonasCobertura}. ${menores}`,
+  },
+  {
+    pregunta: '¿Cómo pago?',
+    respuesta:
+      'Nequi, llave Bre-B, link de pago con tarjeta o efectivo al recibir. Te confirmamos el total por WhatsApp antes de cobrar.',
+  },
+  {
+    pregunta: '¿Cómo compro un medicamento con fórmula?',
+    respuesta:
+      'Toca Consultar por WhatsApp en el medicamento, envíanos la foto de tu fórmula y te confirmamos disponibilidad y precio.',
+  },
+];
+---
+
+<section id="preguntas" aria-labelledby="faq-titulo">
+  <div class="mx-auto max-w-sitio px-margen py-[clamp(36px,5vw,60px)]">
+    <div class="max-w-190">
+      <h2 id="faq-titulo" class="m-0 mb-3 text-[clamp(26px,2.6vw,34px)] leading-tight font-semibold">Preguntas frecuentes</h2>
+      {
+        preguntas.map((p) => (
+          <details class="border-b border-borde">
+            <summary class="min-h-11 cursor-pointer py-4 text-[16.5px] leading-snug font-semibold">{p.pregunta}</summary>
+            <p class="m-0 mb-4.5 text-[15.5px] leading-relaxed text-texto-cuerpo">{p.respuesta}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

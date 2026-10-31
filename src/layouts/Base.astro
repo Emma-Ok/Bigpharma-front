@@ -1,0 +1,71 @@
+---
+import '@fontsource-variable/lexend/wght.css';
+import '../styles/global.css';
+import lexendLatin from '@fontsource-variable/lexend/files/lexend-latin-wght-normal.woff2?url';
+import { ClientRouter } from 'astro:transitions';
+import BarraAvisos from '../components/BarraAvisos.astro';
+import Encabezado from '../components/Encabezado.astro';
+import Pie from '../components/Pie.astro';
+import Buscador from '../components/Buscador';
+import BarraPedidoMovil from '../components/BarraPedidoMovil';
+import { cargarDatos } from '../lib/datos';
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  /** Ruta canónica; por defecto la de la página. */
+  canonica?: string;
+  noindex?: boolean;
+  jsonLd?: object | object[];
+  /** La barra inferior del pedido se oculta en /pedido. */
+  sinBarraPedido?: boolean;
+}
+
+const { titulo, descripcion, canonica, noindex = false, jsonLd, sinBarraPedido = false } = Astro.props;
+const { configuracion } = await cargarDatos();
+const urlCanonica = new URL(canonica ?? Astro.url.pathname, Astro.site).href;
+const esquemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+// Evita que un texto de la hoja cierre la etiqueta <script>.
+const aJson = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={urlCanonica} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={urlCanonica} />
+    <meta name="theme-color" content="#173F72" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href={lexendLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    {esquemas.map((e) => <script type="application/ld+json" set:html={aJson(e)} />)}
+    <ClientRouter />
+    <slot name="head" />
+  </head>
+  <body class="flex min-h-dvh flex-col bg-blanco font-sans text-tinta antialiased">
+    <a
+      href="#contenido"
+      class="absolute -top-16 left-3 z-50 rounded-boton bg-tinta px-4 py-3 font-semibold text-blanco no-underline focus:top-3"
+    >
+      Saltar al contenido
+    </a>
+    <BarraAvisos avisos={configuracion.avisos} whatsapp={configuracion.whatsapp} />
+    <Encabezado nombre={configuracion.nombreDrogueria} whatsapp={configuracion.whatsapp} />
+    <main id="contenido" tabindex="-1" class="flex flex-1 flex-col focus:outline-none">
+      <slot />
+    </main>
+    <Pie config={configuracion} />
+    {!sinBarraPedido && <BarraPedidoMovil client:load umbral={configuracion.domicilioGratisDesde} />}
+    <Buscador client:idle whatsapp={configuracion.whatsapp} />
+    <div id="anuncios-pedido" aria-live="polite" class="visualmente-oculto"></div>
+  </body>
+</html>

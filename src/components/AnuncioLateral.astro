@@ -1,0 +1,30 @@
+---
+import type { Anuncio } from '../lib/datos';
+
+interface Props {
+  anuncio: Anuncio;
+}
+
+const { anuncio: a } = Astro.props;
+---
+
+<div role="group" aria-label="Anuncio lateral" class="flex min-w-0 flex-[1_1_280px] flex-wrap-reverse content-center gap-3.5 rounded-panel bg-miel p-[clamp(18px,2.4vw,24px)]">
+  <div class="flex min-w-0 flex-[1_1_200px] flex-col gap-2">
+    <h3 class="m-0 text-[22px] leading-tight font-semibold">{a.titulo}</h3>
+    {a.texto && <p class="m-0 text-[15.5px] leading-relaxed text-texto-cuerpo">{a.texto}</p>}
+    {
+      a.enlace && (
+        <a href={a.enlace} class="inline-flex min-h-11 items-center self-start font-semibold text-azul">
+          {a.botonTexto ?? 'Ver catálogo'}
+        </a>
+      )
+    }
+  </div>
+  {
+    a.foto && (
+      <div class="h-40 min-w-0 flex-[1_1_200px] overflow-hidden rounded-[14px]">
+        <img src={a.foto} alt={a.altFoto} loading="lazy" width="320" height="160" class="block size-full object-cover" />
+      </div>
+    )
+  }
+</div>

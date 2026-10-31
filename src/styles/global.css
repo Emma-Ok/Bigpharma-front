@@ -1,0 +1,320 @@
+@import "tailwindcss";
+
+/* Tokens: docs/ESPECIFICACION.md, sección 6. No usar colores arbitrarios. */
+@theme {
+  --color-*: initial;
+
+  --color-azul: #1E5AA0;
+  --color-azul-oscuro: #173F72;
+  --color-azul-claro: #EAF2FB;
+  --color-tinta: #1B2A3A;
+  --color-texto-cuerpo: #3B4A5A;
+  --color-texto-2: #52606F;
+  --color-borde: #D5DFEA;
+  --color-borde-suave: #E4EAF1;
+  --color-borde-control: #C5D3E2;
+  --color-miel: #FBEBD6;
+  --color-formula: #7B3F5E;
+  --color-formula-fondo: #F6E9EF;
+  --color-descuento: #8A4B14;
+  --color-blanco: #FFFFFF;
+
+  --color-cat-dolor: #D9963F;
+  --color-cat-dolor-fondo: #FBEBD6;
+  --color-cat-gripa: #6E9FC4;
+  --color-cat-gripa-fondo: #E4EEF6;
+  --color-cat-estomago: #7FB08F;
+  --color-cat-estomago-fondo: #E5F0E8;
+  --color-cat-piel: #E7B9A0;
+  --color-cat-piel-fondo: #FBE8DE;
+  --color-cat-bebes: #B9A6D8;
+  --color-cat-bebes-fondo: #EEE9F7;
+  --color-cat-auxilios: #1E5AA0;
+  --color-cat-auxilios-fondo: #EAF2FB;
+  --color-cat-formula: #7B3F5E;
+  --color-cat-formula-fondo: #F6E9EF;
+  --color-cat-todo: #52606F;
+  --color-cat-todo-fondo: #F1F4F8;
+
+  --font-sans: "Lexend Variable", "Lexend", system-ui, sans-serif;
+
+  --breakpoint-sm: 37.5rem;
+  --breakpoint-md: 56.25rem;
+  --breakpoint-lg: 75rem;
+
+  --radius-boton: 12px;
+  --radius-tarjeta: 16px;
+  --radius-panel: 20px;
+  --radius-panel-grande: 24px;
+
+  --container-sitio: 1280px;
+  --spacing-margen: clamp(16px, 4vw, 32px);
+
+  --shadow-ficha: 0 14px 36px rgb(23 63 114 / 0.18);
+  --shadow-flotante: 0 18px 48px rgb(27 42 58 / 0.18);
+  --shadow-barra: 0 -8px 24px rgb(27 42 58 / 0.08);
+
+  --transition-duration-rapida: 150ms;
+  --transition-duration-media: 240ms;
+  --transition-duration-lenta: 420ms;
+  --ease-salida: cubic-bezier(.22, .8, .24, 1);
+  --ease-entrada: cubic-bezier(.4, 0, .6, 1);
+}
+
+/* Hover solo con puntero fino (docs/MOVIMIENTO-Y-3D.md). */
+@custom-variant hover-fino {
+  &:hover {
+    @media (pointer: fine) {
+      @slot;
+    }
+  }
+}
+
+/* Hover sobre la tarjeta (.group) que escala la imagen: nunca con movimiento reducido. */
+@custom-variant hover-fino-grupo {
+  @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    &:is(:where(.group):hover *) {
+      @slot;
+    }
+  }
+}
+
+@layer base {
+  html {
+    color: var(--color-tinta);
+    background: var(--color-blanco);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  a {
+    color: var(--color-azul);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-tinta);
+    outline-offset: 3px;
+  }
+
+  .foco-claro :focus-visible,
+  .foco-claro:focus-visible {
+    outline-color: var(--color-blanco);
+  }
+
+  [id] {
+    scroll-margin-top: 16px;
+  }
+}
+
+/* Pistas de carrusel: el desplazamiento vertical de la página sigue funcionando sobre ellas. */
+.carrusel-pista {
+  scrollbar-width: none;
+  touch-action: pan-y;
+}
+
+.carrusel-pista::-webkit-scrollbar {
+  display: none;
+}
+
+@utility visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Movimiento (docs/MOVIMIENTO-Y-3D.md). Todo responde a una acción, salvo la entrada de la portada. ---------- */
+
+/* View Transitions: cambio de página 280 ms; ficha rápida 240 ms; cuadrícula 220 ms; carrusel 280 ms. */
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: 280ms;
+  animation-timing-function: var(--ease-salida);
+}
+
+/*
+ * Nombres de transición según el tipo (los componentes ponen data-vt y --vt):
+ * - cambio de página (router de Astro, sin tipos propios): imagen y nombre del producto, de la tarjeta a la ficha;
+ * - ficha rápida: solo la imagen de la tarjeta elegida, y el panel entra como un bloque. El resto de
+ *   tarjetas no lleva nombre, para que nada se pinte por encima del fondo oscuro mientras se abre;
+ * - cuadrícula: cada tarjeta, para que se reubique al elegir categoría.
+ */
+html:not(:active-view-transition-type(ficha, cuadricula)) [data-vt] {
+  view-transition-name: var(--vt);
+}
+
+html:active-view-transition-type(ficha) {
+  & [data-vt][data-vt-elegida] {
+    view-transition-name: var(--vt);
+    view-transition-class: foto-elegida;
+  }
+  /* El diálogo vive en la capa superior: la imagen que crece debe pintarse encima del panel. */
+  &::view-transition-group(ficha-rapida) {
+    z-index: 1;
+  }
+  &::view-transition-group(.foto-elegida) {
+    z-index: 2;
+  }
+  & .dialogo-ficha[open] {
+    view-transition-name: ficha-rapida;
+  }
+  &::view-transition-group(*),
+  &::view-transition-old(*),
+  &::view-transition-new(*) {
+    animation-duration: var(--transition-duration-media);
+  }
+  &::view-transition-new(ficha-rapida) {
+    animation: var(--transition-duration-media) var(--ease-salida) both aparecer-ficha;
+  }
+}
+
+html:active-view-transition-type(cuadricula) [data-vt-tarjeta] {
+  view-transition-name: var(--vt-tarjeta);
+}
+
+html:active-view-transition-type(cuadricula) {
+  &::view-transition-group(*),
+  &::view-transition-old(*),
+  &::view-transition-new(*) {
+    animation-duration: 220ms;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Entrada de la portada, una sola vez por carga: las líneas suben 12 px en secuencia (60 ms). */
+  .hero-linea {
+    animation: subir-texto 420ms var(--ease-salida) var(--retraso, 0ms) both;
+  }
+  .ficha-profesional {
+    animation: subir 480ms var(--ease-salida) 240ms both;
+  }
+
+  /* Ficha rápida sin View Transitions: escala de 0,96 a 1 con fundido. */
+  @supports not (view-transition-name: none) {
+    .dialogo-ficha[open] {
+      animation: aparecer-ficha var(--transition-duration-media) var(--ease-salida);
+    }
+  }
+
+  /* Buscador: el panel baja 8 px con fundido y el fondo oscuro aparece. */
+  .buscador[open] {
+    animation: bajar 180ms var(--ease-salida);
+  }
+  .buscador[open]::backdrop {
+    animation: fundido 180ms var(--ease-salida);
+  }
+  /* Al escribir, los resultados cambian con fundido, sin desplazarse. */
+  .buscador .resultados {
+    animation: fundido 180ms var(--ease-salida);
+  }
+
+  /* «Agregar» se transforma en − / +. */
+  .control-cantidad {
+    animation: aparecer-control var(--transition-duration-rapida) var(--ease-salida);
+  }
+
+  /* Domicilio gratis: el check se dibuja. */
+  .check-gratis path {
+    stroke-dasharray: 24;
+    animation: dibujar-check 400ms var(--ease-salida) both;
+  }
+
+  /* Preguntas y secciones de la ficha: apertura de details donde exista interpolate-size. */
+  @supports (interpolate-size: allow-keywords) {
+    :root {
+      interpolate-size: allow-keywords;
+    }
+    details::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition:
+        block-size 200ms var(--ease-salida),
+        content-visibility 200ms allow-discrete;
+    }
+    details[open]::details-content {
+      block-size: auto;
+    }
+  }
+}
+
+@keyframes subir {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* Opacidad inicial 0,01 y no 0: Chrome ignora para LCP los elementos invisibles, y el titular debe ser el LCP. */
+@keyframes subir-texto {
+  from {
+    opacity: 0.01;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes bajar {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes fundido {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes aparecer-ficha {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes aparecer-control {
+  from {
+    opacity: 0.4;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes dibujar-check {
+  from {
+    stroke-dashoffset: 24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Se queda en CSS: movimiento reducido y View Transitions. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-duration-rapida: 0ms;
+    --transition-duration-media: 0ms;
+    --transition-duration-lenta: 0ms;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+
+  /* Solo fundidos de opacidad de 120 ms como máximo. */
+  .dialogo-ficha[open],
+  .buscador[open] {
+    animation: fundido 120ms linear;
+  }
+}

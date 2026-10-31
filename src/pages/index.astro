@@ -1,0 +1,87 @@
+---
+import Base from '../layouts/Base.astro';
+import PresentacionProfesional from '../components/PresentacionProfesional.astro';
+import AnuncioLateral from '../components/AnuncioLateral.astro';
+import Servicios from '../components/Servicios.astro';
+import PreguntasFrecuentes from '../components/PreguntasFrecuentes.astro';
+import CarruselAnuncios from '../components/CarruselAnuncios';
+import CatalogoResumido from '../components/CatalogoResumido';
+import EscenaCapsulas from '../components/EscenaCapsulas.astro';
+import { cargarDatos } from '../lib/datos';
+import { resumir } from '../lib/catalogo';
+import { farmaciaJsonLd } from '../lib/seo';
+import { enlaceWhatsApp, MENSAJE_GENERAL } from '../lib/whatsapp';
+import { formatearPrecio } from '../lib/formato';
+
+const { productos, configuracion: c, anuncios } = await cargarDatos();
+const carrusel = anuncios.filter((a) => a.ubicacion === 'carrusel');
+const lateral = anuncios.find((a) => a.ubicacion === 'lateral');
+---
+
+<Base
+  titulo={`Droguería a domicilio en ${c.barrio} | ${c.nombreDrogueria}`}
+  descripcion={`Pide medicamentos de venta libre y productos de cuidado a domicilio en ${c.barrio}. Domicilio gratis desde ${formatearPrecio(c.domicilioGratisDesde)}. Consulta medicamentos con fórmula y agenda inyectología en casa.`}
+  jsonLd={farmaciaJsonLd(c, Astro.site!)}
+>
+  <section id="inicio" aria-labelledby="hero-titulo" class="hero relative isolate overflow-hidden bg-azul-claro">
+    <EscenaCapsulas />
+    <div class="relative z-10 mx-auto flex max-w-sitio flex-wrap items-center gap-x-10 gap-y-7 px-margen py-[clamp(28px,4vw,52px)]">
+      <div class="flex min-w-0 flex-[3_1_440px] flex-col gap-4">
+        <h1 id="hero-titulo" class="m-0 max-w-[17ch] text-[clamp(32px,4vw,52px)] leading-[1.12] font-semibold tracking-[-0.01em]">
+          <span class="hero-linea block" style="--retraso: 0ms">Droguería a domicilio</span>
+          <span class="hero-linea block" style="--retraso: 60ms">en {c.barrio}</span>
+        </h1>
+        <p style="--retraso: 120ms" class="hero-linea m-0 max-w-[46ch] text-[clamp(16px,1.4vw,18px)] leading-relaxed text-texto-cuerpo">
+          Pide tus medicamentos y productos de cuidado sin salir de casa. Armas el pedido aquí y lo confirmamos por WhatsApp.
+        </p>
+        <div style="--retraso: 180ms" class="hero-linea mt-1 flex flex-wrap gap-2.5">
+          <a href="#catalogo" class="inline-flex min-h-12.5 items-center rounded-boton bg-azul px-5.5 font-semibold text-blanco no-underline">
+            Ver catálogo
+          </a>
+          <a
+            href={enlaceWhatsApp(c.whatsapp, MENSAJE_GENERAL)}
+            class="inline-flex min-h-12.5 items-center rounded-boton border-2 border-azul bg-blanco px-5.5 font-semibold text-azul no-underline"
+          >
+            Escribir por WhatsApp
+          </a>
+        </div>
+      </div>
+      <PresentacionProfesional config={c} />
+    </div>
+  </section>
+
+  {
+    (carrusel.length > 0 || lateral) && (
+      <section aria-labelledby="promo-titulo">
+        <div class="mx-auto max-w-sitio px-margen pt-[clamp(20px,3vw,32px)] pb-1">
+          <h2 id="promo-titulo" class="visualmente-oculto">
+            Promociones
+          </h2>
+          <div class="flex flex-wrap items-stretch gap-4">
+            {carrusel.length > 0 && <CarruselAnuncios client:idle anuncios={carrusel} />}
+            {lateral && <AnuncioLateral anuncio={lateral} />}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section id="catalogo" aria-labelledby="cat-titulo">
+    <div class="mx-auto max-w-sitio px-margen py-[clamp(28px,4vw,44px)]">
+      <div class="mb-3.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1.5">
+        <h2 id="cat-titulo" class="m-0 text-[clamp(26px,2.6vw,34px)] leading-tight font-semibold">Catálogo</h2>
+        <a href="/catalogo" class="inline-flex min-h-11 items-center text-[15.5px] font-semibold text-azul">Ver todos los productos</a>
+      </div>
+      <CatalogoResumido
+        client:load
+        productos={productos.map(resumir)}
+        whatsapp={c.whatsapp}
+        entrega={`Domicilio en ${c.tiempoEntrega} a ${c.zonasCobertura}.`}
+        umbral={c.domicilioGratisDesde}
+      />
+    </div>
+  </section>
+
+  <Servicios config={c} />
+  <PreguntasFrecuentes config={c} />
+</Base>

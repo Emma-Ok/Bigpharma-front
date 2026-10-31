@@ -1,0 +1,136 @@
+---
+import Icono from './Icono.astro';
+import ContadorPedido from './ContadorPedido';
+import { enlaceWhatsApp, MENSAJE_GENERAL } from '../lib/whatsapp';
+
+interface Props {
+  nombre: string;
+  whatsapp: string;
+}
+
+const { nombre, whatsapp } = Astro.props;
+const ruta = Astro.url.pathname;
+const enlaces = [
+  { href: '/catalogo', texto: 'Catálogo', actual: ruta.startsWith('/catalogo') },
+  { href: '/#servicios', texto: 'Inyectables a domicilio', actual: false },
+  { href: '/#preguntas', texto: 'Preguntas frecuentes', actual: false },
+];
+const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
+---
+
+<header class="border-b border-borde-suave bg-blanco" data-encabezado>
+  <div class="mx-auto flex max-w-sitio items-center justify-between gap-3 px-margen py-2.5">
+    <a href="/" class="flex min-h-11 items-center gap-2.5 text-tinta no-underline">
+      <span aria-hidden="true" class="flex size-9.5 shrink-0 items-center justify-center rounded-[11px] bg-azul text-blanco">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 6v12M6 12h12"></path></svg>
+      </span>
+      <span class="flex flex-col">
+        <span class="text-lg leading-tight font-semibold">{nombre}</span>
+        <span class="text-[13px] text-texto-2">Droguería a domicilio</span>
+      </span>
+    </a>
+
+    <nav aria-label="Principal" class="hidden items-center gap-0.5 lg:flex">
+      {
+        enlaces.map((e) => (
+          <a
+            href={e.href}
+            aria-current={e.actual ? 'page' : undefined}
+            class="inline-flex min-h-11 items-center px-3 text-[15px] font-medium text-tinta no-underline aria-[current=page]:underline aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8"
+          >
+            {e.texto}
+          </a>
+        ))
+      }
+      <a
+        href="/catalogo#buscar"
+        data-abrir-buscador
+        aria-haspopup="dialog"
+        aria-label="Buscar productos"
+        class="ml-1 inline-flex size-11 items-center justify-center rounded-boton border border-texto-2 text-tinta"
+      >
+        <Icono nombre="lupa" />
+      </a>
+      <ContadorPedido client:load variante="encabezado" />
+      <a
+        href={whatsappUrl}
+        class="ml-2 inline-flex min-h-11 items-center rounded-boton bg-azul px-4.5 text-[15px] font-semibold text-blanco no-underline"
+      >
+        Escribir por WhatsApp
+      </a>
+    </nav>
+
+    <div class="flex gap-2 lg:hidden">
+      <a
+        href="/catalogo#buscar"
+        data-abrir-buscador
+        aria-haspopup="dialog"
+        aria-label="Buscar productos"
+        class="flex size-11.5 shrink-0 items-center justify-center rounded-boton border border-texto-2 text-tinta"
+      >
+        <Icono nombre="lupa" tamano={21} />
+      </a>
+      <button
+        type="button"
+        data-menu-boton
+        aria-expanded="false"
+        aria-controls="menu-movil"
+        aria-label="Menú"
+        class="flex size-11.5 shrink-0 cursor-pointer items-center justify-center rounded-boton border border-texto-2 bg-blanco text-tinta"
+      >
+        <Icono nombre="menu" tamano={22} />
+      </button>
+    </div>
+  </div>
+
+  <nav id="menu-movil" aria-label="Principal" class="px-margen pb-3 lg:hidden" hidden data-menu>
+    <ul class="m-0 flex list-none flex-col p-0">
+      {
+        enlaces.map((e) => (
+          <li>
+            <a
+              href={e.href}
+              aria-current={e.actual ? 'page' : undefined}
+              class="flex min-h-12 items-center border-b border-borde-suave text-[17px] font-medium text-tinta no-underline"
+            >
+              {e.texto}
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a href="/pedido" class="flex min-h-12 items-center border-b border-borde-suave text-[17px] font-medium text-tinta no-underline">
+          Tu pedido
+        </a>
+      </li>
+      <li>
+        <a href={whatsappUrl} class="flex min-h-12 items-center text-[17px] font-semibold text-azul no-underline">
+          Escribir por WhatsApp
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+  // Menú de celular: aria-expanded, cierre con Esc y retorno del foco al botón.
+  document.addEventListener('astro:page-load', () => {
+    const boton = document.querySelector<HTMLButtonElement>('[data-menu-boton]');
+    const menu = document.querySelector<HTMLElement>('[data-menu]');
+    if (!boton || !menu) return;
+    const fijar = (abierto: boolean) => {
+      boton.setAttribute('aria-expanded', String(abierto));
+      menu.hidden = !abierto;
+    };
+    boton.addEventListener('click', () => fijar(!!menu.hidden));
+    menu.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) fijar(false);
+    });
+    document.querySelector('[data-encabezado]')?.addEventListener('keydown', (e) => {
+      if ((e as KeyboardEvent).key === 'Escape' && !menu.hidden) {
+        fijar(false);
+        boton.focus();
+      }
+    });
+  });
+</script>

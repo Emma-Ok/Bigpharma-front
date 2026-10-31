@@ -1,0 +1,45 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import RutaNavegacion from '../../components/RutaNavegacion.astro';
+import FichaProducto from '../../components/FichaProducto';
+import { cargarDatos } from '../../lib/datos';
+import { categoria, urlProducto, type Producto } from '../../lib/catalogo';
+import { formatearPrecio } from '../../lib/formato';
+import { migasJsonLd, productoJsonLd, type Miga } from '../../lib/seo';
+
+export const getStaticPaths = (async () => {
+  const { productos } = await cargarDatos();
+  return productos.map((producto) => ({ params: { slug: producto.slug }, props: { producto } }));
+}) satisfies GetStaticPaths;
+
+const { producto } = Astro.props as { producto: Producto };
+const { configuracion } = await cargarDatos();
+const cat = categoria(producto.categoria);
+const migas: Miga[] = [
+  { nombre: 'Inicio', ruta: '/' },
+  { nombre: 'Catálogo', ruta: '/catalogo' },
+  { nombre: cat.nombre, ruta: `/catalogo?categoria=${cat.id}` },
+  { nombre: producto.nombre, ruta: urlProducto(producto) },
+];
+const descripcion =
+  producto.condicionVenta === 'libre'
+    ? `${producto.nombre}, ${producto.presentacion}, a ${formatearPrecio(producto.precio)}. Pídelo a domicilio por WhatsApp.`
+    : `${producto.nombre}. Medicamento con fórmula médica: envíanos tu fórmula por WhatsApp y te confirmamos disponibilidad.`;
+const esquemas = [migasJsonLd(migas, Astro.site!), productoJsonLd(producto, Astro.site!)].filter(
+  (e): e is NonNullable<typeof e> => !!e,
+);
+---
+
+<Base titulo={`${producto.nombre} | ${configuracion.nombreDrogueria}`} descripcion={descripcion} jsonLd={esquemas}>
+  <div class="mx-auto flex w-full max-w-260 flex-col gap-4 px-margen pt-4 pb-14">
+    <RutaNavegacion migas={migas} />
+    <FichaProducto
+      client:load
+      producto={producto}
+      whatsapp={configuracion.whatsapp}
+      entrega={`Domicilio en ${configuracion.tiempoEntrega} a ${configuracion.zonasCobertura}.`}
+      nivel={1}
+    />
+  </div>
+</Base>

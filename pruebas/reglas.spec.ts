@@ -1,0 +1,136 @@
+import { expect, test } from '@playwright/test';
+import { conCarrito, sinViolaciones } from './utilidades';
+
+test('un medicamento con fórmula no muestra precio ni se agrega al pedido', async ({ page }) => {
+  await page.goto('/producto/amoxicilina-500-mg');
+  await expect(page.getByRole('heading', { level: 1, name: 'Amoxicilina 500 mg' })).toBeVisible();
+  await expect(page.locator('main')).not.toContainText(/\$\d/);
+  await expect(page.getByRole('button', { name: /Agregar/ })).toHaveCount(0);
+  const enlace = page.getByRole('link', { name: 'Enviar fórmula por WhatsApp' });
+  await expect(enlace).toHaveAttribute(
+    'href',
+    /^https:\/\/wa\.me\/\d*\?text=Hola%2C%20quiero%20consultar%20por%20Amoxicilina%20500%20mg\.%20Te%20env%C3%ADo%20la%20foto%20de%20mi%20f%C3%B3rmula\.$/,
+  );
+  await expect(page.getByText('Este medicamento requiere fórmula médica.')).toBeVisible();
+  expect(await page.locator('script[type="application/ld+json"]').allTextContents()).not.toContainEqual(
+    expect.stringContaining('"Offer"'),
+  );
+});
+
+test('un medicamento de venta libre muestra la leyenda y su JSON-LD Product', async ({ page }) => {
+  await page.goto('/producto/acetaminofen-500-mg');
+  await expect(page.getByText('Si los síntomas persisten, consulte a su médico.').first()).toBeVisible();
+  await expect(page.getByText('Precio por unidad: $350 por tableta')).toBeVisible();
+  const jsonLd = (await page.locator('script[type="application/ld+json"]').allTextContents()).join('');
+  expect(jsonLd).toContain('"@type":"Product"');
+  expect(jsonLd).toContain('"price":3500');
+  expect(jsonLd).toContain('"@type":"BreadcrumbList"');
+});
+
+test('el catálogo aplica el filtro de la URL', async ({ page }) => {
+  await page.goto('/catalogo?categoria=piel');
+  await expect(page.getByText('Mostrando 1–2 de 2 productos')).toBeVisible();
+  if (test.info().project.name === 'celular') await page.getByRole('button', { name: /^Filtros/ }).click();
+  await expect(page.getByRole('radio', { name: /Piel y cuidado/ })).toBeChecked();
+  await page.getByRole('checkbox', { name: 'Solo productos con descuento' }).check();
+  await expect(page).toHaveURL(/categoria=piel&descuento=1/);
+});
+
+test('la barra del pedido en celular muestra el avance hacia el domicilio gratis', async ({ page }, info) => {
+  test.skip(info.project.name !== 'celular', 'Solo en celular');
+  await conCarrito(page, [{ id: 'd1', cantidad: 1 }]);
+  await page.goto('/catalogo');
+  await expect(page.getByText('1 producto, $42.000')).toBeVisible();
+  await expect(page.getByText('Te faltan $18.000 para el domicilio gratis')).toBeVisible();
+  await expect(page.getByRole('progressbar', { name: 'Avance hacia el domicilio gratis' })).toHaveAttribute('aria-valuenow', '70');
+  await page.getByRole('button', { name: 'Agregar al pedido: Crema humectante' }).click();
+  await expect(page.getByText('Tu domicilio es gratis')).toBeVisible();
+});
+
+test('un producto agotado ofrece preguntar disponibilidad', async ({ page }) => {
+  await page.goto('/catalogo?categoria=bebes');
+  await expect(page.getByRole('link', { name: 'Preguntar disponibilidad por WhatsApp: Crema antipañalitis' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Agregar al pedido: Crema antipañalitis' })).toHaveCount(0);
+});
+
+test('vaciar el pedido pide confirmación y deja el pedido vacío', async ({ page }) => {
+  await conCarrito(page, [
+    { id: 'a1', cantidad: 2 },
+    { id: 'c1', cantidad: 1 },
+  ]);
+  await page.goto('/pedido');
+  await expect(page.getByRole('heading', { name: '3 productos' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Vaciar pedido' }).click();
+  await expect(page.getByRole('group', { name: '¿Quitar todos los productos de tu pedido?' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Cancelar' })).toBeFocused();
+  await sinViolaciones(page, 'confirmación de vaciar');
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: 'Vaciar pedido' })).toBeFocused();
+  await expect(page.getByRole('heading', { name: '3 productos' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Vaciar pedido' }).click();
+  await page.getByRole('button', { name: 'Sí, vaciar' }).click();
+  await expect(page.getByText('Tu pedido está vacío')).toBeFocused();
+  expect(await page.evaluate(() => localStorage.getItem('carrito:v1'))).toBe('[]');
+});
+
+test('el panel del pedido de la portada también se puede vaciar', async ({ page }, info) => {
+  test.skip(info.project.name !== 'escritorio', 'El panel lateral es de escritorio');
+  await conCarrito(page, [{ id: 'd1', cantidad: 1 }]);
+  await page.goto('/');
+  const panel = page.getByRole('complementary', { name: 'Tu pedido' });
+  await expect(panel.getByText('Protector solar FPS 50')).toBeVisible();
+  await panel.getByRole('button', { name: 'Vaciar pedido' }).click();
+  await panel.getByRole('button', { name: 'Sí, vaciar' }).click();
+  await expect(panel.getByText('Aún no tienes productos.')).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Tu pedido' })).toBeFocused();
+});
+
+test('los avisos y los anuncios funcionan como carrusel', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Aviso siguiente' }).click();
+  await expect(page.locator('[data-aviso-anuncio]')).toContainText('Aviso 2 de 3');
+  await page.getByRole('button', { name: 'Aviso anterior' }).click();
+  await page.getByRole('button', { name: 'Aviso anterior' }).click();
+  await expect(page.locator('[data-aviso-anuncio]')).toContainText('Aviso 3 de 3');
+
+  await page.waitForFunction(() => !document.querySelector('astro-island[component-url*="CarruselAnuncios"][ssr]'));
+  await page.getByRole('button', { name: 'Anuncio siguiente' }).click();
+  await expect(page.getByRole('button', { name: 'Ver anuncio 2 de 3' })).toHaveAttribute('aria-current', 'true');
+  await expect(page.getByRole('group', { name: 'Anuncio 2 de 3' })).not.toHaveAttribute('inert');
+  await expect(page.getByRole('group', { name: 'Anuncio 1 de 3', includeHidden: true })).toHaveAttribute('inert', '');
+});
+
+test('al abrir la vista rápida solo la imagen elegida tiene nombre de transición', async ({ page }, info) => {
+  test.skip(info.project.name !== 'escritorio', 'Escritorio');
+  await page.goto('/catalogo');
+  await page.waitForFunction(() => !document.querySelector('astro-island[component-url*="Catalogo"][ssr]'));
+  // Durante la transición de tipo «ficha», ninguna otra tarjeta debe pintarse encima del fondo.
+  const nombres = await page.evaluate(async () => {
+    const enlace = [...document.querySelectorAll('a')].find((a) => a.textContent?.trim() === 'Protector solar FPS 50')!;
+    enlace.click();
+    await new Promise((r) => setTimeout(r, 30));
+    const conNombre = [...document.querySelectorAll('[data-vt], [data-vt-tarjeta]')]
+      .map((e) => getComputedStyle(e).viewTransitionName)
+      .filter((n) => n && n !== 'none');
+    return { activa: document.documentElement.matches(':active-view-transition'), conNombre };
+  });
+  if (nombres.activa) expect(nombres.conNombre).toEqual(['producto-d1-foto']);
+  await expect(page.getByRole('dialog', { name: 'Protector solar FPS 50' })).toBeVisible();
+});
+
+test('el carrusel de anuncios se desliza con el gesto', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => !document.querySelector('astro-island[component-url*="CarruselAnuncios"][ssr]'));
+  const pista = page.locator('[aria-label="Anuncios principales"] .carrusel-pista');
+  await pista.scrollIntoViewIfNeeded();
+  const caja = (await pista.boundingBox())!;
+  const y = caja.y + caja.height / 2;
+  await page.mouse.move(caja.x + caja.width * 0.8, y);
+  await page.mouse.down();
+  await page.mouse.move(caja.x + caja.width * 0.2, y, { steps: 6 });
+  await page.mouse.up();
+  await expect(page.getByRole('button', { name: 'Ver anuncio 2 de 3' })).toHaveAttribute('aria-current', 'true');
+  await expect(page).toHaveURL(/\/$/);
+});

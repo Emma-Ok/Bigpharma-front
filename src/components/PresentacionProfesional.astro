@@ -1,0 +1,71 @@
+---
+import Icono from './Icono.astro';
+import type { Configuracion } from '../lib/datos';
+import { enlaceWhatsApp, MENSAJE_GENERAL } from '../lib/whatsapp';
+
+interface Props {
+  config: Configuracion;
+}
+
+const { config } = Astro.props;
+const { profesional: p } = config;
+---
+
+<aside id="quien" aria-labelledby="quien-titulo" class="ficha-profesional flex w-full max-w-130 min-w-0 flex-[2_1_340px] flex-col">
+  <div class="relative h-[clamp(320px,30vw,400px)] overflow-hidden rounded-panel-grande bg-borde">
+    {
+      p.foto ? (
+        <img
+          src={p.foto}
+          alt={`${p.nombre}, ${p.profesion}`}
+          width="520"
+          height="400"
+          class="block size-full object-cover object-[center_22%]"
+        />
+      ) : (
+        <div class="flex size-full items-end justify-center text-borde-control">
+          <svg aria-hidden="true" width="230" height="250" viewBox="0 0 230 250" fill="currentColor">
+            <circle cx="115" cy="82" r="54" />
+            <path d="M14 250 C20 172 62 148 115 148 C168 148 210 172 216 250 Z" />
+          </svg>
+        </div>
+      )
+    }
+  </div>
+  <div class="relative mx-3.5 -mt-18 flex flex-col gap-2.5 rounded-[18px] bg-blanco px-5 pt-4.5 pb-5 shadow-ficha">
+    <div class="flex flex-col gap-0.5">
+      <h2 id="quien-titulo" class="m-0 text-[22px] leading-tight font-semibold">{p.nombre}</h2>
+      <p class="m-0 text-[15px] text-texto-2">{p.profesion}. Atiende personalmente cada pedido.</p>
+    </div>
+    <p class="m-0 inline-flex items-center gap-2 self-start rounded-[10px] bg-azul-claro px-3 py-1.5 text-sm font-semibold text-azul-oscuro">
+      <Icono nombre="escudo" tamano={18} />
+      Registro profesional {p.registro}
+    </p>
+    {
+      p.frase && (
+        <p class="m-0 border-l-[3px] border-azul pl-3 text-[15px] leading-relaxed text-texto-cuerpo">«{p.frase}»</p>
+      )
+    }
+    <a
+      href={enlaceWhatsApp(config.whatsapp, MENSAJE_GENERAL)}
+      class="inline-flex min-h-11 items-center gap-2 self-start text-[15.5px] font-semibold text-azul"
+    >
+      <Icono nombre="chat" tamano={18} />
+      Escríbeme por WhatsApp
+    </a>
+  </div>
+  <ul aria-label="Datos de la droguería" class="mx-3.5 mt-4.5 mb-0 flex list-none flex-col gap-2 p-0 text-[14.5px] leading-snug">
+    <li class="flex items-start gap-2.5">
+      <Icono nombre="escudo" class="mt-px text-azul" />
+      Droguería inscrita ante {config.autoridadSalud}, código {config.codigoInscripcion}
+    </li>
+    <li class="flex items-start gap-2.5">
+      <Icono nombre="reloj" class="mt-px text-azul" />
+      Atendemos {config.horario}
+    </li>
+    <li class="flex items-start gap-2.5">
+      <Icono nombre="ubicacion" class="mt-px text-azul" />
+      Domicilio en {config.tiempoEntrega} a {config.zonasCobertura}
+    </li>
+  </ul>
+</aside>

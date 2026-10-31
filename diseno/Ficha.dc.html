@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Detalle del producto</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div onKeyDown="{{ onKey }}" style="position: {{ pos }}; top: 0; right: 0; bottom: 0; left: 0; z-index: 60; box-sizing: border-box; display: flex; align-items: flex-start; justify-content: center; padding: {{ pad }}; background: {{ fondo }}; overflow-y: auto; color: #1B2A3A; font-family: 'Lexend', system-ui, sans-serif; font-size: 16px; line-height: 1.55;">
+  <div role="dialog" aria-modal="true" aria-labelledby="ficha-titulo" style="position: relative; width: 100%; max-width: 980px; box-sizing: border-box; display: flex; flex-direction: column; gap: 26px; padding: clamp(18px, 3vw, 36px); background: #FFFFFF; border-radius: {{ radio }}; box-shadow: {{ sombra }};">
+
+    <button id="ficha-cerrar" type="button" onClick="{{ cerrar }}" aria-label="Cerrar detalles del producto" style="position: absolute; right: 14px; top: 14px; z-index: 2; width: 46px; height: 46px; border: 2px solid #1B2A3A; border-radius: 12px; background: #FFFFFF; color: #1B2A3A; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 24px 40px;">
+
+      <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+        <div style="position: relative; height: clamp(240px, 28vw, 340px); border-radius: 18px; background: {{ p.tint }}; display: flex; align-items: center; justify-content: center;">
+          <sc-if value="{{ p.conDesc }}" hint-placeholder-val="{{ false }}">
+            <span style="position: absolute; left: 14px; top: 14px; padding: 4px 12px; border-radius: 999px; background: #8A4B14; color: #FFFFFF; font-size: 13px; font-weight: 600;">{{ p.descTxt }}</span>
+          </sc-if>
+          <sc-if value="{{ p.esCaja }}" hint-placeholder-val="{{ true }}">
+            <svg aria-hidden="true" width="160" height="176" viewBox="0 0 100 110" fill="none" stroke="#1B2A3A" stroke-width="1.6" stroke-linejoin="round"><path d="M20 32 L40 20 L84 20 L64 32 Z" fill="#FFFFFF"></path><path d="M64 32 L84 20 L84 90 L64 102 Z" fill="#EEF2F6"></path><rect x="20" y="32" width="44" height="70" fill="#FFFFFF"></rect><rect x="20" y="58" width="44" height="16" fill="{{ p.color }}"></rect><path d="M27 42 H50 M27 48 H44" stroke-linecap="round"></path></svg>
+          </sc-if>
+          <sc-if value="{{ p.esFrasco }}" hint-placeholder-val="{{ false }}">
+            <svg aria-hidden="true" width="160" height="176" viewBox="0 0 100 110" fill="none" stroke="#1B2A3A" stroke-width="1.6" stroke-linejoin="round"><rect x="38" y="8" width="24" height="16" rx="3" fill="{{ p.color }}"></rect><path d="M41 24 H59 V32 H41 Z" fill="#FFFFFF"></path><rect x="26" y="32" width="48" height="70" rx="12" fill="#FFFFFF"></rect><path d="M26 52 H74 V80 H26 Z" fill="{{ p.color }}"></path></svg>
+          </sc-if>
+          <sc-if value="{{ p.esTubo }}" hint-placeholder-val="{{ false }}">
+            <svg aria-hidden="true" width="160" height="176" viewBox="0 0 100 110" fill="none" stroke="#1B2A3A" stroke-width="1.6" stroke-linejoin="round"><rect x="30" y="8" width="40" height="8" rx="2" fill="{{ p.color }}"></rect><path d="M30 16 H70 L64 86 H36 Z" fill="#FFFFFF"></path><path d="M32.5 40 H67.5 L65.8 60 H34.2 Z" fill="{{ p.color }}"></path><rect x="42" y="86" width="16" height="16" rx="3" fill="#FFFFFF"></rect></svg>
+          </sc-if>
+          <sc-if value="{{ p.esPaquete }}" hint-placeholder-val="{{ false }}">
+            <svg aria-hidden="true" width="160" height="176" viewBox="0 0 100 110" fill="none" stroke="#1B2A3A" stroke-width="1.6" stroke-linejoin="round"><path d="M22 24 L30 16 L38 24 L46 16 L54 24 L62 16 L70 24 L78 16 V96 A6 6 0 0 1 72 102 H28 A6 6 0 0 1 22 96 Z" fill="#FFFFFF"></path><rect x="22" y="44" width="56" height="22" fill="{{ p.color }}"></rect><path d="M32 80 H58 M32 87 H50" stroke-linecap="round"></path></svg>
+          </sc-if>
+        </div>
+        <div aria-hidden="true" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;">
+          <div style="height: 64px; border: 2px solid #1E5AA0; border-radius: 12px; background: {{ p.tint }};"></div>
+          <div style="height: 64px; border: 1px dashed #A9BCD0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #52606F;">[Foto 2]</div>
+          <div style="height: 64px; border: 1px dashed #A9BCD0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #52606F;">[Foto 3]</div>
+          <div style="height: 64px; border: 1px dashed #A9BCD0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #52606F;">[Foto 4]</div>
+        </div>
+      </div>
+
+      <div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 12px; padding-top: 4px;">
+        <p style="margin: 0; padding-right: 56px; display: flex; align-items: center; gap: 8px; font-size: 14px; color: #52606F;">
+          <span aria-hidden="true" style="flex: none; width: 10px; height: 10px; border-radius: 50%; background: {{ p.color }};"></span>
+          {{ p.catNombre }}
+        </p>
+        <h2 id="ficha-titulo" style="margin: 0; padding-right: 56px; font-size: clamp(24px, 2.6vw, 32px); font-weight: 600; line-height: 1.18;">{{ p.n }}</h2>
+        <p style="margin: 0; font-size: 15px; color: #52606F;">{{ p.lab }}, {{ p.pres }}</p>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center;">
+          <span style="padding: 4px 12px; border-radius: 999px; background: {{ p.condBg }}; color: {{ p.condFg }}; font-size: 13.5px; font-weight: 600;">{{ p.condTxt }}</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: {{ p.dispColor }};">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>
+            {{ p.dispTxt }}
+          </span>
+        </div>
+
+        <sc-if value="{{ p.libre }}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 4px;">
+            <p style="margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px;">
+              <span style="font-size: 32px; font-weight: 700; line-height: 1.1;">{{ p.precioTxt }}</span>
+              <sc-if value="{{ p.conDesc }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size: 15px; color: #52606F;">Antes <s>{{ p.antesTxt }}</s></span>
+              </sc-if>
+            </p>
+            <sc-if value="{{ p.hasPum }}" hint-placeholder-val="{{ true }}">
+              <p style="margin: 0; font-size: 14px; color: #52606F;">{{ p.pumTxt }}</p>
+            </sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{ p.rx }}" hint-placeholder-val="{{ false }}">
+          <p style="margin: 4px 0 0; padding: 12px 14px; border-radius: 12px; background: #F6E9EF; color: #5E2F47; font-size: 15px; line-height: 1.5;">Para comprarlo, envíanos la foto de tu fórmula médica vigente. Te confirmamos disponibilidad y precio por WhatsApp.</p>
+        </sc-if>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+          <sc-if value="{{ p.zero }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ p.add }}" style="width: 100%; min-height: 54px; border: 0; border-radius: 14px; background: #1E5AA0; color: #FFFFFF; font-family: inherit; font-size: 17px; font-weight: 600; cursor: pointer;">Agregar al pedido</button>
+          </sc-if>
+          <sc-if value="{{ p.some }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <div role="group" aria-label="{{ p.grupoAria }}" style="display: flex; align-items: center; border-radius: 14px; background: #EAF2FB; border: 2px solid #1E5AA0;">
+                <button type="button" onClick="{{ p.dec }}" aria-label="{{ p.decAria }}" style="width: 52px; height: 50px; border: 0; background: transparent; color: #1E5AA0; font-family: inherit; font-size: 24px; font-weight: 600; cursor: pointer;">−</button>
+                <span style="min-width: 32px; text-align: center; font-size: 18px; font-weight: 700;">{{ p.qty }}</span>
+                <button type="button" onClick="{{ p.inc }}" aria-label="{{ p.incAria }}" style="width: 52px; height: 50px; border: 0; background: transparent; color: #1E5AA0; font-family: inherit; font-size: 24px; font-weight: 600; cursor: pointer;">+</button>
+              </div>
+              <p role="status" style="margin: 0; font-size: 15px; font-weight: 500; color: #1E5AA0;">En tu pedido</p>
+            </div>
+          </sc-if>
+          <sc-if value="{{ p.avisar }}" hint-placeholder-val="{{ false }}">
+            <button type="button" style="width: 100%; min-height: 54px; border: 2px solid #52606F; border-radius: 14px; background: #FFFFFF; color: #1B2A3A; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer;">Preguntar disponibilidad por WhatsApp</button>
+          </sc-if>
+          <sc-if value="{{ p.rx }}" hint-placeholder-val="{{ false }}">
+            <button type="button" style="width: 100%; min-height: 54px; border: 0; border-radius: 14px; background: #7B3F5E; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer;">Enviar fórmula por WhatsApp</button>
+          </sc-if>
+          <p style="margin: 0; display: flex; align-items: flex-start; gap: 8px; font-size: 14px; line-height: 1.5; color: #52606F;">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex: none; margin-top: 2px;"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+            Domicilio en [tiempo] a [barrios o zonas de cobertura].
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 24px 40px; align-items: flex-start;">
+      <div style="flex: 1 1 340px; min-width: 0;">
+        <details open="{{ yes }}" style="border-top: 1px solid #D5DFEA; border-bottom: 1px solid #D5DFEA;">
+          <summary style="padding: 14px 0; font-size: 16.5px; font-weight: 600; cursor: pointer;">Para qué sirve</summary>
+          <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.65; color: #3B4A5A;">{{ p.sirve }}</p>
+        </details>
+        <details style="border-bottom: 1px solid #D5DFEA;">
+          <summary style="padding: 14px 0; font-size: 16.5px; font-weight: 600; cursor: pointer;">Cómo se usa</summary>
+          <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.65; color: #3B4A5A;">{{ p.uso }}</p>
+        </details>
+        <details style="border-bottom: 1px solid #D5DFEA;">
+          <summary style="padding: 14px 0; font-size: 16.5px; font-weight: 600; cursor: pointer;">Advertencias</summary>
+          <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.65; color: #3B4A5A;">{{ p.advertencias }}</p>
+        </details>
+      </div>
+      <section aria-labelledby="ficha-info" style="flex: 1 1 340px; min-width: 0; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #F5F8FC;">
+        <h3 id="ficha-info" style="margin: 0 0 10px; font-size: 16.5px; font-weight: 600;">Información del producto</h3>
+        <dl style="margin: 0; display: flex; flex-direction: column;">
+          <sc-for list="{{ p.filas }}" as="f" hint-placeholder-count="6">
+            <div style="display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 12px; padding: 9px 0; border-bottom: 1px solid #E4EAF1;">
+              <dt style="font-size: 14px; color: #52606F;">{{ f.k }}</dt>
+              <dd style="margin: 0; font-size: 14.5px; font-weight: 500;">{{ f.v }}</dd>
+            </div>
+          </sc-for>
+        </dl>
+      </section>
+    </div>
+
+    <sc-if value="{{ p.hasLeyenda }}" hint-placeholder-val="{{ true }}">
+      <p style="margin: 0; padding: 12px 16px; border-radius: 12px; background: #EAF2FB; color: #173F72; font-size: 15px; font-weight: 600;">{{ p.leyenda }}</p>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"item":{"editor":null},"onClose":{"editor":null},"$preview":{"width":980,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { qty: 0 };
+  }
+  componentDidMount() {
+    if (this.props.item) {
+      var el = document.getElementById('ficha-cerrar');
+      if (el && el.focus) { try { el.focus(); } catch (e) {} }
+    }
+  }
+  renderVals() {
+    var self = this;
+    var enPagina = !!this.props.item;
+    var cerrar = function () { if (typeof self.props.onClose === 'function') self.props.onClose(); };
+    var p = this.props.item;
+    if (!p) {
+      var q = this.state.qty;
+      p = {
+        n: 'Acetaminofén 500 mg',
+        pres: 'Caja × 10 tabletas',
+        catNombre: 'Dolor y fiebre',
+        color: '#D9963F',
+        tint: '#FBEBD6',
+        esCaja: true, esFrasco: false, esTubo: false, esPaquete: false,
+        precioTxt: '$3.500',
+        conDesc: false, antesTxt: '', descTxt: '',
+        rx: false, libre: true, agotado: false, avisar: false,
+        qty: q, zero: q === 0, some: q > 0,
+        hasPum: true,
+        pumTxt: 'Precio por unidad: $350 por tableta',
+        lab: '[Laboratorio]',
+        condTxt: 'Venta libre', condBg: '#EAF2FB', condFg: '#173F72',
+        dispTxt: 'Disponible para domicilio', dispColor: '#1E5AA0',
+        sirve: '[Indicaciones tal como aparecen en el registro sanitario o en el inserto aprobado por el Invima.]',
+        uso: '[Modo de uso y dosis tal como aparecen en el empaque.] Si tienes dudas, escríbenos antes de usarlo.',
+        advertencias: '[Contraindicaciones, precauciones e interacciones del inserto.]',
+        leyenda: 'Si los síntomas persisten, consulte a su médico.',
+        hasLeyenda: true,
+        filas: [
+          { k: 'Laboratorio', v: '[Laboratorio]' },
+          { k: 'Principio activo', v: 'Acetaminofén' },
+          { k: 'Concentración', v: '500 mg' },
+          { k: 'Forma farmacéutica', v: 'Tableta' },
+          { k: 'Presentación', v: 'Caja × 10 tabletas' },
+          { k: 'Registro sanitario Invima', v: 'INVIMA [número]' },
+          { k: 'Condición de venta', v: 'Venta libre' }
+        ],
+        grupoAria: 'Cantidad de Acetaminofén 500 mg',
+        decAria: 'Quitar una unidad: Acetaminofén 500 mg',
+        incAria: 'Agregar una unidad: Acetaminofén 500 mg',
+        add: function () { self.setState({ qty: 1 }); },
+        inc: function () { self.setState({ qty: self.state.qty + 1 }); },
+        dec: function () { self.setState({ qty: Math.max(0, self.state.qty - 1) }); }
+      };
+    }
+    return {
+      p: p,
+      yes: true,
+      cerrar: cerrar,
+      onKey: function (e) { if (e && e.key === 'Escape') { e.preventDefault(); cerrar(); } },
+      pos: enPagina ? 'fixed' : 'relative',
+      pad: enPagina ? 'clamp(0px, 4vw - 12px, 48px)' : '0',
+      fondo: enPagina ? 'rgba(27, 42, 58, 0.5)' : 'transparent',
+      radio: enPagina ? 'clamp(0px, 2vw - 4px, 24px)' : '0',
+      sombra: enPagina ? '0 24px 64px rgba(23, 63, 114, 0.28)' : 'none'
+    };
+  }
+}
+</script>
+</body>
+</html>

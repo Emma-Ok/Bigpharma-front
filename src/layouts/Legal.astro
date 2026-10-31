@@ -1,0 +1,43 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  actualizado: string;
+}
+
+const { titulo, descripcion, actualizado } = Astro.props;
+---
+
+<Base titulo={titulo} descripcion={descripcion}>
+  <article class="legal mx-auto w-full max-w-[72ch] px-margen pt-8 pb-16 leading-relaxed text-texto-cuerpo">
+    <p class="m-0 mb-6 rounded-boton bg-miel px-4 py-3 text-[15px] font-semibold text-tinta" role="note">
+      Texto base pendiente de revisión legal. No lo publiques sin la aprobación de un abogado.
+    </p>
+    <slot />
+    <p class="mt-10 text-sm text-texto-2">Última actualización: {actualizado}.</p>
+  </article>
+</Base>
+
+<style>
+  .legal :global(h1) {
+    margin: 0 0 1rem;
+    font-size: clamp(28px, 3vw, 36px);
+    line-height: 1.15;
+    font-weight: 600;
+    color: var(--color-tinta);
+  }
+  .legal :global(h2) {
+    margin: 2rem 0 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-tinta);
+  }
+  .legal :global(ul) {
+    padding-left: 1.25rem;
+  }
+  .legal :global(li) {
+    margin: 0.25rem 0;
+  }
+</style>

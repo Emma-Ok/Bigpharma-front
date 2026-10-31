@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Droguería a domicilio en [tu barrio] | [Nombre de la droguería]</title>
+<meta name="description" content="Pide medicamentos de venta libre y productos de cuidado a domicilio en [tu barrio]. Domicilio gratis desde [monto]. Consulta medicamentos con fórmula y agenda inyectología en casa.">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+a{color:#1E5AA0}a:hover{color:#173F72}
+:focus-visible{outline:3px solid #1B2A3A;outline-offset:3px}
+.skip{position:absolute;left:16px;top:-60px;z-index:40;background:#1B2A3A;color:#FFFFFF;padding:12px 16px;border-radius:10px;font-weight:600;text-decoration:none}
+.skip:focus{top:16px;color:#FFFFFF}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+</style>
+</helmet>
+<div style="width: 100%; position: relative; background: #FFFFFF; color: #1B2A3A; font-family: 'Lexend', system-ui, sans-serif;">
+  <a class="skip" href="#catalogo">Saltar al catálogo</a>
+  <dc-import name="Contenido" hint-size="100%,3400px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

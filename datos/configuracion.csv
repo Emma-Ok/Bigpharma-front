@@ -1,0 +1,21 @@
+clave,valor,notas
+nombre_drogueria,[Nombre de la droguería],
+whatsapp,57[número sin espacios],"Formato para wa.me, ej.: 573001234567"
+domicilio_gratis_desde,60000,"Pesos. Alimenta el aviso, el banner y la barra de progreso."
+costo_domicilio,0,[valor] para pedidos menores al mínimo
+tiempo_entrega,[tiempo],Ej.: 40 a 60 minutos
+zonas_cobertura,[barrios o zonas],
+horario,[días y horas],
+barrio,[tu barrio],Aparece en el titular de la portada
+aviso_1,Domicilio gratis en compras desde $60.000,Barra superior
+aviso_2,[Marca]: 15 % de descuento en [producto] hasta el [fecha],Barra superior
+aviso_3,"Atendemos de [hora] a [hora], [días]",Barra superior
+profesional_nombre,[Nombre del profesional],
+profesional_profesion,[Profesión],
+profesional_registro,[número],Registro profesional
+profesional_frase,[Una frase suya en primera persona],
+profesional_foto,[URL de la foto],Retrato con buena luz
+drogueria_codigo_inscripcion,[código],Inscripción ante la secretaría de salud
+autoridad_salud,[autoridad de salud],Ej.: Secretaría Distrital de Salud
+razon_social,[Razón social],Pie de página
+nit,[número],Pie de página

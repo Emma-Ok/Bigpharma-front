@@ -1,0 +1,38 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { cargarDatos } from '../lib/datos';
+import { formatearPrecio } from '../lib/formato';
+
+const { configuracion: c } = await cargarDatos();
+---
+
+<Legal
+  titulo={`Términos y condiciones de las promociones | ${c.nombreDrogueria}`}
+  descripcion="Condiciones de las promociones y del domicilio gratis de la droguería."
+  actualizado="[fecha]"
+>
+  <h1>Términos y condiciones de las promociones</h1>
+
+  <h2>Precios</h2>
+  <p>
+    Los precios del sitio están en pesos colombianos. El total final, con domicilio, te lo confirmamos por WhatsApp antes de cobrar.
+  </p>
+
+  <h2>Promociones</h2>
+  <ul>
+    <li>Cada promoción indica su vigencia. Aplica hasta esa fecha o hasta agotar existencias.</li>
+    <li>Las promociones no son acumulables entre sí, salvo que se indique lo contrario.</li>
+    <li>No aplican a medicamentos con fórmula médica.</li>
+  </ul>
+
+  <h2>Domicilio gratis</h2>
+  <p>
+    El domicilio es gratis en compras desde {formatearPrecio(c.domicilioGratisDesde)} dentro de {c.zonasCobertura}. En pedidos menores o
+    fuera de esa zona, te confirmamos el valor por WhatsApp.
+  </p>
+
+  <h2>Medicamentos</h2>
+  <p>
+    Los medicamentos con fórmula médica solo se despachan con una fórmula vigente. Si los síntomas persisten, consulte a su médico.
+  </p>
+</Legal>

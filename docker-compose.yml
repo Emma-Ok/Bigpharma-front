@@ -1,0 +1,35 @@
+name: bigpharma
+
+services:
+  web:
+    build: .
+    image: bigpharma-web:dev
+    init: true
+    ports:
+      - "4321:4321"
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      - npm-cache:/home/node/.npm
+
+  # Fase de pruebas: Playwright + axe contra el servidor de "web".
+  # La versión de la imagen debe ser la misma de @playwright/test en package.json (1.62.1).
+  pruebas:
+    image: mcr.microsoft.com/playwright:v1.62.1-jammy
+    profiles: ["pruebas"]
+    user: pwuser
+    init: true
+    ipc: host
+    working_dir: /app
+    depends_on:
+      - web
+    environment:
+      BASE_URL: http://web:4321
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    command: ["npm", "run", "test:e2e"]
+
+volumes:
+  node_modules:
+  npm-cache:

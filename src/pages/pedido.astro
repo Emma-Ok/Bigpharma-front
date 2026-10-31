@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import PaginaPedido from '../components/PaginaPedido';
+import { cargarDatos } from '../lib/datos';
+import { resumir } from '../lib/catalogo';
+
+const { productos, configuracion } = await cargarDatos();
+---
+
+<Base
+  titulo={`Tu pedido | ${configuracion.nombreDrogueria}`}
+  descripcion="Revisa tu pedido, escribe tus datos de entrega y envíalo por WhatsApp."
+  noindex
+  sinBarraPedido
+>
+  <div class="mx-auto flex w-full max-w-sitio flex-col gap-5 px-margen pt-6 pb-14">
+    <h1 class="m-0 text-[clamp(28px,3vw,38px)] leading-tight font-semibold">Tu pedido</h1>
+    <PaginaPedido
+      client:load
+      productos={productos.map(resumir)}
+      whatsapp={configuracion.whatsapp}
+      umbral={configuracion.domicilioGratisDesde}
+    />
+  </div>
+</Base>

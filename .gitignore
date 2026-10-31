@@ -1,0 +1,47 @@
+# Dependencias (viven en el volumen de Docker)
+node_modules/
+
+# Salida del build y caché de Astro
+dist/
+.astro/
+
+# Cloudflare / Wrangler
+.wrangler/
+.dev.vars
+.dev.vars.*
+
+# Variables de entorno (las URLs de la hoja y claves no se suben)
+.env
+.env.*
+!.env.example
+
+# Pruebas, informes y capturas
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+coverage/
+
+# Registros
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Archivos que agrega Windows al descargar (WSL) y del sistema
+*:Zone.Identifier
+*Zone.Identifier
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*~
+
+# Configuración local de Claude Code (la skill del proyecto sí se versiona)
+.claude/settings.local.json

@@ -1,0 +1,61 @@
+---
+// Fondo decorativo del hero: imagen estática de la escena (SVG en línea, generado con
+// scripts/generar-capsulas.mjs) y, en escritorio, la escena 3D con three.js.
+// Es SVG vectorial en línea y no <img>: así nunca compite como elemento LCP con el titular.
+import capsulas from '../assets/capsulas.svg?raw';
+---
+
+<div class="escena-capsulas pointer-events-none absolute inset-0 z-0" aria-hidden="true" data-escena-capsulas>
+  <div class="capsulas-estaticas absolute inset-0 transition-opacity duration-lenta [&>svg]:size-full" set:html={capsulas} />
+</div>
+
+<style>
+  .escena-capsulas[data-escena-lista] .capsulas-estaticas {
+    opacity: 0;
+  }
+</style>
+
+<script>
+  type Conexion = { saveData?: boolean };
+  type Navegador = Navigator & { connection?: Conexion; deviceMemory?: number };
+
+  /** Condiciones de docs/MOVIMIENTO-Y-3D.md para cargar three.js; si no se cumplen, queda la imagen estática. */
+  function puedeCargarEscena(): boolean {
+    const n = navigator as Navegador;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+    if (window.innerWidth < 768) return false;
+    if (n.connection?.saveData === true) return false;
+    if (typeof n.deviceMemory === 'number' && n.deviceMemory < 4) return false;
+    try {
+      const c = document.createElement('canvas');
+      return !!(c.getContext('webgl2') || c.getContext('webgl'));
+    } catch {
+      return false;
+    }
+  }
+
+  let destruir: (() => void) | undefined;
+
+  function cuandoEsteLibre(fn: () => void) {
+    if ('requestIdleCallback' in window) window.requestIdleCallback(fn, { timeout: 2000 });
+    else setTimeout(fn, 200);
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    const contenedor = document.querySelector<HTMLElement>('[data-escena-capsulas]');
+    if (!contenedor || !puedeCargarEscena()) return;
+    const iniciar = () =>
+      cuandoEsteLibre(async () => {
+        if (!contenedor.isConnected) return;
+        const { iniciarEscena } = await import('../scripts/capsulas');
+        destruir = iniciarEscena(contenedor);
+      });
+    if (document.readyState === 'complete') iniciar();
+    else window.addEventListener('load', iniciar, { once: true });
+  });
+
+  document.addEventListener('astro:before-swap', () => {
+    destruir?.();
+    destruir = undefined;
+  });
+</script>

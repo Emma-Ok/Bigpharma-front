@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Catálogo de productos | [Nombre de la droguería]</title>
+<meta name="description" content="Catálogo de [Nombre de la droguería]: medicamentos de venta libre, cuidado personal, bebés y primeros auxilios con domicilio en [tu barrio].">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div ref="{{ setRoot }}" style="width: 100%; display: flex; flex-direction: column; background: #FFFFFF; color: #1B2A3A; font-family: 'Lexend', system-ui, sans-serif; font-size: 16px; line-height: 1.55;">
+
+  <p style="margin: 0; background: #173F72; color: #FFFFFF;">
+    <span style="display: block; max-width: 1280px; margin: 0 auto; box-sizing: border-box; padding: 12px clamp(16px, 4vw, 32px); text-align: center; font-size: 14.5px; font-weight: 500; line-height: 1.35;">Domicilio gratis en compras desde {{ umbralTxt }}</span>
+  </p>
+
+  <header style="background: #FFFFFF; border-bottom: 1px solid #E4EAF1;">
+    <div style="max-width: 1280px; margin: 0 auto; box-sizing: border-box; padding: 10px clamp(16px, 4vw, 32px); display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+      <a href="{{ inicioHref }}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; color: #1B2A3A; text-decoration: none;">
+        <span aria-hidden="true" style="flex: none; width: 38px; height: 38px; border-radius: 11px; background: #1E5AA0; color: #FFFFFF; display: flex; align-items: center; justify-content: center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 6v12M6 12h12"></path></svg>
+        </span>
+        <span style="display: flex; flex-direction: column;">
+          <span style="font-size: 18px; font-weight: 600; line-height: 1.15;">[Nombre de la droguería]</span>
+          <span style="font-size: 13px; color: #52606F;">Droguería a domicilio</span>
+        </span>
+      </a>
+      <a href="Carrito.dc.html" aria-label="{{ carritoAria }}" style="display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 14px; border-radius: 12px; background: #1E5AA0; color: #FFFFFF; font-size: 15px; font-weight: 600; text-decoration: none;">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7z"></path><path d="M9 7a3 3 0 0 1 6 0"></path></svg>
+        <span aria-hidden="true">{{ carritoTxt }}</span>
+      </a>
+    </div>
+  </header>
+
+  <main style="max-width: 1280px; width: 100%; margin: 0 auto; box-sizing: border-box; padding: 16px clamp(16px, 4vw, 32px) 48px; display: flex; flex-direction: column; gap: 18px;">
+
+    <nav aria-label="Ruta de navegación">
+      <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 14.5px; color: #52606F;">
+        <li><a href="{{ inicioHref }}" style="display: inline-flex; align-items: center; min-height: 36px; color: #1E5AA0; font-weight: 500;">Inicio</a></li>
+        <li aria-hidden="true">/</li>
+        <li><span aria-current="page">Catálogo</span></li>
+      </ol>
+    </nav>
+
+    <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px;">
+      <h1 style="margin: 0; font-size: clamp(28px, 3vw, 40px); font-weight: 600; line-height: 1.15;">Catálogo de productos</h1>
+      <p aria-live="polite" style="margin: 0; font-size: 15px; color: #52606F;">{{ rangoTxt }}</p>
+    </div>
+
+    <form role="search" onSubmit="{{ buscar }}" style="display: flex; flex-direction: column; gap: 6px;">
+      <label for="q-catalogo" style="font-size: 15px; font-weight: 600;">Busca por nombre o síntoma</label>
+      <div style="display: flex; height: 58px; box-sizing: border-box; border: 2px solid #52606F; border-radius: 14px; background: #FFFFFF; overflow: hidden;">
+        <input id="q-catalogo" type="search" value="{{ q }}" onChange="{{ setQ }}" placeholder="Ej.: ibuprofeno, suero, gripa" autocomplete="off" aria-controls="resultados" style="flex: 1 1 auto; min-width: 0; border: 0; padding: 0 16px; background: transparent; color: #1B2A3A; font-family: inherit; font-size: 16.5px;">
+        <button type="submit" aria-label="Buscar" style="flex: none; width: 56px; border: 0; border-left: 1px solid #D5DFEA; background: #EAF2FB; color: #1E5AA0; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+        </button>
+      </div>
+    </form>
+
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px;">
+      <sc-if value="{{ narrow }}" hint-placeholder-val="{{ true }}">
+        <button type="button" onClick="{{ toggleFiltros }}" aria-expanded="{{ filtros }}" aria-controls="panel-filtros" style="display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 16px; border: 2px solid #1E5AA0; border-radius: 12px; background: #FFFFFF; color: #1E5AA0; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"></path></svg>
+          {{ filtrosTxt }}
+        </button>
+      </sc-if>
+      <div style="display: flex; flex-direction: column; gap: 4px; margin-left: auto;">
+        <label for="orden" style="font-size: 14px; font-weight: 600;">Ordenar por</label>
+        <select id="orden" value="{{ orden }}" onChange="{{ setOrden }}" style="min-height: 46px; padding: 0 12px; border: 2px solid #52606F; border-radius: 12px; background: #FFFFFF; color: #1B2A3A; font-family: inherit; font-size: 15px;">
+          <option value="az">Nombre (A–Z)</option>
+          <option value="menor">Menor precio</option>
+          <option value="mayor">Mayor precio</option>
+          <option value="desc">Con descuento primero</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start;">
+
+      <sc-if value="{{ verFiltros }}" hint-placeholder-val="{{ true }}">
+        <div id="panel-filtros" style="flex: 1 1 230px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 22px; padding: 18px; border: 1px solid #D5DFEA; border-radius: 16px; background: #FFFFFF;">
+          <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 2px;">
+            <legend style="padding: 0; margin-bottom: 8px; font-size: 16px; font-weight: 600;">Categoría</legend>
+            <sc-for list="{{ catOpts }}" as="c" hint-placeholder-count="8">
+              <label style="display: flex; align-items: center; gap: 10px; min-height: 40px; font-size: 15px; cursor: pointer;">
+                <input type="radio" name="categoria" checked="{{ c.sel }}" onChange="{{ c.pick }}" style="width: 20px; height: 20px; margin: 0; accent-color: #1E5AA0;">
+                <span aria-hidden="true" style="flex: none; width: 10px; height: 10px; border-radius: 50%; background: {{ c.color }};"></span>
+                <span style="flex: 1 1 auto;">{{ c.nombre }}</span>
+                <span style="font-size: 13.5px; color: #52606F;">{{ c.n }}</span>
+              </label>
+            </sc-for>
+          </fieldset>
+          <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 2px;">
+            <legend style="padding: 0; margin-bottom: 8px; font-size: 16px; font-weight: 600;">Tipo de producto</legend>
+            <sc-for list="{{ tipoOpts }}" as="t" hint-placeholder-count="3">
+              <label style="display: flex; align-items: center; gap: 10px; min-height: 40px; font-size: 15px; cursor: pointer;">
+                <input type="radio" name="tipo" checked="{{ t.sel }}" onChange="{{ t.pick }}" style="width: 20px; height: 20px; margin: 0; accent-color: #1E5AA0;">
+                {{ t.nombre }}
+              </label>
+            </sc-for>
+          </fieldset>
+          <label style="display: flex; align-items: center; gap: 10px; min-height: 40px; font-size: 15px; cursor: pointer;">
+            <input type="checkbox" checked="{{ soloDesc }}" onChange="{{ toggleDesc }}" style="width: 20px; height: 20px; margin: 0; accent-color: #1E5AA0;">
+            Solo productos con descuento
+          </label>
+          <sc-if value="{{ hayFiltros }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ limpiar }}" style="align-self: flex-start; min-height: 44px; padding: 0; border: 0; background: transparent; color: #1E5AA0; font-family: inherit; font-size: 15px; font-weight: 600; text-decoration: underline; cursor: pointer;">Borrar filtros</button>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <div id="resultados" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 20px;">
+        <sc-if value="{{ vacio }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 12px; padding: 24px; border: 1px dashed #A9BCD0; border-radius: 16px;">
+            <p style="margin: 0; font-size: 19px; font-weight: 600;">No hay productos con esos filtros</p>
+            <p style="margin: 0; font-size: 15.5px; color: #52606F;">Cambia la búsqueda o pregúntanos si lo conseguimos.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;">
+              <button type="button" style="min-height: 46px; padding: 0 18px; border: 0; border-radius: 12px; background: #1E5AA0; color: #FFFFFF; font-family: inherit; font-size: 15.5px; font-weight: 600; cursor: pointer;">Preguntar por WhatsApp</button>
+              <button type="button" onClick="{{ limpiar }}" style="min-height: 44px; padding: 0; border: 0; background: transparent; color: #1E5AA0; font-family: inherit; font-size: 15.5px; font-weight: 600; text-decoration: underline; cursor: pointer;">Borrar filtros</button>
+            </div>
+          </div>
+        </sc-if>
+        <ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: {{ gridCols }}; gap: 14px;">
+          <sc-for list="{{ items }}" as="p" hint-placeholder-count="10">
+            <li style="display: flex; min-width: 0;">
+              <dc-import name="Tarjeta" item="{{ p }}" hint-size="100%,350px"></dc-import>
+            </li>
+          </sc-for>
+        </ul>
+        <sc-if value="{{ hayPaginas }}" hint-placeholder-val="{{ true }}">
+          <nav aria-label="Páginas del catálogo" style="display: flex; justify-content: center;">
+            <ul style="list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 6px;">
+              <li>
+                <button type="button" onClick="{{ pagPrev }}" disabled="{{ prevDis }}" aria-label="Página anterior" style="width: 44px; height: 44px; border: 1px solid #C5D3E2; border-radius: 12px; background: #FFFFFF; color: #1B2A3A; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: {{ prevOp }};">
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>
+                </button>
+              </li>
+              <sc-for list="{{ paginas }}" as="pg" hint-placeholder-count="2">
+                <li>
+                  <button type="button" onClick="{{ pg.pick }}" aria-label="{{ pg.aria }}" aria-current="{{ pg.cur }}" style="min-width: 44px; height: 44px; border: {{ pg.border }}; border-radius: 12px; background: {{ pg.bg }}; color: {{ pg.fg }}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">{{ pg.n }}</button>
+                </li>
+              </sc-for>
+              <li>
+                <button type="button" onClick="{{ pagNext }}" disabled="{{ nextDis }}" aria-label="Página siguiente" style="width: 44px; height: 44px; border: 1px solid #C5D3E2; border-radius: 12px; background: #FFFFFF; color: #1B2A3A; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: {{ nextOp }};">
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </sc-if>
+      </div>
+    </div>
+  </main>
+
+  <footer style="background: #EAF2FB; color: #1B2A3A;">
+    <div style="max-width: 1280px; margin: 0 auto; box-sizing: border-box; padding: 28px clamp(16px, 4vw, 32px) 32px; display: flex; flex-wrap: wrap; gap: 16px 40px; align-items: center; justify-content: space-between;">
+      <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #52606F;">[Razón social], NIT [número]. Droguería inscrita ante [autoridad de salud]. Si los síntomas persisten, consulte a su médico.</p>
+      <a href="{{ inicioHref }}" style="display: inline-flex; align-items: center; min-height: 44px; color: #1E5AA0; font-size: 15px; font-weight: 600;">Volver al inicio</a>
+    </div>
+  </footer>
+
+  <sc-if value="{{ narrow }}" hint-placeholder-val="{{ true }}">
+    <div style="position: sticky; bottom: 0; z-index: 5; display: flex; flex-direction: column; background: #FFFFFF; border-top: 1px solid #D5DFEA; box-shadow: 0 -8px 24px rgba(27, 42, 58, 0.08);">
+      <div role="progressbar" aria-label="Avance hacia el domicilio gratis" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ pctNum }}" style="height: 5px; background: #E4EAF1;">
+        <div style="height: 100%; width: {{ pct }}; background: #1E5AA0;"></div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 10px 16px 16px;">
+        <p aria-live="polite" style="margin: 0; flex: 1 1 auto; display: flex; flex-direction: column; gap: 1px; min-width: 0;">
+          <span style="font-size: 15.5px; font-weight: 600;">{{ linea1 }}</span>
+          <span style="font-size: 13.5px; line-height: 1.35; color: #52606F;">{{ envioTxt }}</span>
+        </p>
+        <a href="Carrito.dc.html" style="flex: none; display: inline-flex; align-items: center; min-height: 48px; padding: 0 18px; border-radius: 12px; background: #1E5AA0; color: #FFFFFF; font-size: 15.5px; font-weight: 600; text-decoration: none;">Ver pedido</a>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hayDetalle }}" hint-placeholder-val="{{ false }}">
+    <dc-import name="Ficha" item="{{ detalle }}" on-close="{{ cerrarDetalle }}" hint-size="100%,600px"></dc-import>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"domicilioGratisDesde":{"editor":"int","default":60000,"min":0,"step":5000,"section":"Promociones"},"$preview":{"width":1440,"height":2500}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    var w = (typeof window !== 'undefined' && window.innerWidth) ? window.innerWidth : 1440;
+    this.state = { q: '', cat: 'todas', tipo: 'todos', soloDesc: false, orden: 'az', pagina: 0, qty: {}, ancho: w, filtros: false, detalle: null };
+    this._lastFocus = null;
+    this._ro = null;
+    this._setRoot = (el) => {
+      if (this._ro) { this._ro.disconnect(); this._ro = null; }
+      if (el && typeof ResizeObserver !== 'undefined') {
+        this._ro = new ResizeObserver((entries) => {
+          var width = Math.round(entries[0].contentRect.width);
+          if (width !== this.state.ancho) this.setState({ ancho: width });
+        });
+        this._ro.observe(el);
+      }
+    };
+  }
+  componentWillUnmount() {
+    if (this._ro) this._ro.disconnect();
+  }
+  renderVals() {
+    var self = this;
+    var st = this.state;
+    var umbral = this.props.domicilioGratisDesde ?? 60000;
+    var fmt = function (n) { return '$' + Number(n).toLocaleString('es-CO'); };
+    var norm = function (s) { return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); };
+    var ancho = st.ancho;
+    var wide = ancho >= 900;
+    var cols = ancho >= 1200 ? 5 : (ancho >= 900 ? 3 : (ancho >= 600 ? 3 : 2));
+    var porPagina = cols * 3;
+
+    var CATS = [
+      { id: 'todas', nombre: 'Todas', color: '#52606F', tint: '#F1F4F8', kw: '' },
+      { id: 'dolor', nombre: 'Dolor y fiebre', color: '#D9963F', tint: '#FBEBD6', kw: 'dolor cabeza fiebre muscular' },
+      { id: 'gripa', nombre: 'Gripa y alergias', color: '#6E9FC4', tint: '#E4EEF6', kw: 'gripa gripe alergia tos congestion nariz' },
+      { id: 'estomago', nombre: 'Estómago', color: '#7FB08F', tint: '#E5F0E8', kw: 'estomago diarrea acidez gases agrieras' },
+      { id: 'piel', nombre: 'Piel y cuidado', color: '#E7B9A0', tint: '#FBE8DE', kw: 'piel sol cuidado personal' },
+      { id: 'bebes', nombre: 'Bebés', color: '#B9A6D8', tint: '#EEE9F7', kw: 'bebe panal' },
+      { id: 'auxilios', nombre: 'Primeros auxilios', color: '#1E5AA0', tint: '#EAF2FB', kw: 'herida curacion fiebre' },
+      { id: 'formula', nombre: 'Con fórmula', color: '#7B3F5E', tint: '#F6E9EF', kw: 'formula receta' }
+    ];
+    var P = [
+      { id: 'a1', n: 'Acetaminofén 500 mg', pres: 'Caja × 10 tabletas', cat: 'dolor', precio: 3500, activo: 'Acetaminofén', conc: '500 mg', ff: 'Tableta', u: 10, uNom: 'tableta' },
+      { id: 'a2', n: 'Ibuprofeno 400 mg', pres: 'Caja × 10 tabletas', cat: 'dolor', precio: 4800, activo: 'Ibuprofeno', conc: '400 mg', ff: 'Tableta', u: 10, uNom: 'tableta' },
+      { id: 'a3', n: 'Naproxeno 250 mg', pres: 'Caja × 10 tabletas', cat: 'dolor', precio: 6900, activo: 'Naproxeno', conc: '250 mg', ff: 'Tableta', u: 10, uNom: 'tableta' },
+      { id: 'a4', n: 'Diclofenaco gel 1 %', pres: 'Tubo × 50 g', cat: 'dolor', precio: 14500, activo: 'Diclofenaco', conc: '1 %', ff: 'Gel tópico', u: 50, uNom: 'g' },
+      { id: 'b1', n: 'Loratadina 10 mg', pres: 'Caja × 10 tabletas', cat: 'gripa', precio: 5200, activo: 'Loratadina', conc: '10 mg', ff: 'Tableta', u: 10, uNom: 'tableta' },
+      { id: 'b2', n: 'Cetirizina 10 mg', pres: 'Caja × 10 tabletas', cat: 'gripa', precio: 6400, activo: 'Cetirizina', conc: '10 mg', ff: 'Tableta', u: 10, uNom: 'tableta' },
+      { id: 'b3', n: 'Guaifenesina jarabe', pres: 'Frasco × 120 ml', cat: 'gripa', precio: 12900, activo: 'Guaifenesina', conc: '[concentración]', ff: 'Jarabe', u: 120, uNom: 'ml' },
+      { id: 'b4', n: 'Solución salina nasal', pres: 'Frasco × 30 ml', cat: 'gripa', precio: 9800, activo: 'Cloruro de sodio', conc: '0,9 %', ff: 'Solución nasal', u: 30, uNom: 'ml' },
+      { id: 'c1', n: 'Suero oral', pres: 'Botella × 500 ml', cat: 'estomago', precio: 6200, activo: 'Sales de rehidratación oral', conc: '[concentración]', ff: 'Solución oral', u: 500, uNom: 'ml' },
+      { id: 'c2', n: 'Loperamida 2 mg', pres: 'Caja × 6 tabletas', cat: 'estomago', precio: 4200, activo: 'Loperamida', conc: '2 mg', ff: 'Tableta', u: 6, uNom: 'tableta' },
+      { id: 'c3', n: 'Hidróxido de aluminio y magnesio', pres: 'Frasco × 360 ml', cat: 'estomago', precio: 13500, activo: 'Hidróxido de aluminio e hidróxido de magnesio', conc: '[concentración]', ff: 'Suspensión oral', u: 360, uNom: 'ml' },
+      { id: 'c4', n: 'Simeticona gotas', pres: 'Frasco × 15 ml', cat: 'estomago', precio: 11200, activo: 'Simeticona', conc: '[concentración]', ff: 'Gotas orales', u: 15, uNom: 'ml' },
+      { id: 'd1', n: 'Protector solar FPS 50', pres: 'Tubo × 60 g', cat: 'piel', precio: 42000, antes: 49400, tipo: 'cos', u: 60, uNom: 'g' },
+      { id: 'd2', n: 'Crema humectante', pres: 'Frasco × 400 ml', cat: 'piel', precio: 23900, antes: 28100, tipo: 'cos', u: 400, uNom: 'ml' },
+      { id: 'd3', n: 'Alcohol antiséptico', pres: 'Frasco × 350 ml', cat: 'auxilios', precio: 7500, activo: 'Alcohol etílico', conc: '70 %', ff: 'Solución tópica', u: 350, uNom: 'ml' },
+      { id: 'e1', n: 'Pañitos húmedos', pres: 'Paquete × 50', cat: 'bebes', precio: 8900, antes: 10500, tipo: 'cos', u: 50, uNom: 'unidad' },
+      { id: 'e2', n: 'Crema antipañalitis', pres: 'Tubo × 60 g', cat: 'bebes', precio: 15600, activo: 'Óxido de zinc', conc: '[concentración]', ff: 'Crema tópica', u: 60, uNom: 'g', disp: 'agotado' },
+      { id: 'f1', n: 'Termómetro digital', pres: 'Caja × 1 unidad', cat: 'auxilios', precio: 18900, tipo: 'dis', disp: 'pocas' },
+      { id: 'f2', n: 'Gasas estériles', pres: 'Paquete × 10', cat: 'auxilios', precio: 3900, tipo: 'dis', u: 10, uNom: 'unidad' },
+      { id: 'f3', n: 'Apósitos adhesivos', pres: 'Caja × 20', cat: 'auxilios', precio: 5600, tipo: 'dis', u: 20, uNom: 'unidad' },
+      { id: 'f4', n: 'Esparadrapo', pres: 'Paquete × 1 rollo', cat: 'auxilios', precio: 4300, tipo: 'dis' },
+      { id: 'g1', n: 'Amoxicilina 500 mg', pres: 'Presentación según tu fórmula', cat: 'formula', precio: 0, activo: 'Amoxicilina', conc: '500 mg', ff: 'Cápsula' },
+      { id: 'g2', n: 'Losartán 50 mg', pres: 'Presentación según tu fórmula', cat: 'formula', precio: 0, activo: 'Losartán potásico', conc: '50 mg', ff: 'Tableta' },
+      { id: 'g3', n: 'Metformina 850 mg', pres: 'Presentación según tu fórmula', cat: 'formula', precio: 0, activo: 'Metformina clorhidrato', conc: '850 mg', ff: 'Tableta' }
+    ];
+    var STOP = ['de', 'la', 'el', 'y', 'para', 'con', 'los', 'las', 'del', 'en'];
+    var catById = {};
+    CATS.forEach(function (c) { catById[c.id] = c; });
+    var byId = {};
+    P.forEach(function (p) { byId[p.id] = p; });
+
+    var setQty = function (id, v) {
+      var next = Object.assign({}, self.state.qty);
+      if (v <= 0) { delete next[id]; } else { next[id] = v; }
+      self.setState({ qty: next });
+    };
+    var forma = function (p) {
+      if (p.cat === 'formula') return 'caja';
+      if (/^Caja/.test(p.pres)) return 'caja';
+      if (/^(Frasco|Botella)/.test(p.pres)) return 'frasco';
+      if (/^Tubo/.test(p.pres)) return 'tubo';
+      return 'paquete';
+    };
+    var mkItem = function (p) {
+      var c = catById[p.cat];
+      var q = st.qty[p.id] || 0;
+      var rx = p.cat === 'formula';
+      var f = forma(p);
+      var conDesc = !!(p.antes && p.antes > p.precio);
+      var tipo = p.tipo || 'med';
+      var esMed = tipo === 'med';
+      var disp = p.disp || 'disponible';
+      var agotado = disp === 'agotado';
+      var pum = (p.precio && p.u) ? fmt(Math.round(p.precio / p.u)) + ' por ' + (p.uNom || 'unidad') : '';
+      var filas = [
+        { k: esMed ? 'Laboratorio' : 'Marca', v: esMed ? '[Laboratorio]' : '[Marca]' },
+        { k: 'Principio activo', v: p.activo || '' },
+        { k: 'Concentración', v: p.conc || '' },
+        { k: 'Forma farmacéutica', v: p.ff || '' },
+        { k: 'Presentación', v: rx ? 'Según tu fórmula' : p.pres },
+        { k: tipo === 'cos' ? 'Notificación sanitaria' : 'Registro sanitario Invima', v: tipo === 'cos' ? 'NSOC[número]' : 'INVIMA [número]' },
+        { k: 'Condición de venta', v: esMed ? (rx ? 'Venta bajo fórmula médica' : 'Venta libre') : '' }
+      ].filter(function (r) { return !!r.v; });
+      return {
+        id: p.id,
+        url: '#producto-' + p.id,
+        ver: function (e) {
+          if (e && e.preventDefault) e.preventDefault();
+          self._lastFocus = document.activeElement;
+          self.setState({ detalle: p.id });
+        },
+        lab: esMed ? '[Laboratorio]' : '[Marca]',
+        condTxt: rx ? 'Con fórmula médica' : (esMed ? 'Venta libre' : (tipo === 'cos' ? 'Cuidado personal' : 'Dispositivo médico')),
+        condBg: rx ? '#F6E9EF' : '#EAF2FB',
+        condFg: rx ? '#7B3F5E' : '#173F72',
+        dispTxt: agotado ? 'Agotado por ahora' : (disp === 'pocas' ? 'Quedan pocas unidades' : 'Disponible para domicilio'),
+        dispColor: agotado ? '#7B3F5E' : (disp === 'pocas' ? '#8A4B14' : '#1E5AA0'),
+        hasPum: !!pum,
+        pumTxt: pum ? 'Precio por unidad: ' + pum : '',
+        sirve: esMed ? '[Indicaciones tal como aparecen en el registro sanitario o en el inserto aprobado por el Invima.]' : '[Para qué sirve el producto, según el empaque.]',
+        uso: rx ? 'Úsalo solo como lo indicó tu médico en la fórmula.' : (esMed ? '[Modo de uso y dosis tal como aparecen en el empaque.] Si tienes dudas, escríbenos antes de usarlo.' : '[Modo de uso según el empaque.]'),
+        advertencias: esMed ? '[Contraindicaciones, precauciones e interacciones del inserto.]' : '[Precauciones del empaque.]',
+        leyenda: rx ? 'Este medicamento requiere fórmula médica.' : 'Si los síntomas persisten, consulte a su médico.',
+        hasLeyenda: esMed,
+        filas: filas,
+        agotado: agotado,
+        avisar: !rx && agotado,
+        avisarAria: 'Preguntar disponibilidad por WhatsApp: ' + p.n,
+        n: p.n, pres: p.pres, catNombre: c.nombre, color: c.color, tint: c.tint,
+        esCaja: f === 'caja', esFrasco: f === 'frasco', esTubo: f === 'tubo', esPaquete: f === 'paquete',
+        precioTxt: p.precio ? fmt(p.precio) : '',
+        conDesc: conDesc,
+        antesTxt: conDesc ? fmt(p.antes) : '',
+        descTxt: conDesc ? 'Ahorra ' + Math.round((1 - p.precio / p.antes) * 100) + ' %' : '',
+        rx: rx, libre: !rx, qty: q, zero: !rx && !agotado && q === 0, some: !rx && !agotado && q > 0,
+        addAria: 'Agregar al pedido: ' + p.n,
+        decAria: 'Quitar una unidad: ' + p.n,
+        incAria: 'Agregar una unidad: ' + p.n,
+        grupoAria: 'Cantidad de ' + p.n,
+        consultaAria: 'Consultar por WhatsApp con fórmula: ' + p.n,
+        add: function () { setQty(p.id, 1); },
+        inc: function () { setQty(p.id, (self.state.qty[p.id] || 0) + 1); },
+        dec: function () { setQty(p.id, (self.state.qty[p.id] || 0) - 1); }
+      };
+    };
+
+    var tokens = norm(st.q).split(/\s+/).filter(function (t) { return t && STOP.indexOf(t) === -1; });
+    var pasaTexto = function (p) {
+      if (!tokens.length) return true;
+      var c = catById[p.cat];
+      var hay = norm(p.n + ' ' + c.nombre + ' ' + c.kw);
+      return tokens.every(function (t) { return hay.indexOf(t) !== -1; });
+    };
+    var pasaTipo = function (p) {
+      if (st.tipo === 'libre') return p.cat !== 'formula';
+      if (st.tipo === 'formula') return p.cat === 'formula';
+      return true;
+    };
+    var pasaDesc = function (p) { return !st.soloDesc || !!p.antes; };
+    var base = P.filter(function (p) { return pasaTexto(p) && pasaTipo(p) && pasaDesc(p); });
+    var lista = base.filter(function (p) { return st.cat === 'todas' || p.cat === st.cat; });
+
+    var precioOrden = function (p) { return p.precio || Infinity; };
+    lista.sort(function (a, b) {
+      if (st.orden === 'menor') return precioOrden(a) - precioOrden(b);
+      if (st.orden === 'mayor') return (b.precio || -1) - (a.precio || -1);
+      if (st.orden === 'desc') {
+        var da = a.antes ? 1 : 0;
+        var db = b.antes ? 1 : 0;
+        if (da !== db) return db - da;
+      }
+      return a.n.localeCompare(b.n, 'es');
+    });
+
+    var total = lista.length;
+    var paginas = Math.max(1, Math.ceil(total / porPagina));
+    var pag = Math.min(st.pagina, paginas - 1);
+    var desde = pag * porPagina;
+    var items = lista.slice(desde, desde + porPagina).map(mkItem);
+    var irPagina = function (i) {
+      self.setState({ pagina: i }, function () {
+        var el = document.getElementById('resultados');
+        if (el && el.scrollIntoView) { try { el.scrollIntoView({ block: 'start' }); } catch (e) {} }
+      });
+    };
+
+    var catOpts = CATS.map(function (c) {
+      var nCat = c.id === 'todas' ? base.length : base.filter(function (p) { return p.cat === c.id; }).length;
+      return {
+        nombre: c.nombre, color: c.color, n: String(nCat), sel: st.cat === c.id,
+        pick: function () { self.setState({ cat: c.id, pagina: 0 }); }
+      };
+    });
+    var tipoOpts = [
+      { id: 'todos', nombre: 'Todos' },
+      { id: 'libre', nombre: 'Venta libre' },
+      { id: 'formula', nombre: 'Con fórmula médica' }
+    ].map(function (t) {
+      return { nombre: t.nombre, sel: st.tipo === t.id, pick: function () { self.setState({ tipo: t.id, pagina: 0 }); } };
+    });
+
+    var nFiltros = (st.cat !== 'todas' ? 1 : 0) + (st.tipo !== 'todos' ? 1 : 0) + (st.soloDesc ? 1 : 0);
+
+    var count = 0;
+    var suma = 0;
+    P.forEach(function (p) {
+      var q = st.qty[p.id] || 0;
+      count += q;
+      suma += q * p.precio;
+    });
+    var falta = Math.max(0, umbral - suma);
+    var pctNum = umbral > 0 ? Math.min(100, Math.round((suma / umbral) * 100)) : 100;
+    var envioTxt = count === 0
+      ? 'Domicilio gratis desde ' + fmt(umbral)
+      : (falta > 0 ? 'Te faltan ' + fmt(falta) + ' para el domicilio gratis' : 'Tu domicilio es gratis');
+
+    return {
+      setRoot: this._setRoot,
+      hayDetalle: !!(st.detalle && byId[st.detalle]),
+      detalle: st.detalle && byId[st.detalle] ? mkItem(byId[st.detalle]) : null,
+      cerrarDetalle: function () {
+        self.setState({ detalle: null }, function () {
+          var el = self._lastFocus;
+          if (el && el.focus) { try { el.focus(); } catch (e) {} }
+        });
+      },
+      wide: wide,
+      narrow: !wide,
+      inicioHref: wide ? 'Web.dc.html' : 'Main.dc.html',
+      umbralTxt: fmt(umbral),
+      carritoTxt: count === 0 ? 'Pedido' : 'Pedido (' + count + ')',
+      carritoAria: count === 0 ? 'Ver pedido, vacío' : 'Ver pedido: ' + count + (count === 1 ? ' producto' : ' productos') + ', ' + fmt(suma),
+
+      q: st.q,
+      setQ: function (e) { self.setState({ q: e.target.value, pagina: 0 }); },
+      buscar: function (e) { if (e && e.preventDefault) e.preventDefault(); },
+      orden: st.orden,
+      setOrden: function (e) { self.setState({ orden: e.target.value, pagina: 0 }); },
+
+      filtros: st.filtros,
+      verFiltros: wide || st.filtros,
+      toggleFiltros: function () { self.setState({ filtros: !self.state.filtros }); },
+      filtrosTxt: nFiltros ? 'Filtros (' + nFiltros + ')' : 'Filtros',
+      catOpts: catOpts,
+      tipoOpts: tipoOpts,
+      soloDesc: st.soloDesc,
+      toggleDesc: function () { self.setState({ soloDesc: !self.state.soloDesc, pagina: 0 }); },
+      hayFiltros: nFiltros > 0 || tokens.length > 0,
+      limpiar: function () { self.setState({ q: '', cat: 'todas', tipo: 'todos', soloDesc: false, pagina: 0 }); },
+
+      items: items,
+      gridCols: 'repeat(' + cols + ', minmax(0, 1fr))',
+      vacio: total === 0,
+      rangoTxt: total === 0 ? '0 productos' : 'Mostrando ' + (desde + 1) + '–' + Math.min(total, desde + porPagina) + ' de ' + total + ' productos',
+      hayPaginas: paginas > 1,
+      paginas: Array.from({ length: paginas }, function (_, i) {
+        var cur = i === pag;
+        return {
+          n: String(i + 1),
+          aria: 'Página ' + (i + 1),
+          cur: cur ? 'page' : 'false',
+          bg: cur ? '#1E5AA0' : '#FFFFFF',
+          fg: cur ? '#FFFFFF' : '#1B2A3A',
+          border: cur ? '1px solid #1E5AA0' : '1px solid #C5D3E2',
+          pick: function () { irPagina(i); }
+        };
+      }),
+      prevDis: pag === 0,
+      nextDis: pag >= paginas - 1,
+      prevOp: pag === 0 ? '0.4' : '1',
+      nextOp: pag >= paginas - 1 ? '0.4' : '1',
+      pagPrev: function () { irPagina(Math.max(0, pag - 1)); },
+      pagNext: function () { irPagina(Math.min(paginas - 1, pag + 1)); },
+
+      envioTxt: envioTxt,
+      pct: pctNum + '%',
+      pctNum: pctNum,
+      linea1: count === 0 ? 'Tu pedido está vacío' : (count === 1 ? '1 producto, ' : count + ' productos, ') + fmt(suma)
+    };
+  }
+}
+</script>
+</body>
+</html>
