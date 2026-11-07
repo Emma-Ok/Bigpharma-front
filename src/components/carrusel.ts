@@ -1,7 +1,7 @@
 /**
  * Pista de carrusel con scroll-snap: desliza con flechas, puntos y el gesto de deslizar, y avanza
- * sola cada 6 s (WCAG 2.2.2: se pausa con el puntero encima, con el foco dentro y con su botón; con
- * movimiento reducido arranca pausada). Con movimiento reducido el cambio es instantáneo.
+ * sola cada 6 s (WCAG 2.2.2: se pausa con el puntero encima, con el foco de teclado dentro y con su
+ * botón). Con movimiento reducido el cambio es instantáneo y el carrusel arranca en pausa.
  * La usan la barra de avisos (script de Astro) y el carrusel de anuncios (Preact).
  */
 
@@ -134,8 +134,9 @@ export function autoReproducir(
     encima = false;
     programar();
   };
-  const conFoco = () => {
-    foco = true;
+  // Solo el foco de teclado: tras tocar o hacer clic, el botón se queda con el foco y no debe impedir reanudar.
+  const conFoco = (e: FocusEvent) => {
+    foco = (e.target as HTMLElement).matches(':focus-visible');
     programar();
   };
   const sinFoco = (e: FocusEvent) => {

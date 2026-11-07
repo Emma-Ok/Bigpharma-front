@@ -87,14 +87,8 @@ test('el panel del pedido de la portada también se puede vaciar', async ({ page
   await expect(panel.getByRole('heading', { name: 'Tu pedido' })).toBeFocused();
 });
 
-test('los avisos y los anuncios funcionan como carrusel', async ({ page }) => {
+test('los anuncios funcionan como carrusel', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Aviso siguiente' }).click();
-  await expect(page.locator('[data-aviso-anuncio]')).toContainText('Aviso 2 de 3');
-  await page.getByRole('button', { name: 'Aviso anterior' }).click();
-  await page.getByRole('button', { name: 'Aviso anterior' }).click();
-  await expect(page.locator('[data-aviso-anuncio]')).toContainText('Aviso 3 de 3');
-
   await page.waitForFunction(() => !document.querySelector('astro-island[component-url*="CarruselAnuncios"][ssr]'));
   await page.getByRole('button', { name: 'Anuncio siguiente' }).click();
   await expect(page.getByRole('button', { name: 'Ver anuncio 2 de 3' })).toHaveAttribute('aria-current', 'true');
@@ -152,6 +146,64 @@ test('los carruseles avanzan solos y se pueden pausar', async ({ page }) => {
   await page.mouse.move(5, 600);
   await page.clock.runFor(13000);
   expect(await avisoActivo()).toBe(1);
+
+  // El foco que deja el clic no impide reanudar.
+  await page.getByRole('button', { name: 'Reanudar avisos' }).click();
+  await page.mouse.move(5, 600);
+  await page.clock.runFor(6100);
+  await expect.poll(avisoActivo).toBe(2);
+});
+
+test('la barra de avisos no muestra flechas ni puntos y se pausa con el puntero y el foco', async ({ page }, info) => {
+  test.skip(info.project.name !== 'escritorio', 'Puntero y teclado');
+  await page.clock.install();
+  await page.goto('/');
+  const barra = page.locator('[data-avisos]');
+  const boton = page.getByRole('button', { name: 'Pausar avisos' });
+  await expect(barra.getByRole('button')).toHaveCount(1);
+  const avisoActivo = () =>
+    page.evaluate(() => [...document.querySelector('[data-aviso-pista]')!.children].findIndex((c) => !(c as HTMLElement).inert));
+
+  // El botón solo aparece con hover o foco.
+  await page.mouse.move(5, 600);
+  await expect(boton).toHaveCSS('opacity', '0');
+  await barra.hover();
+  await expect(boton).toHaveCSS('opacity', '1');
+  await page.clock.runFor(13000);
+  expect(await avisoActivo()).toBe(0);
+
+  await page.mouse.move(5, 600);
+  await barra.getByRole('link').focus();
+  await page.keyboard.press('Shift+Tab');
+  await expect(boton).toBeFocused();
+  await expect(boton).toHaveCSS('opacity', '1');
+  await page.clock.runFor(13000);
+  expect(await avisoActivo()).toBe(0);
+});
+
+test('en celular el botón de pausa siempre se ve y el WhatsApp de los avisos no', async ({ page }, info) => {
+  test.skip(info.project.name !== 'celular', 'Celular');
+  await page.goto('/');
+  await expect(page.getByRole('button', { name: 'Pausar avisos' })).toHaveCSS('opacity', '1');
+  const caja = await page.getByRole('button', { name: 'Pausar avisos' }).boundingBox();
+  expect(Math.min(caja!.width, caja!.height)).toBeGreaterThanOrEqual(44);
+  await expect(page.locator('[data-avisos]').getByRole('link')).toBeHidden();
+});
+
+test.describe('con movimiento reducido', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+
+  test('la barra de avisos deja fijo el primer mensaje', async ({ page }) => {
+    await page.clock.install();
+    await page.goto('/');
+    await page.mouse.move(5, 600);
+    await page.clock.runFor(13000);
+    const activo = await page.evaluate(() =>
+      [...document.querySelector('[data-aviso-pista]')!.children].findIndex((c) => !(c as HTMLElement).inert),
+    );
+    expect(activo).toBe(0);
+    await expect(page.locator('[data-aviso-pausa]')).toBeHidden();
+  });
 });
 
 test('en celular el menú y los filtros se superponen y se cierran con Esc', async ({ page }, info) => {

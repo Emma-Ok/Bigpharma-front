@@ -20,22 +20,9 @@ const varios = avisos.length > 1;
       class="foco-claro bg-bottle text-blanco"
       data-avisos
     >
-      <div class="mx-auto flex max-w-sitio items-center gap-1 px-1 py-0.5 sm:px-margen">
-        {varios && (
-          <button
-            type="button"
-            data-aviso-anterior
-            aria-label="Aviso anterior"
-            class="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[10px] text-blanco"
-          >
-            <Icono nombre="anterior" tamano={18} grosor={2.4} />
-          </button>
-        )}
-        <div class="flex min-w-0 flex-1 flex-col items-center gap-1 py-1.5">
-          <div
-            class="carrusel-pista flex w-full snap-x snap-mandatory overflow-x-hidden"
-            data-aviso-pista
-          >
+      <div class="mx-auto flex min-h-11 max-w-sitio items-center gap-1 px-1 sm:px-margen">
+        <div class="min-w-0 flex-1 py-1.5">
+          <div class="carrusel-pista flex w-full snap-x snap-mandatory overflow-x-hidden" data-aviso-pista>
             {avisos.map((aviso, i) => (
               <p
                 role="group"
@@ -43,40 +30,23 @@ const varios = avisos.length > 1;
                 aria-label={`Aviso ${i + 1} de ${avisos.length}`}
                 aria-hidden={i > 0 ? 'true' : undefined}
                 inert={i > 0}
-                class="m-0 w-full shrink-0 snap-start px-1 text-center text-[14.5px] leading-snug font-medium"
+                class="m-0 flex w-full shrink-0 snap-start items-center justify-center px-1 text-center text-[14.5px] leading-snug font-medium"
               >
                 {aviso}
               </p>
             ))}
           </div>
-          {varios && (
-            <div aria-hidden="true" class="flex gap-1.5" data-aviso-puntos>
-              {avisos.map((_, i) => (
-                <span class={`h-1.5 rounded-full bg-blanco transition-[width,opacity] duration-media ${i === 0 ? 'w-4 opacity-100' : 'w-1.5 opacity-50'}`} />
-              ))}
-            </div>
-          )}
           <p class="visualmente-oculto" aria-live="polite" data-aviso-anuncio />
         </div>
         {varios && (
           <button
             type="button"
-            data-aviso-siguiente
-            aria-label="Aviso siguiente"
-            class="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[10px] text-blanco"
-          >
-            <Icono nombre="siguiente" tamano={18} grosor={2.4} />
-          </button>
-        )}
-        {varios && (
-          <button
-            type="button"
             data-aviso-pausa
             aria-label="Pausar avisos"
-            class="group flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[10px] text-blanco"
+            class="group flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[10px] text-blanco transition-opacity duration-rapida"
           >
-            <Icono nombre="pausa" tamano={16} grosor={2.6} class="group-data-[pausado=true]:hidden" />
-            <Icono nombre="reproducir" tamano={16} grosor={2.2} class="hidden group-data-[pausado=true]:block" />
+            <Icono nombre="pausa" tamano={14} grosor={2.6} class="group-data-[pausado=true]:hidden" />
+            <Icono nombre="reproducir" tamano={14} grosor={2.2} class="hidden group-data-[pausado=true]:block" />
           </button>
         )}
         <a
@@ -91,32 +61,46 @@ const varios = avisos.length > 1;
   )
 }
 
+<style>
+  /* Con puntero fino el botón aparece con hover o foco; en pantallas táctiles siempre está visible. */
+  @media (hover: hover) and (pointer: fine) {
+    [data-aviso-pausa]:not([data-pausado='true']) {
+      opacity: 0;
+    }
+    [data-avisos]:hover [data-aviso-pausa],
+    [data-avisos]:focus-within [data-aviso-pausa] {
+      opacity: 1;
+    }
+  }
+
+  /* Con movimiento reducido solo está el primer mensaje, fijo: no hay nada que pausar. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-aviso-pausa] {
+      display: none;
+    }
+  }
+</style>
+
 <script>
   import { alDetenerse, autoReproducir, conGesto, irA, marcarActual } from './carrusel';
 
-  // Carrusel de avisos: avanza solo cada 6 s (se pausa con el puntero, el foco o su botón), flechas y gesto.
+  // Avisos: avanzan solos cada 6 s y se pausan con el puntero, el foco, su botón o la pestaña oculta.
+  // Con movimiento reducido no se monta nada: queda el primer mensaje.
   document.addEventListener('astro:page-load', () => {
     const barra = document.querySelector<HTMLElement>('[data-avisos]');
     const pista = barra?.querySelector<HTMLElement>('[data-aviso-pista]');
-    if (!barra || !pista) return;
+    if (!barra || !pista || pista.children.length < 2) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const avisos = [...pista.children] as HTMLElement[];
-    const puntos = [...(barra.querySelector('[data-aviso-puntos]')?.children ?? [])] as HTMLElement[];
     const anuncio = barra.querySelector<HTMLElement>('[data-aviso-anuncio]');
     let actual = 0;
 
     const mostrar = (i: number, anunciar: boolean) => {
       actual = i;
       marcarActual(pista, i);
-      puntos.forEach((p, j) => {
-        p.classList.toggle('w-4', j === i);
-        p.classList.toggle('opacity-100', j === i);
-        p.classList.toggle('w-1.5', j !== i);
-        p.classList.toggle('opacity-50', j !== i);
-      });
       if (anunciar && anuncio) anuncio.textContent = `Aviso ${i + 1} de ${avisos.length}: ${avisos[i].textContent?.trim()}`;
     };
 
-    // El índice cambia en el momento del clic (no al terminar de deslizar): dos clics seguidos avanzan dos.
     const ir = (paso: number, anunciar: boolean) => {
       const destino = (actual + paso + avisos.length) % avisos.length;
       mostrar(destino, anunciar);
@@ -127,16 +111,13 @@ const varios = avisos.length > 1;
       pausa?.setAttribute('data-pausado', String(pausado));
       pausa?.setAttribute('aria-label', pausado ? 'Reanudar avisos' : 'Pausar avisos');
     });
-    const mover = (paso: number) => {
-      ir(paso, true);
-      auto.reiniciar();
-    };
     document.addEventListener('astro:before-swap', () => auto.destruir(), { once: true });
     alDetenerse(pista, (i) => {
       if (i !== actual) mostrar(i, true);
     });
-    conGesto(pista, mover);
-    barra.querySelector('[data-aviso-anterior]')?.addEventListener('click', () => mover(-1));
-    barra.querySelector('[data-aviso-siguiente]')?.addEventListener('click', () => mover(1));
+    conGesto(pista, (paso) => {
+      ir(paso, true);
+      auto.reiniciar();
+    });
   });
 </script>
