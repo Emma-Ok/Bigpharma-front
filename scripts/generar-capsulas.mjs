@@ -3,7 +3,7 @@
 //   docker compose run --rm web node scripts/generar-capsulas.mjs
 import { writeFile } from 'node:fs/promises';
 import { Color, Euler, Vector3 } from 'three';
-import { CAMARA_Z, ENCUADRES, LARGO, PARES, RADIO, ubicar } from '../src/compartido/movimiento/3d/piezas.ts';
+import { CAMARA_Z, ENCUADRES, LARGO, PARES, RADIO, RADIO_TABLETA, TABLETAS_HERO, ubicar } from '../src/compartido/movimiento/3d/piezas.ts';
 
 const FONDO = new Color('#F3F5F1');
 const NIEBLA = { cerca: CAMARA_Z - 2, lejos: CAMARA_Z + 16 };
@@ -42,6 +42,27 @@ function capsula(p, escalaPx) {
   return { z, svg: `<g>${mitad(b, colorB)}${mitad(a, colorA)}${sombra}</g>` };
 }
 
+/** Pastilla vista en perspectiva: elipse achatada en la dirección de su eje, con la misma sombra que las cápsulas. */
+function tableta(p, escalaPx) {
+  const { x, y, z } = ubicar(p, 0);
+  const px = escalaPx * (CAMARA_Z / (CAMARA_Z - z));
+  const eje = new Vector3(0, 1, 0).applyEuler(new Euler(...p.giro));
+  const radio = RADIO_TABLETA * p.escala * px;
+  const angulo = (Math.atan2(-eje.y, eje.x) * 180) / Math.PI;
+  const achatado = Math.max(0.2, Math.abs(eje.z));
+  const id = `s${++degradados}`;
+  const color = conNiebla(TABLETAS_HERO[p.color], z);
+  const forma = (relleno) =>
+    `<ellipse cx="${r(x)}" cy="${r(y)}" rx="${r(radio * achatado)}" ry="${r(radio)}" transform="rotate(${r(angulo)} ${r(x)} ${r(y)})" fill="${relleno}"/>`;
+  return {
+    z,
+    svg:
+      `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${r(x - radio)}" y1="${r(y - radio)}" x2="${r(x + radio)}" y2="${r(y + radio)}">` +
+      `<stop offset=".4" stop-color="#1C2623" stop-opacity=".04"/><stop offset="1" stop-color="#1C2623" stop-opacity=".24"/></linearGradient>` +
+      `<g>${forma(color)}${forma(`url(#${id})`)}</g>`,
+  };
+}
+
 /** Frasco de vidrio ámbar: cuerpo, contenido, etiqueta y tapa. */
 function frasco(f, escalaPx) {
   const k = f.escala * escalaPx * (CAMARA_Z / (CAMARA_Z - f.z));
@@ -61,7 +82,7 @@ function frasco(f, escalaPx) {
 for (const [nombre, encuadre] of Object.entries(ENCUADRES)) {
   const anclas = Object.groupBy(encuadre.piezas, (p) => p.ancla);
   for (const [ancla, piezas] of Object.entries(anclas)) {
-    const figuras = piezas.map((p) => capsula(p, encuadre.pxPorUnidad));
+    const figuras = piezas.map((p) => (p.tipo === 'tableta' ? tableta : capsula)(p, encuadre.pxPorUnidad));
     if (ancla === 'tarjeta') figuras.push(frasco(encuadre.frasco, encuadre.pxPorUnidad));
     figuras.sort((x, y) => x.z - y.z);
     const svg =

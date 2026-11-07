@@ -10,11 +10,11 @@ Hay tres, en `src/compartido/movimiento/3d/`. Todas son decorativas: `aria-hidde
 
 | Escena | Dónde | Qué pasa |
 |---|---|---|
-| Hero (`hero.ts`) | Alrededor de la tarjeta del profesional, sobre `paper`, a toda la altura del hero y hasta el borde derecho de la ventana | Cápsulas y un frasco de vidrio ámbar flotan despacio. Las más grandes van en primer plano, cortadas por el borde; otras dan la vuelta a la tarjeta, por delante y por detrás de la foto; las más pequeñas quedan al fondo. Parallax de 6° como máximo con el puntero en escritorio y con el scroll en celular |
+| Hero (`hero.ts`) | Alrededor de la tarjeta del profesional, sobre `paper`, a toda la altura del hero y hasta el borde derecho de la ventana | Cápsulas, pastillas y un frasco de vidrio ámbar flotan y giran. Las más grandes van en primer plano, cortadas por el borde; otras dan la vuelta a la tarjeta, por delante y por detrás de la foto; las más pequeñas quedan al fondo. Parallax de 6° como máximo con el puntero en escritorio y con el scroll en celular |
 | Inyectología (`servicios.ts`) | Sección de servicios de la portada | Jeringa y frasco flotan y se inclinan hacia el puntero; cada pocos segundos el émbolo baja y salen gotas |
 | Celebración (`celebracion.ts`) | Al llegar al domicilio gratis | Las piezas salen de la barra de progreso y caen con gravedad. Dura menos de 2 s. Al enviar el pedido no hay celebración: WhatsApp se abre de inmediato |
 
-**Cantidad de objetos del hero:** 13 cápsulas y el frasco en escritorio (3 grandes, 3 en órbita y 7 al fondo), 5 cápsulas y el frasco en celular (2 grandes, 1 en órbita y 2 al fondo).
+**Cantidad de objetos del hero:** en escritorio, 13 cápsulas (3 grandes, 3 en órbita y 7 al fondo), 8 pastillas (2 grandes) y el frasco: 22 objetos. En celular, 5 cápsulas (2 grandes, 1 en órbita y 2 al fondo), 3 pastillas y el frasco: 9 objetos. Las pastillas son blancas, celadon o bottle.
 
 **Encuadre:** `piezas.ts` define cada pieza en píxeles de pantalla desde un ancla (el centro de la foto o un borde de la ventana), con una escala fija por encuadre. De esa tabla salen la escena y la imagen estática, y la cámara mantiene esa escala en cualquier tamaño: el primer cuadro coincide con la imagen en todos los anchos. No hay animación de entrada; el cambio es un fundido de 300 ms (`motor.ts` y `global.css`). Las capas de la imagen se anclan igual que las piezas: la del fondo, en la foto y debajo de la tarjeta; las de los bordes, encima. Por eso, al arrancar, ninguna pieza anclada a la tarjeta puede estar por delante de ella.
 
@@ -43,13 +43,13 @@ El respaldo es SVG en línea y no una imagen `.webp` para que nunca compita como
 | Momento | Qué pasa | Duración |
 |---|---|---|
 | Entrada de la portada (una sola vez) | Las líneas del titular suben 12 px y aparecen en secuencia (60 ms entre una y otra); la tarjeta del profesional sube. La escena 3D llega después, con la primera interacción | ≤ 900 ms en total |
-| Cambio de página | View Transitions de Astro (`<ClientRouter />`); la imagen y el nombre del producto se transforman de la tarjeta a la página (`transition:name="producto-{id}"`) | 280 ms |
+| Cambio de página | View Transitions de Astro (`<ClientRouter />`). Si la navegación entra o sale de la página de un producto, la imagen y el nombre se transforman entre la tarjeta y la ficha; entre listas (portada y catálogo) no, porque cada producto cruzaría por encima de los demás | 280 ms |
 | Abrir la ficha rápida | `document.startViewTransition`: la imagen crece desde la tarjeta. Respaldo: escala de 0,96 a 1 con fundido | 240 ms |
 | Abrir el buscador | El panel baja 8 px con fundido y el fondo oscuro aparece; al escribir, los resultados cambian con fundido, sin desplazarse | 180 ms |
 | Elegir categoría | El anillo del ícono crece y la cuadrícula cambia con View Transition (los productos que siguen se reubican, los nuevos aparecen) | 220 ms |
 | Agregar al pedido | El botón «Agregar» se transforma en − / +; un punto de 10 px viaja del botón al contador del pedido (Web Animations API, curva de salida) y el contador late (escala 1 → 1,15 → 1) | 450 ms |
 | Barra de domicilio gratis | El ancho avanza suave; al llegar al 100 % el ícono pasa a un check que se dibuja (`stroke-dashoffset`) y aparece «Tu domicilio es gratis» | 400 ms |
-| Carruseles (avisos y anuncios) | Deslizamiento horizontal con `scroll-snap`. Avanzan solos cada 6 s; se detienen con el puntero o el foco de teclado encima y con la pestaña oculta. Los avisos tienen un botón de pausa discreto; los anuncios, solo chips de posición, sin botones. Con movimiento reducido, los avisos dejan fijo el primer mensaje y los anuncios no rotan y cambian sin deslizarse | Desplazamiento suave del navegador |
+| Carruseles (avisos y anuncios) | Deslizamiento horizontal con `scroll-snap`. Avanzan solos cada 6 s; se detienen con el puntero o el foco de teclado encima y con la pestaña oculta. Ninguno tiene botón de pausa; los anuncios muestran chips de posición. Con movimiento reducido, los avisos dejan fijo el primer mensaje y los anuncios no rotan y cambian sin deslizarse | Desplazamiento suave del navegador |
 | Preguntas y secciones de la ficha | Apertura de `details` con `interpolate-size: allow-keywords` donde exista; sin animación donde no | 200 ms |
 | Hover (solo con `pointer: fine`) | En la tarjeta, el borde toma el azul y la imagen del producto escala a 1,03. Nada más | 150 ms |
 

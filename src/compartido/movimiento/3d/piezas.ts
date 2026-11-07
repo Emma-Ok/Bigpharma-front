@@ -14,6 +14,8 @@ export const PARES: [string, string][] = [
   ['#4A5A55', '#F3F5F1'],
 ];
 export const TABLETAS = ['#FFFFFF', '#F3F5F1', '#D5E5DB'];
+/** Pastillas del hero: sobre paper, la blanca y la celadon se distinguen por la luz; la bottle da contraste. */
+export const TABLETAS_HERO = ['#FFFFFF', '#D5E5DB', '#133B34'];
 export const RADIO = 0.32;
 export const LARGO = 0.55;
 export const RADIO_TABLETA = 0.42;
@@ -25,6 +27,7 @@ export const CAMARA_Z = 16;
 export type Ancla = 'tarjeta' | 'derecha' | 'izquierda';
 
 export interface Pieza {
+  tipo: 'capsula' | 'tableta';
   ancla: Ancla;
   /** Desde el ancla, en píxeles de pantalla (y hacia abajo). */
   x: number;
@@ -57,7 +60,22 @@ const pieza = (
   giro: Pieza['giro'],
   fase: number,
   orbita?: Pieza['orbita'],
-): Pieza => ({ ancla, x, y, z, escala, color, giro, fase, orbita, velocidad: [0.05 + (fase % 0.1), 0.04 + (fase % 0.07)] });
+): Pieza => ({
+  tipo: 'capsula',
+  ancla,
+  x,
+  y,
+  z,
+  escala,
+  color,
+  giro,
+  fase,
+  orbita,
+  velocidad: [0.18 + (fase % 0.1) * 3, 0.14 + (fase % 0.07) * 3],
+});
+
+/** Pastilla: disco con bisel. Mismos datos que la cápsula; `color` indexa TABLETAS_HERO. */
+const tableta = (...datos: Parameters<typeof pieza>): Pieza => ({ ...pieza(...datos), tipo: 'tableta' });
 
 /**
  * Primero las grandes, en primer plano y cortadas por el borde; luego las que orbitan y al final las
@@ -83,6 +101,14 @@ export const ENCUADRES: Record<NombreEncuadre, Encuadre> = {
       pieza('tarjeta', 300, 190, -3, 0.65, 2, [0.4, 1.1, -0.9], 5.2),
       pieza('tarjeta', 70, -165, -5, 0.55, 1, [1, 0.3, 0.2], 4.6),
       pieza('tarjeta', -80, 298, -3.5, 0.6, 2, [0.5, 0.6, 1.4], 5.9),
+      tableta('derecha', -40, -40, 3, 1.4, 1, [1.1, 0.2, 0.4], 0.7),
+      tableta('derecha', -260, -250, 2.5, 1.1, 0, [0.6, 0.3, -0.5], 2.4),
+      tableta('tarjeta', -235, -20, -2, 0.9, 2, [1.3, 0.4, 0.2], 1.3),
+      tableta('tarjeta', -250, 130, -3, 0.8, 0, [0.4, 0.9, 0.6], 3.3),
+      tableta('tarjeta', 250, -90, -2.5, 0.85, 1, [0.9, 0.1, -0.7], 4.4),
+      tableta('tarjeta', 265, 120, -3.5, 0.8, 2, [1.2, 0.5, 0.3], 5.1),
+      tableta('tarjeta', -120, -150, -4, 0.7, 0, [0.3, 1.2, 0.8], 0.3),
+      tableta('tarjeta', 140, -150, -3, 0.75, 1, [1.4, 0.6, -0.2], 2.9),
     ],
     frasco: { x: 215, y: 255, z: -1, escala: 1.15 },
   },
@@ -96,13 +122,16 @@ export const ENCUADRES: Record<NombreEncuadre, Encuadre> = {
       pieza('tarjeta', 116, 74, 0, 0.7, 2, [0.4, 0.2, 1.2], 0.8, { radio: 170, angulo: Math.PI + 0.2 }),
       pieza('tarjeta', -63, 74, -3, 0.6, 2, [0.6, 0.4, 0.9], 2.7),
       pieza('tarjeta', 150, -80, -3.5, 0.55, 0, [1.2, 0.2, 1.3], 3.6),
+      tableta('tarjeta', -55, -70, -3, 0.6, 2, [1.1, 0.3, 0.4], 1.2),
+      tableta('tarjeta', 200, 78, -2.5, 0.65, 0, [0.5, 0.9, 0.2], 4.2),
+      tableta('tarjeta', 60, -78, -3.5, 0.55, 1, [1.3, 0.2, -0.5], 5.5),
     ],
     frasco: { x: 270, y: 66, z: -1, escala: 0.62 },
   },
 };
 
 const FONDO_ORBITA = 2.6;
-const VELOCIDAD_ORBITA = 0.11;
+const VELOCIDAD_ORBITA = 0.15;
 const DERIVA_PX = 8;
 
 /** Posición de una pieza desde su ancla, en píxeles de pantalla, con la profundidad en unidades de la escena. */

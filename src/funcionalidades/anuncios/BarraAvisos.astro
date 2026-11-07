@@ -8,7 +8,6 @@ interface Props {
 }
 
 const { avisos, whatsapp } = Astro.props;
-const varios = avisos.length > 1;
 ---
 
 {
@@ -20,8 +19,8 @@ const varios = avisos.length > 1;
       class="foco-claro bg-bottle text-blanco"
       data-avisos
     >
-      <div class="relative mx-auto flex min-h-11 max-w-sitio items-center gap-1 px-1 sm:px-margen">
-        <div class="min-w-0 flex-1 py-1.5 max-[48rem]:pr-7">
+      <div class="mx-auto flex min-h-11 max-w-sitio items-center gap-1 px-1 sm:px-margen">
+        <div class="min-w-0 flex-1 py-1.5">
           <div class="carrusel-pista flex w-full snap-x snap-mandatory overflow-x-hidden" data-aviso-pista>
             {avisos.map((aviso, i) => (
               <p
@@ -38,17 +37,6 @@ const varios = avisos.length > 1;
           </div>
           <p class="visualmente-oculto" aria-live="polite" data-aviso-anuncio />
         </div>
-        {varios && (
-          <button
-            type="button"
-            data-aviso-pausa
-            aria-label="Pausar avisos"
-            class="group flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[10px] text-blanco transition-opacity duration-rapida max-[48rem]:absolute max-[48rem]:inset-y-0 max-[48rem]:right-0 max-[48rem]:my-auto"
-          >
-            <Icono nombre="pausa" tamano={14} grosor={2.6} class="group-data-[pausado=true]:hidden" />
-            <Icono nombre="reproducir" tamano={14} grosor={2.2} class="hidden group-data-[pausado=true]:block" />
-          </button>
-        )}
         <a
           href={enlaceWhatsApp(whatsapp, MENSAJE_GENERAL)}
           class="ml-2 hidden min-h-11 shrink-0 items-center gap-2 border-l border-blanco/40 pl-4 text-[14.5px] font-medium text-blanco no-underline lg:inline-flex"
@@ -61,31 +49,11 @@ const varios = avisos.length > 1;
   )
 }
 
-<style>
-  /* Con puntero fino el botón aparece con hover o foco; en pantallas táctiles siempre está visible. */
-  @media (hover: hover) and (pointer: fine) {
-    [data-aviso-pausa]:not([data-pausado='true']) {
-      opacity: 0;
-    }
-    [data-avisos]:hover [data-aviso-pausa],
-    [data-avisos]:focus-within [data-aviso-pausa] {
-      opacity: 1;
-    }
-  }
-
-  /* Con movimiento reducido solo está el primer mensaje, fijo: no hay nada que pausar. */
-  @media (prefers-reduced-motion: reduce) {
-    [data-aviso-pausa] {
-      display: none;
-    }
-  }
-</style>
-
 <script>
   import { prefiereMenosMovimiento } from '@/compartido/movimiento/preferencias';
   import { alDetenerse, autoReproducir, conGesto, irA, marcarActual } from './carrusel';
 
-  // Avisos: avanzan solos cada 6 s y se pausan con el puntero, el foco, su botón o la pestaña oculta.
+  // Avisos: avanzan solos cada 6 s, sin botón de pausa; se detienen con el puntero, el foco o la pestaña oculta.
   // Con movimiento reducido no se monta nada: queda el primer mensaje.
   document.addEventListener('astro:page-load', () => {
     const barra = document.querySelector<HTMLElement>('[data-avisos]');
@@ -107,11 +75,7 @@ const varios = avisos.length > 1;
       mostrar(destino, anunciar);
       irA(pista, destino);
     };
-    const pausa = barra.querySelector<HTMLButtonElement>('[data-aviso-pausa]');
-    const auto = autoReproducir(barra, () => ir(1, false), pausa, (pausado) => {
-      pausa?.setAttribute('data-pausado', String(pausado));
-      pausa?.setAttribute('aria-label', pausado ? 'Reanudar avisos' : 'Pausar avisos');
-    });
+    const auto = autoReproducir(barra, () => ir(1, false));
     document.addEventListener('astro:before-swap', () => auto.destruir(), { once: true });
     alDetenerse(pista, (i) => {
       if (i !== actual) mostrar(i, true);

@@ -1,5 +1,5 @@
 /**
- * Escena del hero (docs/MOVIMIENTO-Y-3D.md, sección 1): cápsulas y un frasco de vidrio ámbar alrededor
+ * Escena del hero (docs/MOVIMIENTO-Y-3D.md, sección 1): cápsulas, pastillas y un frasco de vidrio ámbar alrededor
  * de la tarjeta del profesional. El canvas va encima de la tarjeta y un plano invisible del tamaño de
  * la tarjeta escribe solo profundidad: lo que pasa por detrás queda tapado y lo que pasa por delante
  * se ve sobre la foto. Así basta un contexto WebGL.
@@ -26,7 +26,7 @@ import {
   Vector2,
 } from 'three';
 import { crearMotor, esLigero } from './motor';
-import { CAMARA_Z, ENCUADRES, geometriaMediaCapsula, PARES, ubicar, type Ancla, type Encuadre } from './piezas';
+import { CAMARA_Z, ENCUADRES, geometriaMediaCapsula, geometriaTableta, PARES, TABLETAS_HERO, ubicar, type Ancla, type Encuadre } from './piezas';
 
 const FONDO_PAPER = 0xf3f5f1;
 const ESCRITORIO = '(min-width: 56.25rem)';
@@ -91,16 +91,21 @@ function montar(contenedor: HTMLElement, tarjeta: HTMLElement, foto: HTMLElement
   const motor = crearMotor(contenedor, { ligero, distancia: CAMARA_Z, niebla: FONDO_PAPER });
   const seg = ligero ? 16 : 24;
   const material = new MeshStandardMaterial({ roughness: 0.4, metalness: 0 });
-  const mitadA = new InstancedMesh(geometriaMediaCapsula(seg), material, piezas.length);
-  const mitadB = new InstancedMesh(mitadA.geometry, material, piezas.length);
-  piezas.forEach((p, i) => {
+  const capsulas = piezas.filter((p) => p.tipo === 'capsula');
+  const tabletas = piezas.filter((p) => p.tipo === 'tableta');
+  const mitadA = new InstancedMesh(geometriaMediaCapsula(seg), material, capsulas.length);
+  const mitadB = new InstancedMesh(mitadA.geometry, material, capsulas.length);
+  const mallaTabletas = new InstancedMesh(geometriaTableta(ligero ? 20 : 28), material, Math.max(1, tabletas.length));
+  mallaTabletas.count = tabletas.length;
+  capsulas.forEach((p, i) => {
     mitadA.setColorAt(i, new Color(PARES[p.color][0]));
     mitadB.setColorAt(i, new Color(PARES[p.color][1]));
   });
+  tabletas.forEach((p, i) => mallaTabletas.setColorAt(i, new Color(TABLETAS_HERO[p.color])));
   const frasco = crearFrasco(ligero ? 20 : 32);
   frasco.scale.setScalar(encuadre.frasco.escala);
   const grupo = new Group();
-  grupo.add(mitadA, mitadB, frasco);
+  grupo.add(mitadA, mitadB, mallaTabletas, frasco);
 
   const oclusor = new Mesh(new ShapeGeometry(new Shape()), new MeshBasicMaterial({ colorWrite: false }));
   oclusor.renderOrder = -1;
@@ -144,7 +149,8 @@ function montar(contenedor: HTMLElement, tarjeta: HTMLElement, foto: HTMLElement
   motor.alIrLento(() => {
     conParallax = false;
     objetivo.set(0, 0);
-    mitadA.count = mitadB.count = Math.ceil(piezas.length / 2);
+    mitadA.count = mitadB.count = Math.ceil(capsulas.length / 2);
+    mallaTabletas.count = Math.ceil(tabletas.length / 2);
   });
 
   const alMoverPuntero = (e: PointerEvent) => {
@@ -165,19 +171,27 @@ function montar(contenedor: HTMLElement, tarjeta: HTMLElement, foto: HTMLElement
     parallax.lerp(objetivo, 0.06);
     grupo.rotation.set(parallax.y, parallax.x, 0);
 
-    piezas.forEach((p, i) => {
+    const colocar = (p: (typeof piezas)[number]) => {
       const { x, y, z } = ubicar(p, t, scroll * 1.4);
       aEscena(p.ancla, x, y, z, aux);
       aux.rotation.set(p.giro[0] + t * p.velocidad[0], p.giro[1] + t * p.velocidad[1], p.giro[2]);
       aux.scale.setScalar(p.escala);
       aux.updateMatrix();
+    };
+    capsulas.forEach((p, i) => {
+      colocar(p);
       mitadA.setMatrixAt(i, aux.matrix);
       aux.quaternion.multiply(volteo);
       aux.updateMatrix();
       mitadB.setMatrixAt(i, aux.matrix);
     });
+    tabletas.forEach((p, i) => {
+      colocar(p);
+      mallaTabletas.setMatrixAt(i, aux.matrix);
+    });
     mitadA.instanceMatrix.needsUpdate = true;
     mitadB.instanceMatrix.needsUpdate = true;
+    mallaTabletas.instanceMatrix.needsUpdate = true;
 
     const f = encuadre.frasco;
     aEscena('tarjeta', f.x, f.y + Math.sin(t * 0.3) * 6, f.z, frasco);

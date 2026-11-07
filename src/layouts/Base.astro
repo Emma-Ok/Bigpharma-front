@@ -71,6 +71,8 @@ const aJson = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
     <div id="anuncios-pedido" aria-live="polite" class="visualmente-oculto"></div>
     <script>
       import '@/compartido/movimiento/3d/cargador';
+      import { marcarNavegacionDeProducto } from '@/funcionalidades/producto/transiciones';
+      marcarNavegacionDeProducto();
     </script>
   </body>
 </html>

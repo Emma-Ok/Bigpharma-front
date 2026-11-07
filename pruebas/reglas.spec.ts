@@ -240,65 +240,58 @@ test('el carrusel de anuncios se desliza con el gesto', async ({ page }) => {
   await expect(page).toHaveURL(/\/$/);
 });
 
-test('los carruseles avanzan solos y se pueden pausar', async ({ page }) => {
+test('los carruseles avanzan solos y no tienen botón de pausa', async ({ page }) => {
   await page.clock.install();
   await page.goto('/');
   await page.waitForFunction(() => !document.querySelector('astro-island[component-url*="CarruselAnuncios"][ssr]'));
   await page.mouse.move(5, 600);
   const avisoActivo = () =>
     page.evaluate(() => [...document.querySelector('[data-aviso-pista]')!.children].findIndex((c) => !(c as HTMLElement).inert));
+  await expect(page.locator('[data-avisos]').getByRole('button')).toHaveCount(0);
   expect(await avisoActivo()).toBe(0);
   await page.clock.runFor(6100);
   await expect.poll(avisoActivo).toBe(1);
   await expect.poll(() => indiceChip(page)).toBe(1);
-
-  await page.getByRole('button', { name: 'Pausar avisos' }).click();
-  await expect(page.getByRole('button', { name: 'Reanudar avisos' })).toBeVisible();
-  await page.mouse.move(5, 600);
-  await page.clock.runFor(13000);
-  expect(await avisoActivo()).toBe(1);
-
-  // El foco que deja el clic no impide reanudar.
-  await page.getByRole('button', { name: 'Reanudar avisos' }).click();
-  await page.mouse.move(5, 600);
   await page.clock.runFor(6100);
   await expect.poll(avisoActivo).toBe(2);
 });
 
-test('la barra de avisos no muestra flechas ni puntos y se pausa con el puntero y el foco', async ({ page }, info) => {
-  test.skip(info.project.name !== 'escritorio', 'Puntero y teclado');
+test('la barra de avisos se detiene con el puntero encima', async ({ page }, info) => {
+  test.skip(info.project.name !== 'escritorio', 'Puntero');
   await page.clock.install();
   await page.goto('/');
-  const barra = page.locator('[data-avisos]');
-  const boton = page.getByRole('button', { name: 'Pausar avisos' });
-  await expect(barra.getByRole('button')).toHaveCount(1);
   const avisoActivo = () =>
     page.evaluate(() => [...document.querySelector('[data-aviso-pista]')!.children].findIndex((c) => !(c as HTMLElement).inert));
-
-  // El botón solo aparece con hover o foco.
-  await page.mouse.move(5, 600);
-  await expect(boton).toHaveCSS('opacity', '0');
-  await barra.hover();
-  await expect(boton).toHaveCSS('opacity', '1');
-  await page.clock.runFor(13000);
-  expect(await avisoActivo()).toBe(0);
-
-  await page.mouse.move(5, 600);
-  await barra.getByRole('link').focus();
-  await page.keyboard.press('Shift+Tab');
-  await expect(boton).toBeFocused();
-  await expect(boton).toHaveCSS('opacity', '1');
+  await page.locator('[data-avisos]').hover();
   await page.clock.runFor(13000);
   expect(await avisoActivo()).toBe(0);
 });
 
-test('en celular el botón de pausa siempre se ve y el WhatsApp de los avisos no', async ({ page }, info) => {
+test('en celular el WhatsApp de los avisos no se ve', async ({ page }, info) => {
   test.skip(info.project.name !== 'celular', 'Celular');
   await page.goto('/');
-  await expect(page.getByRole('button', { name: 'Pausar avisos' })).toHaveCSS('opacity', '1');
-  const caja = await page.getByRole('button', { name: 'Pausar avisos' }).boundingBox();
-  expect(Math.min(caja!.width, caja!.height)).toBeGreaterThanOrEqual(44);
   await expect(page.locator('[data-avisos]').getByRole('link')).toBeHidden();
+});
+
+test('ir de la portada al catálogo no hace viajar los productos; hacia una ficha sí', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const w = window as unknown as { __marcas: boolean[] };
+    w.__marcas = [];
+    document.addEventListener('astro:before-swap', () => w.__marcas.push(document.documentElement.hasAttribute('data-vt-producto')));
+  });
+  await page.locator('#catalogo').getByRole('link', { name: 'Ver todos los productos' }).click();
+  await expect(page).toHaveURL(/\/catalogo$/);
+  expect(await page.evaluate(() => (window as unknown as { __marcas: boolean[] }).__marcas)).toEqual([false]);
+  await page.goto('/producto/acetaminofen-500-mg');
+  await page.evaluate(() => {
+    const w = window as unknown as { __marcas: boolean[] };
+    w.__marcas = [];
+    document.addEventListener('astro:before-swap', () => w.__marcas.push(document.documentElement.hasAttribute('data-vt-producto')));
+  });
+  await page.getByRole('navigation', { name: /ruta|migas/i }).getByRole('link', { name: 'Catálogo' }).click();
+  await expect(page).toHaveURL(/\/catalogo$/);
+  expect(await page.evaluate(() => (window as unknown as { __marcas: boolean[] }).__marcas)).toEqual([true]);
 });
 
 test.describe('con movimiento reducido', () => {
@@ -313,7 +306,6 @@ test.describe('con movimiento reducido', () => {
       [...document.querySelector('[data-aviso-pista]')!.children].findIndex((c) => !(c as HTMLElement).inert),
     );
     expect(activo).toBe(0);
-    await expect(page.locator('[data-aviso-pausa]')).toBeHidden();
   });
 });
 

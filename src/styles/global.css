@@ -176,12 +176,13 @@
 
 /*
  * Nombres de transición según el tipo (los componentes ponen data-vt y --vt):
- * - cambio de página (router de Astro, sin tipos propios): imagen y nombre del producto, de la tarjeta a la ficha;
+ * - cambio de página hacia o desde un producto ([data-vt-producto], transiciones.ts): imagen y nombre, de la
+ *   tarjeta a la ficha. Entre listas no hay nombres: cada producto cruzaría por encima de los demás;
  * - ficha rápida: solo la imagen de la tarjeta elegida, y el panel entra como un bloque. El resto de
  *   tarjetas no lleva nombre, para que nada se pinte por encima del fondo oscuro mientras se abre;
  * - cuadrícula: cada tarjeta, para que se reubique al elegir categoría.
  */
-html:not(:active-view-transition-type(ficha, cuadricula)) [data-vt] {
+html[data-vt-producto]:not(:active-view-transition-type(ficha, cuadricula)) [data-vt] {
   view-transition-name: var(--vt);
 }
 
