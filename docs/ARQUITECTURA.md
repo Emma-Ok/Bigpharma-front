@@ -22,6 +22,7 @@ src/
 ├── compartido/
 │   ├── ui/              Boton, HojaInferior, Icono, iconos.ts, RutaNavegacion, estilosCategoria.ts
 │   ├── catalogoCliente.ts   cargarCatalogo, usarCatalogo
+│   ├── navegacion/      volver.ts (enlace «volver» de celular y estado del catálogo en sessionStorage)
 │   └── movimiento/      preferencias.ts, animaciones.ts, 3d/ (escenas e isla Escena3d)
 ├── dominio/             TypeScript puro: producto, categorias, busqueda, filtrosCatalogo, carrito,
 │                        domicilio, pedido, whatsapp, sitio, seo, formato

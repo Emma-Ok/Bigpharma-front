@@ -1,15 +1,44 @@
 ---
 import type { Miga } from '@/dominio/seo';
+import Icono from './Icono.astro';
 
 interface Props {
   migas: Miga[];
+  /** Enlace de celular. Por omisión, la miga anterior a la actual con «Volver a» para lectores de pantalla. */
+  volver?: { nombre: string; ruta: string; lector?: string };
+  /**
+   * Qué ajusta el navegador en el enlace de celular (compartido/navegacion/volver.ts):
+   * «ficha» vuelve al catálogo con sus filtros y nombra la categoría si se llegó desde ella;
+   * «pedido» vuelve al catálogo con sus filtros.
+   */
+  restaurar?: 'ficha' | 'pedido';
 }
 
-const { migas } = Astro.props;
+const { migas, restaurar } = Astro.props;
+const anterior = migas.at(-2);
+const volver = Astro.props.volver ?? (anterior && { ...anterior, lector: 'Volver a ' });
 ---
 
 <nav aria-label="Ruta de navegación" class="text-sm">
-  <ol class="m-0 flex list-none flex-wrap items-center gap-x-2 gap-y-1 p-0 text-muted">
+  {
+    volver && (
+      <a
+        href={volver.ruta}
+        data-volver={restaurar}
+        class="-ml-2 inline-flex min-h-11 min-w-11 items-center gap-1 rounded-boton pr-3 pl-1 font-semibold text-bottle no-underline min-[48rem]:hidden"
+      >
+        <Icono nombre="anterior" tamano={20} />
+        {volver.lector && <span class="visualmente-oculto">{volver.lector}</span>}
+        <span data-volver-nombre>{volver.nombre}</span>
+      </a>
+    )
+  }
+  <ol
+    class:list={[
+      'm-0 list-none flex-wrap items-center gap-x-2 gap-y-1 p-0 text-muted',
+      volver ? 'hidden min-[48rem]:flex' : 'flex',
+    ]}
+  >
     {
       migas.map((m, i) =>
         i === migas.length - 1 ? (

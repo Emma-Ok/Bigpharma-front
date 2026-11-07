@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { cambiarConTransicion } from '@/compartido/movimiento/animaciones';
+import { recordarCatalogo } from '@/compartido/navegacion/volver';
 import { escribirFiltros, FILTROS_INICIALES, leerFiltros, type FiltrosCatalogo } from '@/dominio/filtrosCatalogo';
 
 /** Filtros del catálogo sincronizados con la URL. */
@@ -17,6 +18,8 @@ export function usarFiltrosCatalogo() {
     const consulta = escribirFiltros(filtros);
     // Conserva history.state para no confundir al router de Astro.
     history.replaceState(history.state, '', `${window.location.pathname}${consulta ? `?${consulta}` : ''}`);
+    // El enlace «volver» de la ficha y del pedido regresa a este mismo estado.
+    recordarCatalogo(consulta);
   }, [filtros]);
 
   /** Cualquier cambio de filtro vuelve a la primera página. */

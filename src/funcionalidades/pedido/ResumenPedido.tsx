@@ -1,8 +1,9 @@
-import { useRef } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import type { LineaResuelta } from '@/dominio/carrito';
 import { progresoDomicilio } from '@/dominio/domicilio';
 import { formatearPrecio } from '@/dominio/formato';
 import Icono from '@/compartido/ui/Icono';
+import { rutaCatalogo } from '@/compartido/navegacion/volver';
 import { cambiarCantidad } from './acciones';
 import ProgresoDomicilio from './ProgresoDomicilio';
 import VaciarPedido from './VaciarPedido';
@@ -18,6 +19,9 @@ interface Props {
 /** Lista editable del pedido, subtotal y avance al domicilio gratis. */
 export default function ResumenPedido({ lineas, total, unidades, umbral, onVaciado }: Props) {
   const titulo = useRef<HTMLHeadingElement>(null);
+  // Vuelve al catálogo como quedó; sin almacenamiento, al catálogo sin filtros.
+  const [catalogo, setCatalogo] = useState('/catalogo');
+  useEffect(() => setCatalogo(rutaCatalogo()), []);
   const { falta, gratis } = progresoDomicilio(total, umbral);
   const cantidad = 'flex h-11 w-11 cursor-pointer items-center justify-center border-0 bg-transparent text-2xl font-semibold text-bottle';
 
@@ -74,7 +78,7 @@ export default function ResumenPedido({ lineas, total, unidades, umbral, onVacia
       </dl>
       <ProgresoDomicilio total={total} umbral={umbral} variante="panel" />
       <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
-        <a href="/catalogo" class="inline-flex min-h-11 items-center gap-2 font-semibold text-bottle">
+        <a href={catalogo} class="inline-flex min-h-11 items-center gap-2 font-semibold text-bottle">
           <Icono nombre="flecha-atras" tamano={18} />
           Seguir comprando
         </a>

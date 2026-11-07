@@ -1,5 +1,6 @@
 ---
 import Base from '@/layouts/Base.astro';
+import RutaNavegacion from '@/compartido/ui/RutaNavegacion.astro';
 import PaginaPedido from '@/funcionalidades/pedido/PaginaPedido';
 import { cargarDatos } from '@/hoja/cargarDatos';
 import { resumir } from '@/dominio/producto';
@@ -14,7 +15,15 @@ const { productos, configuracion } = await cargarDatos();
   noindex
   sinBarraPedido
 >
-  <div class="mx-auto flex w-full max-w-sitio flex-col gap-5 px-margen pt-6 pb-14">
+  <div class="mx-auto flex w-full max-w-sitio flex-col gap-5 px-margen pt-4 pb-14">
+    <RutaNavegacion
+      migas={[
+        { nombre: 'Inicio', ruta: '/' },
+        { nombre: 'Tu pedido', ruta: '/pedido' },
+      ]}
+      volver={{ nombre: 'Seguir comprando', ruta: '/catalogo' }}
+      restaurar="pedido"
+    />
     <h1 class="m-0 text-[clamp(28px,3vw,38px)] leading-tight font-semibold">Tu pedido</h1>
     <PaginaPedido client:load productos={productos.map(resumir)} tienda={tiendaDe(configuracion)} />
   </div>

@@ -35,7 +35,7 @@ const esquemas = [migasJsonLd(migas, Astro.site!), productoJsonLd(producto, Astr
 
 <Base titulo={`${producto.nombre} | ${configuracion.nombreDrogueria}`} descripcion={descripcion} jsonLd={esquemas}>
   <div class="mx-auto flex w-full max-w-260 flex-col gap-4 px-margen pt-4 pb-14">
-    <RutaNavegacion migas={migas} />
+    <RutaNavegacion migas={migas} volver={{ nombre: 'Catálogo', ruta: '/catalogo', lector: 'Volver a ' }} restaurar="ficha" />
     <FichaProducto client:load producto={producto} tienda={tiendaDe(configuracion)} nivel={1} />
   </div>
 </Base>

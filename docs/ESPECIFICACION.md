@@ -46,8 +46,10 @@ Slug del producto: `nombre` normalizado (sin tildes, minúsculas, guiones) + `id
 | `/catalogo` | Ruta de navegación, `h1` y búsqueda, categorías, botón «Filtros» (tipo, solo con descuento y orden), cuadrícula paginada y panel del pedido |
 | `/catalogo?categoria=piel` | Mismo catálogo con filtro inicial desde la URL |
 | `/producto/[slug]` | Página estática con el contenido de la ficha (SEO). Desde el catálogo también se abre como diálogo de vista rápida |
-| `/pedido` | Resumen editable, formulario, vista previa del mensaje y envío a WhatsApp (`noindex`) |
+| `/pedido` | «Seguir comprando» (ruta de navegación desde 768 px), resumen editable, formulario, vista previa del mensaje y envío a WhatsApp (`noindex`) |
 | `/politica-de-datos`, `/terminos` | Textos legales |
+
+**Volver a la página superior.** Por debajo de 768 px, arriba del contenido y fuera del encabezado, un solo enlace con chevron que nombra el destino: en el catálogo «Inicio»; en la ficha «Catálogo», o el nombre de la categoría si se llegó desde ella; en `/pedido` «Seguir comprando». Desde 768 px se ve la ruta de navegación completa (en `/pedido`, «Inicio / Tu pedido»). El enlace nunca usa `history.back()`: siempre lleva a la página superior del sitio, también si se llega desde Google o WhatsApp. Al volver al catálogo se conservan la búsqueda, la categoría, los filtros y la página, que el catálogo guarda en `sessionStorage` con los mismos parámetros de su URL. Área táctil de 44 px.
 
 ## 5. Componentes
 
