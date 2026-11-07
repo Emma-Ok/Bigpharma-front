@@ -3,11 +3,15 @@
  * de la tarjeta del profesional. El canvas va encima de la tarjeta y un plano invisible del tamaño de
  * la tarjeta escribe solo profundidad: lo que pasa por detrás queda tapado y lo que pasa por delante
  * se ve sobre la foto. Así basta un contexto WebGL.
+ *
+ * La cámara tiene una escala fija en píxeles y cada pieza se proyecta exactamente a su lugar en pantalla
+ * (piezas.ts): el primer cuadro coincide con la imagen estática en cualquier ancho.
  * Parallax: con el puntero en escritorio y con el scroll en celular.
  */
 import {
   Color,
   CylinderGeometry,
+  Euler,
   Group,
   InstancedMesh,
   LatheGeometry,
@@ -15,33 +19,23 @@ import {
   MeshBasicMaterial,
   MeshPhysicalMaterial,
   MeshStandardMaterial,
-  Euler,
   Object3D,
   Quaternion,
   Shape,
   ShapeGeometry,
   Vector2,
 } from 'three';
-import { crearMotor, esLigero, FONDO_CELADON } from './motor';
-import {
-  CAMARA,
-  crearPiezas,
-  geometriaMediaCapsula,
-  MITAD_ALTO,
-  PARES,
-  ubicar,
-  ubicarFrasco,
-  type Medidas,
-} from './piezas';
+import { crearMotor, esLigero } from './motor';
+import { CAMARA_Z, ENCUADRES, geometriaMediaCapsula, PARES, ubicar, type Ancla, type Encuadre } from './piezas';
+
+const FONDO_PAPER = 0xf3f5f1;
+const ESCRITORIO = '(min-width: 56.25rem)';
 
 const PARALLAX_MAX = (6 * Math.PI) / 180;
-const ENTRADA_MS = 1200;
 const AMBAR = 0xa8621a;
 const AMBAR_OSCURO = 0x8a4e12;
 const BOTTLE = 0x133b34;
 const RADIO_TARJETA_PX = 20;
-
-const suavizar = (t: number) => 1 - Math.pow(1 - t, 3);
 
 function crearFrasco(segmentos: number): Group {
   const perfil = [
@@ -90,15 +84,11 @@ function formaTarjeta(ancho: number, alto: number, radio: number): Shape {
   return s;
 }
 
-export function iniciarHero(contenedor: HTMLElement): () => void {
-  const escenario = contenedor.closest<HTMLElement>('[data-escenario]');
-  const tarjeta = escenario?.querySelector<HTMLElement>('[data-tarjeta-hero]');
-  const foto = escenario?.querySelector<HTMLElement>('[data-foto-hero]');
-  if (!tarjeta || !foto) return () => {};
-
+function montar(contenedor: HTMLElement, tarjeta: HTMLElement, foto: HTMLElement, encuadre: Encuadre): () => void {
   const ligero = esLigero();
-  const motor = crearMotor(contenedor, { ligero, fov: CAMARA.fov, distancia: CAMARA.z, niebla: FONDO_CELADON });
-  const piezas = crearPiezas(ligero);
+  const { piezas, pxPorUnidad } = encuadre;
+  const u = 1 / pxPorUnidad;
+  const motor = crearMotor(contenedor, { ligero, distancia: CAMARA_Z, niebla: FONDO_PAPER });
   const seg = ligero ? 16 : 24;
   const material = new MeshStandardMaterial({ roughness: 0.4, metalness: 0 });
   const mitadA = new InstancedMesh(geometriaMediaCapsula(seg), material, piezas.length);
@@ -108,7 +98,7 @@ export function iniciarHero(contenedor: HTMLElement): () => void {
     mitadB.setColorAt(i, new Color(PARES[p.color][1]));
   });
   const frasco = crearFrasco(ligero ? 20 : 32);
-  frasco.scale.setScalar(ligero ? 0.82 : 1.15);
+  frasco.scale.setScalar(encuadre.frasco.escala);
   const grupo = new Group();
   grupo.add(mitadA, mitadB, frasco);
 
@@ -116,29 +106,40 @@ export function iniciarHero(contenedor: HTMLElement): () => void {
   oclusor.renderOrder = -1;
   motor.agregar(oclusor, grupo);
 
-  const medidas: Medidas = { mitadAncho: 1, centroX: 0, mitadTarjeta: 1, bajoFoto: 0 };
+  // Anclas en píxeles desde el centro del canvas (y hacia abajo).
+  const anclas: Record<Ancla, { x: number; y: number }> = { tarjeta: { x: 0, y: 0 }, derecha: { x: 0, y: 0 }, izquierda: { x: 0, y: 0 } };
   const medir = () => {
     const c = contenedor.getBoundingClientRect();
     const t = tarjeta.getBoundingClientRect();
+    const f = foto.getBoundingClientRect();
     if (!c.height || !t.height) return;
-    const u = (2 * MITAD_ALTO) / c.height;
-    const centroY = (c.top + c.height / 2 - (t.top + t.height / 2)) * u;
-    medidas.mitadAncho = (c.width / 2) * u;
-    medidas.centroX = (t.left + t.width / 2 - c.left - c.width / 2) * u;
-    medidas.mitadTarjeta = (t.width / 2) * u;
-    medidas.bajoFoto = (c.top + c.height / 2 - foto.getBoundingClientRect().bottom) * u;
+    const centroX = c.left + c.width / 2;
+    const centroY = c.top + c.height / 2;
+    anclas.tarjeta = { x: f.left + f.width / 2 - centroX, y: f.top + f.height / 2 - centroY };
+    anclas.derecha = { x: window.innerWidth - centroX, y: 0 };
+    anclas.izquierda = { x: -centroX, y: 0 };
+    // La altura visible en z = 0 es la del canvas en unidades: la escala no depende del tamaño.
+    motor.camara.fov = (2 * Math.atan((c.height * u) / 2 / CAMARA_Z) * 180) / Math.PI;
+    motor.camara.updateProjectionMatrix();
     oclusor.geometry.dispose();
     oclusor.geometry = new ShapeGeometry(formaTarjeta(t.width * u, t.height * u, RADIO_TARJETA_PX * u), 8);
-    oclusor.position.set(medidas.centroX, centroY, 0);
+    oclusor.position.set((t.left + t.width / 2 - centroX) * u, -(t.top + t.height / 2 - centroY) * u, 0);
   };
   medir();
   const redimension = new ResizeObserver(medir);
   redimension.observe(contenedor);
 
+  /** Punto de la escena que se proyecta en ese lugar de la pantalla a esa profundidad. */
+  const aEscena = (ancla: Ancla, x: number, y: number, z: number, destino: Object3D) => {
+    const k = (u * (CAMARA_Z - z)) / CAMARA_Z;
+    destino.position.set((anclas[ancla].x + x) * k, -(anclas[ancla].y + y) * k, z);
+  };
+
   const aux = new Object3D();
   const volteo = new Quaternion().setFromEuler(new Euler(Math.PI, 0, 0));
   const objetivo = new Vector2();
   const parallax = new Vector2();
+  let scroll = 0;
   let conParallax = true;
   motor.alIrLento(() => {
     conParallax = false;
@@ -154,23 +155,21 @@ export function iniciarHero(contenedor: HTMLElement): () => void {
 
   motor.animar((ms) => {
     const t = ms / 1000;
-    let avance = 0;
     if (ligero && conParallax) {
       const r = contenedor.getBoundingClientRect();
-      const desplazado = Math.min(Math.max(0, -r.top / r.height), 1);
-      objetivo.set(0, desplazado * PARALLAX_MAX * 2);
-      grupo.position.y = desplazado * 1.2;
-      avance = desplazado * 1.4;
+      // Suavizado desde 0: el primer cuadro coincide con la imagen aunque la página ya esté desplazada.
+      scroll += (Math.min(Math.max(0, -r.top / r.height), 1) - scroll) * 0.06;
+      objetivo.set(0, scroll * PARALLAX_MAX * 2);
+      grupo.position.y = scroll * 1.2;
     }
     parallax.lerp(objetivo, 0.06);
     grupo.rotation.set(parallax.y, parallax.x, 0);
 
     piezas.forEach((p, i) => {
-      const entrada = suavizar(Math.min(1, Math.max(0, (ms - i * 50) / ENTRADA_MS)));
-      const { x, y, z } = ubicar(p, medidas, t, avance);
-      aux.position.set(x, y, z);
-      aux.rotation.set(p.giro.x + t * p.velocidad.x, p.giro.y + t * p.velocidad.y, p.giro.z);
-      aux.scale.setScalar(p.escala * entrada);
+      const { x, y, z } = ubicar(p, t, scroll * 1.4);
+      aEscena(p.ancla, x, y, z, aux);
+      aux.rotation.set(p.giro[0] + t * p.velocidad[0], p.giro[1] + t * p.velocidad[1], p.giro[2]);
+      aux.scale.setScalar(p.escala);
       aux.updateMatrix();
       mitadA.setMatrixAt(i, aux.matrix);
       aux.quaternion.multiply(volteo);
@@ -180,8 +179,8 @@ export function iniciarHero(contenedor: HTMLElement): () => void {
     mitadA.instanceMatrix.needsUpdate = true;
     mitadB.instanceMatrix.needsUpdate = true;
 
-    const f = ubicarFrasco(medidas, t);
-    frasco.position.set(f.x, f.y, f.z);
+    const f = encuadre.frasco;
+    aEscena('tarjeta', f.x, f.y + Math.sin(t * 0.3) * 6, f.z, frasco);
     frasco.rotation.set(0.1, t * 0.25, -0.12);
   });
 
@@ -189,5 +188,25 @@ export function iniciarHero(contenedor: HTMLElement): () => void {
     redimension.disconnect();
     window.removeEventListener('pointermove', alMoverPuntero);
     motor.destruir();
+  };
+}
+
+export function iniciarHero(contenedor: HTMLElement): () => void {
+  const escenario = contenedor.closest<HTMLElement>('[data-escenario]');
+  const tarjeta = escenario?.querySelector<HTMLElement>('[data-tarjeta-hero]');
+  const foto = escenario?.querySelector<HTMLElement>('[data-foto-hero]');
+  if (!tarjeta || !foto) return () => {};
+
+  const escritorio = window.matchMedia(ESCRITORIO);
+  const arrancar = () => montar(contenedor, tarjeta, foto, ENCUADRES[escritorio.matches ? 'escritorio' : 'celular']);
+  let destruir = arrancar();
+  const alCambiar = () => {
+    destruir();
+    destruir = arrancar();
+  };
+  escritorio.addEventListener('change', alCambiar);
+  return () => {
+    escritorio.removeEventListener('change', alCambiar);
+    destruir();
   };
 }

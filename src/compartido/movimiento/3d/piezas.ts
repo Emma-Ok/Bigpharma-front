@@ -1,9 +1,12 @@
 /**
  * Piezas de las escenas (datos y geometrías, sin renderer): cápsulas de dos colores y tabletas.
- * Las tabletas solo salen en la celebración. Lo usan las escenas 3D y scripts/generar-capsulas.mjs
- * (imagen estática), por eso solo importa three.
+ * Las tabletas solo salen en la celebración.
+ *
+ * El encuadre del hero se define en píxeles de pantalla desde un ancla (el centro de la foto o un borde
+ * de la ventana), con una escala fija. Lo leen la escena 3D y scripts/generar-capsulas.mjs: como la
+ * imagen estática y el primer cuadro salen de la misma tabla, coinciden en cualquier ancho.
  */
-import { Euler, LatheGeometry, Vector2 } from 'three';
+import { Vector2, LatheGeometry } from 'three';
 
 export const PARES: [string, string][] = [
   ['#133B34', '#FFFFFF'],
@@ -15,97 +18,100 @@ export const RADIO = 0.32;
 export const LARGO = 0.55;
 export const RADIO_TABLETA = 0.42;
 export const GROSOR_TABLETA = 0.16;
-/** Cámara compartida con la imagen estática (scripts/generar-capsulas.mjs). */
-export const CAMARA = { fov: 35, z: 16 };
-export const MITAD_ALTO = Math.tan(((CAMARA.fov / 2) * Math.PI) / 180) * CAMARA.z;
+/** Distancia de la cámara al plano de la tarjeta (z = 0). */
+export const CAMARA_Z = 16;
 
-/** Geometría del escenario en unidades de la escena, en el plano z = 0 (la tarjeta está ahí). */
-export interface Medidas {
-  /** Mitad del ancho visible. */
-  mitadAncho: number;
-  /** Centro y mitad del ancho de la tarjeta. */
-  centroX: number;
-  mitadTarjeta: number;
-  /** Borde inferior de la foto: por debajo está el texto, que ninguna pieza puede tapar. */
-  bajoFoto: number;
-}
+/** tarjeta: centro de la foto. derecha e izquierda: borde de la ventana, a media altura del canvas. */
+export type Ancla = 'tarjeta' | 'derecha' | 'izquierda';
 
 export interface Pieza {
-  /** orbita: da la vuelta a la tarjeta, por delante y por detrás de la foto. lateral: flota a un costado, detrás. */
-  tipo: 'orbita' | 'lateral';
-  /** Posición entre 0 y 1 dentro de la franja que le toca. */
-  fx: number;
-  fy: number;
-  lado: 1 | -1;
-  fase: number;
-  giro: Euler;
-  velocidad: Vector2;
-  color: number;
+  ancla: Ancla;
+  /** Desde el ancla, en píxeles de pantalla (y hacia abajo). */
+  x: number;
+  y: number;
+  z: number;
   escala: number;
+  color: number;
+  giro: [number, number, number];
+  velocidad: [number, number];
+  fase: number;
+  /** Da la vuelta a la tarjeta, por delante y por detrás de la foto: radio en píxeles y ángulo inicial. */
+  orbita?: { radio: number; angulo: number };
 }
 
-function aleatorio(semilla: number) {
-  let s = semilla;
-  return () => {
-    s = (s * 16807) % 2147483647;
-    return (s - 1) / 2147483646;
-  };
+export interface Encuadre {
+  pxPorUnidad: number;
+  piezas: Pieza[];
+  frasco: { x: number; y: number; z: number; escala: number };
 }
 
-/** Cápsulas del hero: 13 en escritorio y 5 en celular; con el frasco son ~14 y ~6 objetos. */
-export function crearPiezas(ligero: boolean): Pieza[] {
-  const azar = aleatorio(7);
-  const orbitas = ligero ? 3 : 7;
-  const total = ligero ? 5 : 13;
-  return Array.from({ length: total }, (_, i) => {
-    const orbita = i < orbitas;
-    return {
-      tipo: orbita ? 'orbita' : 'lateral',
-      fx: azar(),
-      fy: orbita ? (i + 0.5) / orbitas : ((i - orbitas + azar() * 0.6) / (total - orbitas)) * 0.9,
-      lado: i % 2 ? 1 : -1,
-      fase: orbita ? (i / orbitas) * Math.PI * 2 : azar() * Math.PI * 2,
-      giro: new Euler(azar() * Math.PI, azar() * Math.PI, azar() * Math.PI),
-      velocidad: new Vector2((azar() - 0.5) * 0.3, (azar() - 0.5) * 0.3),
-      color: i % PARES.length,
-      escala: 0.75 + azar() * 0.4,
-    };
-  });
-}
+export type NombreEncuadre = 'celular' | 'escritorio';
+
+const pieza = (
+  ancla: Ancla,
+  x: number,
+  y: number,
+  z: number,
+  escala: number,
+  color: number,
+  giro: Pieza['giro'],
+  fase: number,
+  orbita?: Pieza['orbita'],
+): Pieza => ({ ancla, x, y, z, escala, color, giro, fase, orbita, velocidad: [0.05 + (fase % 0.1), 0.04 + (fase % 0.07)] });
+
+/**
+ * Primero las grandes, en primer plano y cortadas por el borde; luego las que orbitan y al final las
+ * pequeñas del fondo. Si el equipo va lento, la escena se queda con la primera mitad.
+ * Al arrancar, ninguna pieza de las ancladas a la tarjeta está por delante de ella: esa capa de la imagen
+ * estática va debajo de la tarjeta.
+ */
+export const ENCUADRES: Record<NombreEncuadre, Encuadre> = {
+  escritorio: {
+    pxPorUnidad: 50,
+    piezas: [
+      pieza('derecha', -34, -165, 4.5, 2.1, 0, [0.35, 0.3, -0.75], 0.4),
+      pieza('derecha', -10, 150, 3.5, 1.7, 1, [0.25, 0.5, 0.3], 1.9),
+      pieza('derecha', -330, -262, 3, 1.5, 2, [0.5, 0.2, 1.15], 3.1),
+      pieza('tarjeta', 0, -60, 0, 0.9, 0, [0.4, 0.2, 0.5], 0.8, { radio: 250, angulo: Math.PI + 0.3 }),
+      pieza('tarjeta', 0, 10, 0, 0.8, 1, [1.1, 0.3, -0.4], 2.2, { radio: 250, angulo: -0.35 }),
+      pieza('tarjeta', 0, -120, 0, 0.7, 2, [0.2, 0.9, 1.2], 4.1, { radio: 250, angulo: Math.PI + 1 }),
+      pieza('tarjeta', -228, 60, -3, 0.7, 2, [0.6, 0.4, 0.9], 1.1),
+      pieza('tarjeta', -220, 190, -4, 0.6, 0, [1.2, 0.2, -0.6], 2.7),
+      pieza('tarjeta', -205, 335, -2.5, 0.75, 1, [0.3, 0.8, 0.5], 3.6),
+      pieza('tarjeta', 250, 70, -4.5, 0.6, 0, [0.8, 0.5, 1.3], 0.2),
+      pieza('tarjeta', 300, 190, -3, 0.65, 2, [0.4, 1.1, -0.9], 5.2),
+      pieza('tarjeta', 70, -165, -5, 0.55, 1, [1, 0.3, 0.2], 4.6),
+      pieza('tarjeta', -80, 385, -3.5, 0.6, 2, [0.5, 0.6, 1.4], 5.9),
+    ],
+    frasco: { x: 215, y: 285, z: -1, escala: 1.15 },
+  },
+  celular: {
+    pxPorUnidad: 32,
+    piezas: [
+      pieza('derecha', -8, -82, 3, 1.5, 0, [0.35, 0.3, -0.6], 0.4),
+      pieza('izquierda', 2, -96, 2.5, 1.25, 1, [0.3, 0.4, 0.7], 1.9),
+      pieza('tarjeta', 0, 24, 0, 0.8, 2, [0.4, 0.2, 0.5], 0.8, { radio: 172, angulo: Math.PI + 0.2 }),
+      pieza('tarjeta', -163, 130, -3, 0.6, 2, [0.6, 0.4, 0.9], 2.7),
+      pieza('tarjeta', 40, 197, -3.5, 0.55, 0, [1.2, 0.2, 1.3], 3.6),
+    ],
+    frasco: { x: 160, y: 142, z: -1, escala: 0.8 },
+  },
+};
 
 const FONDO_ORBITA = 2.6;
 const VELOCIDAD_ORBITA = 0.11;
+const DERIVA_PX = 8;
 
-/**
- * Posición de una pieza. Las órbitas solo pasan a la altura de la foto o por encima, nunca del texto;
- * las laterales van detrás de la tarjeta (z < 0), que las tapa si se acercan.
- */
-export function ubicar(p: Pieza, m: Medidas, segundos: number, avance = 0) {
-  if (p.tipo === 'orbita') {
-    const a = p.fase + segundos * VELOCIDAD_ORBITA + avance;
-    const radio = Math.min(m.mitadAncho * 0.92, m.mitadTarjeta + 1.6);
-    const piso = m.bajoFoto + 1.1;
-    return {
-      x: m.centroX + Math.cos(a) * radio,
-      y: piso + p.fy * (MITAD_ALTO - piso) + Math.sin(segundos * 0.35 + p.fase) * 0.12,
-      z: Math.sin(a) * FONDO_ORBITA,
-    };
+/** Posición de una pieza desde su ancla, en píxeles de pantalla, con la profundidad en unidades de la escena. */
+export function ubicar(p: Pieza, segundos: number, avance = 0) {
+  if (p.orbita) {
+    const a = p.orbita.angulo + segundos * VELOCIDAD_ORBITA + avance;
+    return { x: Math.cos(a) * p.orbita.radio, y: p.y + Math.sin(segundos * 0.35 + p.fase) * 6, z: Math.sin(a) * FONDO_ORBITA };
   }
-  const cerca = m.mitadTarjeta + 0.5;
-  const lejos = Math.max(cerca, Math.min(m.mitadAncho - 0.5, cerca + 3.5));
   return {
-    x: m.centroX + p.lado * (cerca + p.fx * (lejos - cerca)) + Math.sin(segundos * 0.15 + p.fase) * 0.2,
-    y: MITAD_ALTO * (0.8 - 1.7 * p.fy) + Math.cos(segundos * 0.12 + p.fase) * 0.2,
-    z: -1.2 - p.fx * 1.6,
-  };
-}
-
-/** Frasco: abajo, a un costado, medio escondido detrás de la tarjeta. */
-export function ubicarFrasco(m: Medidas, segundos: number) {
-  return {
-    x: m.centroX + m.mitadTarjeta + 0.55,
-    y: -MITAD_ALTO * 0.5 + Math.sin(segundos * 0.3) * 0.12,
-    z: -0.9,
+    x: p.x + Math.sin(segundos * 0.15 + p.fase) * DERIVA_PX,
+    y: p.y + Math.cos(segundos * 0.12 + p.fase) * DERIVA_PX,
+    z: p.z,
   };
 }
 

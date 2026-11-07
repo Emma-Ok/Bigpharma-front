@@ -25,7 +25,7 @@ test.describe('con movimiento reducido', () => {
       await expect(page.locator('canvas')).toHaveCount(0);
     }
     await page.goto('/');
-    await expect(page.locator('#inicio .imagen-estatica svg')).toBeVisible();
+    await expect(page.locator('#inicio .imagen-estatica svg').locator('visible=true').first()).toBeVisible();
     expect(scripts.filter((u) => CHUNKS_3D.test(u))).toEqual([]);
   });
 });
@@ -73,7 +73,7 @@ test.describe('con movimiento activo', () => {
     await page.goto('/', { waitUntil: 'load' });
     await page.waitForTimeout(2500);
     await expect(page.locator('#inicio canvas')).toHaveCount(0);
-    await expect(page.locator('#inicio .imagen-estatica svg')).toBeAttached();
+    await expect(page.locator('#inicio .imagen-estatica svg').first()).toBeAttached();
     await page.mouse.wheel(0, 40);
     await expect(page.locator('#inicio canvas')).toHaveCount(1, { timeout: 15_000 });
   });
@@ -90,7 +90,7 @@ test('en 390×844 el título y un botón se ven sin hacer scroll', async ({ page
   test.skip(info.project.name !== 'celular', 'Celular');
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
-  const escenario = (await page.locator('[data-escenario]').first().boundingBox())!;
+  const escenario = (await page.locator('[data-escena="hero"]').boundingBox())!;
   const titulo = (await page.locator('#hero-titulo').boundingBox())!;
   const boton = (await page.locator('#inicio a[href="/catalogo"]').boundingBox())!;
   expect(escenario.height).toBe(300);

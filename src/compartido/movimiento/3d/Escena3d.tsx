@@ -10,6 +10,7 @@ const ESCENAS: Record<'hero' | 'servicios', () => Promise<Iniciar>> = {
 
 interface Props {
   escena: keyof typeof ESCENAS;
+  /** Posición del contenedor; por defecto ocupa todo su escenario. */
   class?: string;
 }
 
@@ -31,5 +32,5 @@ export default function Escena3d({ escena, class: clase }: Props) {
       destruir?.();
     };
   }, [escena]);
-  return <div ref={ref} aria-hidden="true" data-escena={escena} class={`pointer-events-none absolute inset-0 ${clase ?? ''}`} />;
+  return <div ref={ref} aria-hidden="true" data-escena={escena} class={`pointer-events-none ${clase ?? 'absolute inset-0'}`} />;
 }

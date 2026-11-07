@@ -12,8 +12,6 @@ import {
   type Object3D,
 } from 'three';
 
-export const FONDO_CELADON = 0xd5e5db;
-
 export interface OpcionesMotor {
   /** Celular o equipo modesto: sin antialias y con menos potencia. */
   ligero: boolean;
@@ -59,7 +57,7 @@ export function crearMotor(contenedor: HTMLElement, o: OpcionesMotor): Motor {
     height: '100%',
     pointerEvents: o.interactivo ? 'auto' : 'none',
     opacity: '0',
-    transition: 'opacity 600ms ease-out',
+    transition: 'opacity 300ms ease-out',
     zIndex: o.pantallaCompleta ? '70' : '',
   });
   contenedor.append(canvas);

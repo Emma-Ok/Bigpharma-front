@@ -35,3 +35,12 @@ export interface Anuncio {
   foto?: string;
   altFoto: string;
 }
+
+const PROFESION_POR_DEFECTO = 'un químico farmacéutico';
+
+/** «una química farmacéutica»: la profesión de la hoja con su artículo. Si falta o es un marcador, la de por defecto. */
+export function profesionConArticulo(profesion: string): string {
+  const texto = profesion.trim().toLowerCase();
+  if (!texto || texto.startsWith('[')) return PROFESION_POR_DEFECTO;
+  return `${texto.split(/\s+/)[0].endsWith('a') ? 'una' : 'un'} ${texto}`;
+}

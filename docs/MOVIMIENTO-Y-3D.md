@@ -10,23 +10,25 @@ Hay tres, en `src/compartido/movimiento/3d/`. Todas son decorativas: `aria-hidde
 
 | Escena | Dónde | Qué pasa |
 |---|---|---|
-| Hero (`hero.ts`) | Alrededor de la tarjeta del profesional | Cápsulas y un frasco de vidrio ámbar flotan despacio. Unas cápsulas dan la vuelta a la tarjeta, por delante y por detrás de la foto; otras flotan a los lados, detrás. Parallax de 6° como máximo con el puntero en escritorio y con el scroll en celular |
+| Hero (`hero.ts`) | Alrededor de la tarjeta del profesional, sobre `paper`, a toda la altura del hero y hasta el borde derecho de la ventana | Cápsulas y un frasco de vidrio ámbar flotan despacio. Las más grandes van en primer plano, cortadas por el borde; otras dan la vuelta a la tarjeta, por delante y por detrás de la foto; las más pequeñas quedan al fondo. Parallax de 6° como máximo con el puntero en escritorio y con el scroll en celular |
 | Inyectología (`servicios.ts`) | Sección de servicios de la portada | Jeringa y frasco flotan y se inclinan hacia el puntero; cada pocos segundos el émbolo baja y salen gotas |
 | Celebración (`celebracion.ts`) | Al llegar al domicilio gratis y al enviar el pedido | Las piezas salen del botón o la barra y caen con gravedad. Dura menos de 2 s |
 
-**Cantidad de objetos del hero:** 13 cápsulas y el frasco en escritorio, 5 cápsulas y el frasco en celular.
+**Cantidad de objetos del hero:** 13 cápsulas y el frasco en escritorio (3 grandes, 3 en órbita y 7 al fondo), 5 cápsulas y el frasco en celular (2 grandes, 1 en órbita y 2 al fondo).
+
+**Encuadre:** `piezas.ts` define cada pieza en píxeles de pantalla desde un ancla (el centro de la foto o un borde de la ventana), con una escala fija por encuadre. De esa tabla salen la escena y la imagen estática, y la cámara mantiene esa escala en cualquier tamaño: el primer cuadro coincide con la imagen en todos los anchos. No hay animación de entrada; el cambio es un fundido de 300 ms (`motor.ts` y `global.css`). Las capas de la imagen se anclan igual que las piezas: la del fondo, en la foto y debajo de la tarjeta; las de los bordes, encima. Por eso, al arrancar, ninguna pieza anclada a la tarjeta puede estar por delante de ella.
 
 **Implementación:**
 - `three` desde npm. Importa solo lo necesario. No uses react-three-fiber.
 - `motor.ts` es común a todas las escenas: renderer transparente, cámara, luces, niebla en el color del fondo, ajuste de tamaño y limpieza. `cargador.ts` decide si se cargan y cuándo.
 - Hero y servicios son la isla `Escena3d.tsx`, con `client:visible`, que importa cada escena de forma dinámica.
-- **Profundidad del hero:** un solo canvas encima de la tarjeta, con `pointer-events:none`. Un plano invisible del tamaño de la tarjeta (`colorWrite: false`) escribe solo profundidad: lo que pasa por detrás queda tapado y lo que pasa por delante se ve sobre la foto. Las piezas nunca pasan por delante del texto: las órbitas van a la altura de la foto o por encima y las laterales siempre van detrás.
+- **Profundidad del hero:** un solo canvas encima de la tarjeta, con `pointer-events:none`. Un plano invisible del tamaño de la tarjeta (`colorWrite: false`) escribe solo profundidad: lo que pasa por detrás queda tapado y lo que pasa por delante se ve sobre la foto. Las órbitas van a la altura de la foto y las del fondo siempre van detrás, para que las piezas no tapen el texto de la tarjeta.
 - Las cápsulas usan `InstancedMesh`: dos, una por mitad, con colores `#133B34`/`#FFFFFF`, `#133B34`/`#D5E5DB` y `#4A5A55`/`#F3F5F1`. Material mate (`roughness` alrededor de 0,4), sin sombras ni postprocesado. El frasco es la excepción aprobada al uso de `amber`.
 - `setPixelRatio` con un tope de 1,5. En pantallas chicas o táctiles no hay antialias y las geometrías llevan menos segmentos.
-- El escenario reserva su espacio: 300 px de alto en celular y `aspect-ratio` en escritorio.
+- La escena no afecta la distribución: en celular la banda tiene 300 px fijos y en escritorio el canvas se ubica de forma absoluta sobre el hero, que toma su alto del contenido.
 - Se pausa con `IntersectionObserver` cuando la escena sale de pantalla y con `visibilitychange` cuando la pestaña se oculta. Libera la geometría, el material y el renderer al desmontar y al cambiar de página.
 
-**Cuándo NO se carga three.js** (se muestra la imagen estática: en el hero, un SVG en línea generado con `scripts/generar-capsulas.mjs` a partir de la misma escena; en servicios, su dibujo SVG; la celebración no se dispara):
+**Cuándo NO se carga three.js** (se muestra la imagen estática: en el hero, SVG en línea generados con `scripts/generar-capsulas.mjs` desde la misma tabla; en servicios, su dibujo SVG; la celebración no se dispara):
 - `prefers-reduced-motion: reduce`
 - `navigator.connection?.saveData === true`
 - `navigator.deviceMemory < 2`, cuando el dato exista

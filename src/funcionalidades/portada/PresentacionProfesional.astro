@@ -1,8 +1,15 @@
 ---
-// Escenario del hero: la tarjeta del profesional con la escena 3D alrededor. La imagen estática va debajo
-// de la tarjeta (movimiento reducido, sin WebGL o antes de cargar la escena) y es SVG en línea: nunca es el LCP.
-// El canvas va encima de la tarjeta (compartido/movimiento/3d/hero.ts).
-import capsulas from '@/assets/capsulas.svg?raw';
+// Tarjeta del profesional con la escena 3D alrededor. El canvas y las capas de la imagen estática se ubican
+// contra la sección del hero ([data-escenario]): en celular, la banda de 300 px; en escritorio, toda la altura
+// hasta el borde derecho de la ventana.
+// La imagen estática (movimiento reducido, sin WebGL o antes de cargar la escena) es SVG en línea, así nunca es
+// el LCP, y sale de la misma tabla que la escena (scripts/generar-capsulas.mjs): sus capas se anclan igual que
+// las piezas. La del fondo va debajo de la tarjeta, centrada en la foto; las de los bordes, encima.
+import celularDerecha from '@/assets/hero-celular-derecha.svg?raw';
+import celularIzquierda from '@/assets/hero-celular-izquierda.svg?raw';
+import celularTarjeta from '@/assets/hero-celular-tarjeta.svg?raw';
+import escritorioDerecha from '@/assets/hero-escritorio-derecha.svg?raw';
+import escritorioTarjeta from '@/assets/hero-escritorio-tarjeta.svg?raw';
 import Escena3d from '@/compartido/movimiento/3d/Escena3d';
 import Icono from '@/compartido/ui/Icono.astro';
 import type { Configuracion } from '@/dominio/sitio';
@@ -14,53 +21,62 @@ interface Props {
 
 const { config, class: clase } = Astro.props;
 const { profesional: p } = config;
+const capa = 'imagen-estatica pointer-events-none absolute size-0';
 ---
 
-<div
-  data-escenario
-  class:list={[
-    'relative flex h-75 items-center justify-center overflow-hidden bg-celadon md:aspect-square md:h-auto md:rounded-panel-grande lg:aspect-[5/4]',
-    clase,
-  ]}
->
-  <div class="imagen-estatica absolute inset-0 transition-opacity duration-lenta [&>svg]:size-full" aria-hidden="true" set:html={capsulas} />
-  <aside
-    id="quien"
-    aria-labelledby="quien-titulo"
-    data-tarjeta-hero
-    class="ficha-profesional relative z-10 w-60 overflow-hidden rounded-[20px] bg-blanco shadow-ficha md:w-72"
-  >
-    <div data-foto-hero class="h-34 overflow-hidden bg-paper md:h-56">
-      {
-        p.foto ? (
-          <img
-            src={p.foto}
-            alt={`${p.nombre}, ${p.profesion}`}
-            width="288"
-            height="224"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-            class="block size-full object-cover object-[center_22%]"
-          />
-        ) : (
-          <div class="flex size-full items-end justify-center text-muted/40">
-            <svg aria-hidden="true" class="h-[88%] w-auto" viewBox="0 0 230 250" fill="currentColor">
-              <circle cx="115" cy="82" r="54" />
-              <path d="M14 250 C20 172 62 148 115 148 C168 148 210 172 216 250 Z" />
-            </svg>
-          </div>
-        )
-      }
-    </div>
-    <div class="flex flex-col gap-1.5 px-3.5 pt-2.5 pb-3 md:gap-2 md:px-4.5 md:pt-3.5 md:pb-4">
-      <h2 id="quien-titulo" class="m-0 text-[17px] leading-tight font-semibold md:text-xl">{p.nombre}</h2>
-      <p class="m-0 hidden text-[15px] leading-snug text-muted md:block">{p.profesion}. Atiende personalmente cada pedido.</p>
-      <p class="m-0 inline-flex items-center gap-1.5 self-start rounded-[10px] bg-celadon px-2.5 py-1 text-[13px] leading-tight font-semibold text-bottle md:text-sm">
-        <Icono nombre="escudo" tamano={16} />
-        Registro profesional {p.registro}
-      </p>
-    </div>
-  </aside>
-  <Escena3d client:visible escena="hero" class="z-20" />
+<div class:list={['flex h-75 items-center justify-center md:h-auto', clase]}>
+  <div class="relative w-72 md:w-90">
+    <div class={`${capa} top-13 left-1/2 md:hidden`} aria-hidden="true" set:html={celularTarjeta} />
+    <div class={`${capa} top-28 left-1/2 hidden md:block`} aria-hidden="true" set:html={escritorioTarjeta} />
+    <aside
+      id="quien"
+      aria-labelledby="quien-titulo"
+      data-tarjeta-hero
+      class="ficha-profesional relative z-10 overflow-hidden rounded-[20px] bg-blanco shadow-ficha"
+    >
+      <div data-foto-hero class="h-26 overflow-hidden bg-celadon md:h-56">
+        {
+          p.foto ? (
+            <img
+              src={p.foto}
+              alt={`${p.nombre}, ${p.profesion}`}
+              width="360"
+              height="224"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              class="block size-full object-cover object-[center_22%]"
+            />
+          ) : (
+            <div class="flex size-full items-end justify-center text-muted/40">
+              <svg aria-hidden="true" class="h-[88%] w-auto" viewBox="0 0 230 250" fill="currentColor">
+                <circle cx="115" cy="82" r="54" />
+                <path d="M14 250 C20 172 62 148 115 148 C168 148 210 172 216 250 Z" />
+              </svg>
+            </div>
+          )
+        }
+      </div>
+      <div class="flex flex-col gap-1.5 px-3.5 pt-2.5 pb-3 md:gap-2 md:px-5 md:pt-4 md:pb-5">
+        <h2 id="quien-titulo" class="m-0 text-[17px] leading-tight font-semibold md:text-[22px]">{p.nombre}</h2>
+        <p class="m-0 hidden text-[15px] leading-snug text-muted md:block">{p.profesion}. Atiende personalmente cada pedido.</p>
+        <p class="m-0 inline-flex items-center gap-1.5 self-start rounded-[10px] bg-celadon px-2.5 py-1 text-[13px] leading-tight font-semibold text-bottle md:text-sm">
+          <Icono nombre="escudo" tamano={16} />
+          Registro profesional {p.registro}
+        </p>
+        {
+          p.frase && (
+            <p class="m-0 line-clamp-2 border-l-[3px] border-bottle pl-2.5 text-sm leading-snug text-muted md:mt-1 md:line-clamp-none md:text-[15px]">
+              «{p.frase}»
+            </p>
+          )
+        }
+      </div>
+    </aside>
+  </div>
 </div>
+
+<div class={`${capa} top-[150px] right-0 z-15 md:hidden`} aria-hidden="true" set:html={celularDerecha} />
+<div class={`${capa} top-[150px] left-0 z-15 md:hidden`} aria-hidden="true" set:html={celularIzquierda} />
+<div class={`${capa} top-1/2 right-0 z-15 hidden md:block`} aria-hidden="true" set:html={escritorioDerecha} />
+<Escena3d client:visible escena="hero" class="absolute inset-x-0 top-0 z-20 h-75 md:inset-y-0 md:right-0 md:left-[44%] md:h-auto" />

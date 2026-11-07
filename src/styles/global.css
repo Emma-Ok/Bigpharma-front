@@ -129,7 +129,14 @@
   }
 }
 
-/* Escena 3D lista: la imagen estática de su escenario se desvanece. */
+/*
+ * Escena 3D lista: fundido de 300 ms. El canvas aparece encima (motor.ts) y la imagen estática se va en la
+ * segunda mitad: si bajaran a la vez, a mitad del fundido las piezas se verían transparentes.
+ */
+.imagen-estatica {
+  transition: opacity 150ms linear 150ms;
+}
+
 [data-escenario]:has([data-escena-lista]) .imagen-estatica {
   opacity: 0;
 }

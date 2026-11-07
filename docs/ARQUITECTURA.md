@@ -75,8 +75,8 @@ Estas piezas se comunican por atributos, no por imports. Si cambias el marcado, 
 | `#anuncios-pedido` | `Base.astro` | `pedido/acciones.ts` |
 | `[data-contador-pedido]` | `Encabezado.astro`, `BarraPedidoMovil.tsx` | `animaciones.ts` |
 | `[data-abrir-buscador]` | `Encabezado.astro`, `CatalogoResumido.tsx` | `Buscador.tsx` |
-| `[data-escenario]`, `.imagen-estatica` | `PresentacionProfesional.astro`, `Servicios.astro` | `global.css` (oculta la imagen cuando la escena está lista), `3d/hero.ts` |
-| `[data-tarjeta-hero]`, `[data-foto-hero]` | `PresentacionProfesional.astro` | `3d/hero.ts` (plano oclusor y límite de las piezas) |
+| `[data-escenario]`, `.imagen-estatica` | `Hero.astro`, `PresentacionProfesional.astro`, `Servicios.astro` | `global.css` (oculta la imagen cuando la escena está lista), `3d/hero.ts` |
+| `[data-tarjeta-hero]`, `[data-foto-hero]` | `PresentacionProfesional.astro` | `3d/hero.ts` (plano oclusor y ancla de las piezas) |
 | `[data-escena]`, `[data-escena-lista]` | `3d/Escena3d.tsx`, `3d/motor.ts` | `global.css`, pruebas |
 | `[data-vt]`, `[data-vt-tarjeta]` | `producto/transiciones.ts`, `Catalogo.tsx`, `CatalogoResumido.tsx` | `global.css` |
 
