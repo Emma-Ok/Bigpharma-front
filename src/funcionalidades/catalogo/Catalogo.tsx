@@ -99,7 +99,7 @@ export default function Catalogo({ productos, tienda }: Props) {
         </div>
 
         <div id="resultados" class="flex flex-col gap-6">
-          {!lista.length && <SinResultados consulta={filtros.q} whatsapp={tienda.whatsapp} onBorrar={borrar} />}
+          {!lista.length && <SinResultados consulta={filtros.q} whatsapp={tienda.whatsapp} onBorrar={() => borrar()} />}
           <ul class={GRILLA}>
             {items.map((p) => (
               <li key={p.id} class="flex min-w-0" data-vt-tarjeta style={`--vt-tarjeta: tarjeta-${p.id}`}>
@@ -122,8 +122,9 @@ export default function Catalogo({ productos, tienda }: Props) {
           filtros={filtros}
           total={lista.length}
           hayFiltros={hayFiltros}
-          onCambiar={(parcial) => cambiar(parcial, true)}
-          onBorrar={borrar}
+          // Sin transición: se pintaría por encima de la hoja, que está en la capa superior.
+          onCambiar={(parcial) => cambiar(parcial)}
+          onBorrar={() => borrar(false)}
           onVer={() => setPanelAbierto(false)}
         />
       </HojaInferior>

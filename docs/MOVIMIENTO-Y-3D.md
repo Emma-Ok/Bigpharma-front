@@ -49,7 +49,7 @@ El respaldo es SVG en línea y no una imagen `.webp` para que nunca compita como
 | Elegir categoría | El anillo del ícono crece y la cuadrícula cambia con View Transition (los productos que siguen se reubican, los nuevos aparecen) | 220 ms |
 | Agregar al pedido | El botón «Agregar» se transforma en − / +; un punto de 10 px viaja del botón al contador del pedido (Web Animations API, curva de salida) y el contador late (escala 1 → 1,15 → 1) | 450 ms |
 | Barra de domicilio gratis | El ancho avanza suave; al llegar al 100 % el ícono pasa a un check que se dibuja (`stroke-dashoffset`) y aparece «Tu domicilio es gratis» | 400 ms |
-| Carruseles (avisos y anuncios) | Deslizamiento horizontal con `scroll-snap`. Avanzan solos cada 6 s; se detienen con el puntero o el foco de teclado encima, con el botón de pausa y con la pestaña oculta. Los anuncios también tienen flechas y puntos. Con movimiento reducido, los avisos dejan fijo el primer mensaje y los anuncios arrancan en pausa y cambian sin deslizarse | Desplazamiento suave del navegador |
+| Carruseles (avisos y anuncios) | Deslizamiento horizontal con `scroll-snap`. Avanzan solos cada 6 s; se detienen con el puntero o el foco de teclado encima y con la pestaña oculta. Los avisos tienen un botón de pausa discreto; los anuncios, solo chips de posición, sin botones. Con movimiento reducido, los avisos dejan fijo el primer mensaje y los anuncios no rotan y cambian sin deslizarse | Desplazamiento suave del navegador |
 | Preguntas y secciones de la ficha | Apertura de `details` con `interpolate-size: allow-keywords` donde exista; sin animación donde no | 200 ms |
 | Hover (solo con `pointer: fine`) | En la tarjeta, el borde toma el azul y la imagen del producto escala a 1,03. Nada más | 150 ms |
 

@@ -7,21 +7,20 @@ import type { NombreIcono } from '@/compartido/ui/iconos';
 import { FONDO_CATEGORIA } from '@/compartido/ui/estilosCategoria';
 
 /**
- * Carrusel principal: avanza solo cada 6 s (se pausa con el puntero, el foco o su botón) y desliza con
- * flechas, puntos o el dedo; en celular asoma el siguiente anuncio. Texto en HTML, nunca dentro de la foto.
+ * Carrusel principal: avanza solo cada 6 s y se detiene con el puntero o el foco encima. No tiene controles
+ * visibles: unos chips muestran cuántos anuncios hay y en cuál va. Se desliza con el dedo y, con el foco
+ * dentro, con las flechas del teclado. En celular asoma el siguiente anuncio. Texto en HTML, nunca en la foto.
  */
 export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) {
   const [actual, setActual] = useState(0);
   const actualRef = useRef(0);
   const pista = useRef<HTMLDivElement>(null);
   const [anuncio, setAnuncio] = useState('');
-  const [pausado, setPausado] = useState(false);
   const region = useRef<HTMLDivElement>(null);
-  const botonPausa = useRef<HTMLButtonElement>(null);
   const auto = useRef<Autoplay | null>(null);
   const n = anuncios.length;
 
-  /** Marca el anuncio en el momento del clic (no al terminar de deslizar): dos clics seguidos avanzan dos. */
+  /** Marca el anuncio de una vez, sin esperar a que termine de deslizar. */
   const marcar = (i: number, anunciar = true) => {
     actualRef.current = i;
     setActual(i);
@@ -45,7 +44,7 @@ export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) 
     });
     const quitarGesto = conGesto(p, (d) => ir(actualRef.current + d));
     if (region.current && n > 1) {
-      auto.current = autoReproducir(region.current, () => ir(actualRef.current + 1, false), botonPausa.current, setPausado);
+      auto.current = autoReproducir(region.current, () => ir(actualRef.current + 1, false));
     }
     return () => {
       quitarDetenerse();
@@ -57,11 +56,17 @@ export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) 
   if (!n) return null;
 
   return (
+    // Sin flechas visibles, el teclado es la forma de llegar a los anuncios que están inert.
+    // eslint-disable-next-line jsx-a11y-x/no-noninteractive-element-interactions
     <div
       ref={region}
       role="region"
       aria-roledescription="carrusel"
       aria-label="Anuncios principales"
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowRight') ir(actualRef.current + 1);
+        if (e.key === 'ArrowLeft') ir(actualRef.current - 1);
+      }}
       class="flex min-w-0 flex-[2_1_560px] flex-col gap-1.5"
     >
       <div
@@ -103,48 +108,16 @@ export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) 
         {anuncio}
       </p>
       {n > 1 && (
-        <div class="flex items-center justify-center gap-0.5">
-          <button
-            type="button"
-            onClick={() => ir(actual - 1)}
-            aria-label="Anuncio anterior"
-            class="flex size-11 cursor-pointer items-center justify-center rounded-full border border-muted bg-blanco text-ink"
-          >
-            <Icono nombre="anterior" tamano={18} grosor={2.4} />
-          </button>
+        <div aria-hidden="true" class="flex items-center justify-center gap-1.5 pt-1">
           {anuncios.map((b, j) => (
-            <button
+            <span
               key={b.id}
-              type="button"
-              onClick={() => ir(j)}
-              aria-label={`Ver anuncio ${j + 1} de ${n}`}
-              aria-current={j === actual ? 'true' : undefined}
-              class="flex size-11 cursor-pointer items-center justify-center border-0 bg-transparent"
-            >
-              <span
-                aria-hidden="true"
-                class={`h-2.5 rounded-full transition-[width,background-color] duration-media ease-salida ${
-                  j === actual ? 'w-6.5 bg-bottle' : 'w-2.5 bg-muted'
-                }`}
-              />
-            </button>
+              data-chip-anuncio={j === actual ? 'actual' : undefined}
+              class={`h-1.5 rounded-full transition-[width,background-color] duration-media ease-salida ${
+                j === actual ? 'w-5 bg-bottle' : 'w-1.5 bg-muted/40'
+              }`}
+            />
           ))}
-          <button
-            type="button"
-            onClick={() => ir(actual + 1)}
-            aria-label="Anuncio siguiente"
-            class="flex size-11 cursor-pointer items-center justify-center rounded-full border border-muted bg-blanco text-ink"
-          >
-            <Icono nombre="siguiente" tamano={18} grosor={2.4} />
-          </button>
-          <button
-            ref={botonPausa}
-            type="button"
-            aria-label={pausado ? 'Reanudar anuncios' : 'Pausar anuncios'}
-            class="ml-1 flex size-11 cursor-pointer items-center justify-center rounded-full border border-muted bg-blanco text-ink"
-          >
-            <Icono nombre={pausado ? 'reproducir' : 'pausa'} tamano={16} grosor={pausado ? 2.2 : 2.6} />
-          </button>
         </div>
       )}
     </div>

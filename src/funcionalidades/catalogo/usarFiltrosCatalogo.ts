@@ -29,7 +29,7 @@ export function usarFiltrosCatalogo() {
   return {
     filtros,
     cambiar,
-    borrar: () => cambiar({ ...FILTROS_INICIALES, orden: filtros.orden }, true),
+    borrar: (conTransicion = true) => cambiar({ ...FILTROS_INICIALES, orden: filtros.orden }, conTransicion),
     irAPagina: (pagina: number) => setFiltros((f) => ({ ...f, pagina })),
   };
 }

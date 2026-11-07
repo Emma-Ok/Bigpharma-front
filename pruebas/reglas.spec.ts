@@ -1,5 +1,8 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { conCarrito, sinViolaciones } from './utilidades';
+
+const chipActual = (page: Page) => page.locator('[data-chip-anuncio="actual"]');
+const indiceChip = (page: Page) => chipActual(page).evaluate((c) => [...c.parentElement!.children].indexOf(c));
 
 test('un medicamento con fórmula no muestra precio ni se agrega al pedido', async ({ page }) => {
   await page.goto('/producto/amoxicilina-500-mg');
@@ -125,6 +128,30 @@ test('debajo de 1200 px la búsqueda sigue visible al bajar por el catálogo', a
   await expect.poll(async () => (await page.locator('#q-catalogo').boundingBox())!.y).toBeLessThan(40);
 });
 
+test('aplicar un filtro no dispara una transición sobre la hoja', async ({ page }) => {
+  // Las transiciones se pintan por encima del diálogo: las tarjetas se verían encima de la hoja.
+  await page.addInitScript(() => {
+    const w = window as unknown as { __transiciones: number };
+    w.__transiciones = 0;
+    const original = document.startViewTransition?.bind(document);
+    if (original) {
+      document.startViewTransition = ((...args: Parameters<typeof original>) => {
+        w.__transiciones++;
+        return original(...args);
+      }) as typeof document.startViewTransition;
+    }
+  });
+  await page.goto('/catalogo');
+  await page.waitForFunction(() => !document.querySelector('astro-island[component-url*="Catalogo"][ssr]'));
+  await page.getByRole('button', { name: /^Filtros/ }).click();
+  const hoja = page.getByRole('dialog', { name: 'Filtros' });
+  await hoja.getByRole('checkbox', { name: 'Solo productos con descuento' }).check();
+  await hoja.getByRole('radio', { name: 'Medicamento' }).check();
+  await hoja.getByRole('combobox', { name: 'Ordenar por' }).selectOption('nombre');
+  await hoja.getByRole('button', { name: 'Borrar filtros' }).click();
+  expect(await page.evaluate(() => (window as unknown as { __transiciones: number }).__transiciones)).toBe(0);
+});
+
 test('un producto agotado ofrece preguntar disponibilidad', async ({ page }) => {
   await page.goto('/catalogo?categoria=bebes');
   await expect(page.getByRole('link', { name: 'Preguntar disponibilidad por WhatsApp: Crema antipañalitis' })).toBeVisible();
@@ -168,8 +195,14 @@ test('el panel del pedido de la portada también se puede vaciar', async ({ page
 test('los anuncios funcionan como carrusel', async ({ page }) => {
   await page.goto('/');
   await page.waitForFunction(() => !document.querySelector('astro-island[component-url*="CarruselAnuncios"][ssr]'));
-  await page.getByRole('button', { name: 'Anuncio siguiente' }).click();
-  await expect(page.getByRole('button', { name: 'Ver anuncio 2 de 3' })).toHaveAttribute('aria-current', 'true');
+  const carrusel = page.getByRole('region', { name: 'Anuncios principales' });
+  // Sin flechas ni botón de pausa: solo chips de posición.
+  await expect(carrusel.getByRole('button')).toHaveCount(0);
+  await expect(page.locator('[data-chip-anuncio], [aria-label="Anuncios principales"] [aria-hidden] > span')).toHaveCount(3);
+  await carrusel.getByRole('link').first().focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(chipActual(page)).toHaveCount(1);
+  expect(await indiceChip(page)).toBe(1);
   await expect(page.getByRole('group', { name: 'Anuncio 2 de 3' })).not.toHaveAttribute('inert');
   await expect(page.getByRole('group', { name: 'Anuncio 1 de 3', includeHidden: true })).toHaveAttribute('inert', '');
 });
@@ -203,7 +236,7 @@ test('el carrusel de anuncios se desliza con el gesto', async ({ page }) => {
   await page.mouse.down();
   await page.mouse.move(caja.x + caja.width * 0.2, y, { steps: 6 });
   await page.mouse.up();
-  await expect(page.getByRole('button', { name: 'Ver anuncio 2 de 3' })).toHaveAttribute('aria-current', 'true');
+  await expect.poll(() => indiceChip(page)).toBe(1);
   await expect(page).toHaveURL(/\/$/);
 });
 
@@ -217,7 +250,7 @@ test('los carruseles avanzan solos y se pueden pausar', async ({ page }) => {
   expect(await avisoActivo()).toBe(0);
   await page.clock.runFor(6100);
   await expect.poll(avisoActivo).toBe(1);
-  await expect(page.getByRole('button', { name: 'Ver anuncio 2 de 3' })).toHaveAttribute('aria-current', 'true');
+  await expect.poll(() => indiceChip(page)).toBe(1);
 
   await page.getByRole('button', { name: 'Pausar avisos' }).click();
   await expect(page.getByRole('button', { name: 'Reanudar avisos' })).toBeVisible();

@@ -1,7 +1,7 @@
 /**
- * Pista de carrusel con scroll-snap: desliza con flechas, puntos y el gesto de deslizar, y avanza
- * sola cada 6 s (WCAG 2.2.2: se pausa con el puntero encima, con el foco de teclado dentro y con su
- * botón). Con movimiento reducido el cambio es instantáneo y el carrusel arranca en pausa.
+ * Pista de carrusel con scroll-snap: se desliza con el gesto y avanza sola cada 6 s. Se detiene con el
+ * puntero encima, con el foco de teclado dentro, con la pestaña oculta y, si lo tiene, con su botón.
+ * Con movimiento reducido el cambio es instantáneo y el carrusel arranca detenido.
  * La usan la barra de avisos (script de Astro) y el carrusel de anuncios (Preact).
  */
 import { prefiereMenosMovimiento } from '@/compartido/movimiento/preferencias';
@@ -108,14 +108,14 @@ export interface Autoplay {
 }
 
 /**
- * Rotación automática. `boton` alterna pausar y reanudar; `alCambiar(pausado)` actualiza su ícono
- * y etiqueta. Mientras rota, los cambios no se anuncian (aria-live «off», patrón de carrusel de la APG).
+ * Rotación automática. `boton`, si lo hay, alterna pausar y reanudar; `alCambiar(pausado)` actualiza su
+ * ícono y etiqueta. Mientras rota, los cambios no se anuncian (aria-live «off», patrón de carrusel de la APG).
  */
 export function autoReproducir(
   region: HTMLElement,
   avanzar: () => void,
-  boton: HTMLButtonElement | null,
-  alCambiar: (pausado: boolean) => void,
+  boton?: HTMLButtonElement | null,
+  alCambiar?: (pausado: boolean) => void,
 ): Autoplay {
   let pausadoPorPersona = prefiereMenosMovimiento();
   let encima = false;
@@ -147,7 +147,7 @@ export function autoReproducir(
   };
   const alternar = () => {
     pausadoPorPersona = !pausadoPorPersona;
-    alCambiar(pausadoPorPersona);
+    alCambiar?.(pausadoPorPersona);
     programar();
   };
   region.addEventListener('pointerenter', entrar);
@@ -156,7 +156,7 @@ export function autoReproducir(
   region.addEventListener('focusout', sinFoco);
   boton?.addEventListener('click', alternar);
   document.addEventListener('visibilitychange', programar);
-  alCambiar(pausadoPorPersona);
+  alCambiar?.(pausadoPorPersona);
   programar();
   return {
     reiniciar: programar,
