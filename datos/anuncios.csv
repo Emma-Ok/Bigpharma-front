@@ -2,4 +2,4 @@ id,ubicacion,titulo,texto,boton_texto,enlace,categoria,foto,alt_foto,activo
 b1,carrusel,Protector solar con 15 % de descuento,"En marcas seleccionadas, hasta el [fecha].",Ver productos,/catalogo?categoria=piel,piel,[URL de la foto],[Describe la foto],si
 b2,carrusel,Todo para el cuidado de tu bebé,"Pañitos, cremas y más, a domicilio.",Ver productos,/catalogo?categoria=bebes,bebes,[URL de la foto],[Describe la foto],si
 b3,carrusel,Inyectología en tu casa,Agenda la visita con tu orden médica.,Agendar visita,/#servicios,,[URL de la foto],[Describe la foto],si
-lat,lateral,Domicilio gratis desde $60.000,En pedidos dentro de [barrios o zonas].,,/catalogo,,[URL de la foto],[Describe la foto],si
+lat,lateral,Domicilio gratis desde $60.000,En pedidos dentro del Valle de Aburrá.,,/catalogo,,[URL de la foto],[Describe la foto],si
