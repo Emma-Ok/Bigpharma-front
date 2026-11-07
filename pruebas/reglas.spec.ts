@@ -58,7 +58,7 @@ test('la barra del pedido en celular solo aparece con productos, reserva su espa
 
   await barra.click();
   const hoja = page.getByRole('dialog', { name: 'Tu pedido' });
-  await expect(hoja.getByText('Te faltan $18.000 para el domicilio gratis')).toBeVisible();
+  await expect(hoja.getByText('Te faltan $18.000 para domicilio gratis')).toBeVisible();
   await expect(hoja.getByRole('region', { name: 'Vista previa del mensaje' })).toContainText('• 1 × Protector solar FPS 50: $42.000');
   await expect(hoja.getByRole('link', { name: 'Continuar con mis datos' })).toHaveAttribute('href', '/pedido');
   await page.keyboard.press('Escape');

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { contarUnidades, resolverLineas, subtotal } from '@/dominio/carrito';
+import { textoDomicilio } from '@/dominio/domicilio';
 import { formatearPrecio } from '@/dominio/formato';
 import type { Tienda } from '@/dominio/sitio';
 import { usarCatalogo } from '@/compartido/catalogoCliente';
@@ -38,18 +39,21 @@ export default function BarraPedidoMovil({ tienda }: { tienda: Tienda }) {
   return (
     <>
       {hayProductos && (
-        <div ref={barra} class="fixed inset-x-0 bottom-0 z-20 border-t border-celadon bg-blanco pb-[env(safe-area-inset-bottom)] shadow-barra lg:hidden">
-          <ProgresoDomicilio total={total} umbral={tienda.umbral} variante="barra" />
+        <div ref={barra} class="fixed inset-x-0 bottom-0 z-20 border-t border-celadon bg-blanco pb-[env(safe-area-inset-bottom)] lg:hidden">
           <button
             type="button"
             aria-haspopup="dialog"
             onClick={() => setAbierta(true)}
-            class="flex min-h-15 w-full cursor-pointer items-center justify-between gap-3 border-0 bg-transparent px-4 py-2 text-left text-ink"
+            class="flex w-full cursor-pointer items-center justify-between gap-2 border-0 bg-transparent px-4 py-2 text-left text-ink"
           >
-            <span data-contador-pedido class="inline-block text-[15.5px] font-semibold">
-              {resumen}
+            <span class="flex min-w-0 flex-1 flex-col gap-0.5">
+              <span data-contador-pedido class="inline-block self-start text-[15.5px] leading-tight font-semibold">
+                {resumen}
+              </span>
+              <span class="text-[12.5px] leading-snug text-muted">{textoDomicilio(total, unidades, tienda.umbral)}</span>
+              <ProgresoDomicilio total={total} umbral={tienda.umbral} variante="barra" />
             </span>
-            <span class="inline-flex min-h-11 shrink-0 items-center rounded-boton bg-bottle px-4.5 text-[15px] font-semibold text-blanco">Ver pedido</span>
+            <span class="inline-flex min-h-11 shrink-0 items-center rounded-boton bg-bottle px-3.5 text-[15px] font-semibold text-blanco">Ver pedido</span>
           </button>
         </div>
       )}

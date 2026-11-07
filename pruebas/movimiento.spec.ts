@@ -93,7 +93,7 @@ test('en 390×844 el título y un botón se ven sin hacer scroll', async ({ page
   const escenario = (await page.locator('[data-escena="hero"]').boundingBox())!;
   const titulo = (await page.locator('#hero-titulo').boundingBox())!;
   const boton = (await page.locator('#inicio a[href="/catalogo"]').boundingBox())!;
-  expect(escenario.height).toBe(300);
+  expect(escenario.height).toBe(220);
   expect(titulo.y).toBeGreaterThan(escenario.y + escenario.height - 1);
   expect(boton.y + boton.height).toBeLessThanOrEqual(844);
 });

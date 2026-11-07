@@ -19,14 +19,14 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
 ---
 
 <header class="relative z-40 border-b border-celadon bg-paper" data-encabezado>
-  <div class="mx-auto flex max-w-sitio items-center justify-between gap-3 px-margen py-2.5">
-    <a href="/" class="flex min-h-11 items-center gap-2.5 text-ink no-underline">
+  <div class="mx-auto flex max-w-sitio items-center justify-between gap-3 px-margen py-2.5 max-[48rem]:py-2">
+    <a href="/" class="flex min-h-11 min-w-0 items-center gap-2.5 text-ink no-underline">
       <span aria-hidden="true" class="flex size-9.5 shrink-0 items-center justify-center rounded-[11px] bg-bottle text-blanco">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 6v12M6 12h12"></path></svg>
       </span>
-      <span class="flex flex-col">
-        <span class="text-lg leading-tight font-semibold">{nombre}</span>
-        <span class="text-[13px] text-muted">Droguería a domicilio</span>
+      <span class="flex min-w-0 flex-col">
+        <span class="text-lg leading-tight font-semibold max-[48rem]:truncate max-[48rem]:text-[17px]">{nombre}</span>
+        <span class="text-[13px] text-muted max-[48rem]:hidden">Droguería a domicilio</span>
       </span>
     </a>
 
@@ -74,7 +74,7 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
         data-abrir-buscador
         aria-haspopup="dialog"
         aria-label="Buscar productos"
-        class="flex size-11.5 shrink-0 items-center justify-center rounded-boton border border-muted text-ink"
+        class="flex size-11 shrink-0 items-center justify-center rounded-boton border border-muted text-ink"
       >
         <Icono nombre="lupa" tamano={21} />
       </a>
@@ -84,7 +84,7 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
         aria-expanded="false"
         aria-controls="menu-movil"
         aria-label="Menú"
-        class="flex size-11.5 shrink-0 cursor-pointer items-center justify-center rounded-boton border border-muted bg-blanco text-ink"
+        class="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-boton border border-muted bg-blanco text-ink"
       >
         <Icono nombre="menu" tamano={22} />
       </button>

@@ -20,8 +20,11 @@ function rutaDeFoto(v: string | undefined): string | undefined {
   return esUrl(v) || v.startsWith('/') ? v : undefined;
 }
 
-/** La frase va entera dentro de la tarjeta del hero: más larga, la tarjeta no cabe en la banda del celular. */
+/** La frase va entera dentro de la tarjeta del hero, sin recortes. */
 export const FRASE_MAX = 90;
+
+/** Los avisos van en una sola línea en la barra del celular. */
+export const AVISO_MAX = 48;
 
 /** Claves con un valor de respaldo [entre corchetes] en el sitio: si faltan en la hoja, también están por llenar. */
 const CLAVES_CON_RESPALDO = ['barrio', 'autoridad_salud', 'razon_social', 'nit'];
@@ -150,6 +153,10 @@ export function validarConfiguracion(filas: Record<string, string>[]): Resultado
   const whatsapp = c.whatsapp.replace(/\D/g, '');
   if (!/^\d{10,15}$/.test(whatsapp)) {
     avisos.push(`Configuracion: «whatsapp» (${c.whatsapp}) no es un número válido para wa.me`);
+  }
+  for (const clave of ['aviso_1', 'aviso_2', 'aviso_3'] as const) {
+    const largo = c[clave]?.length ?? 0;
+    if (largo > AVISO_MAX) avisos.push(`Configuracion: «${clave}» tiene ${largo} caracteres (máximo ${AVISO_MAX})`);
   }
   if (c.profesional_frase && c.profesional_frase.length > FRASE_MAX) {
     avisos.push(`Configuracion: «profesional_frase» tiene ${c.profesional_frase.length} caracteres (máximo ${FRASE_MAX})`);

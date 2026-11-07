@@ -27,7 +27,7 @@ export default function ProgresoDomicilio({ total, umbral, variante }: Props) {
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={porcentaje}
-      class={`flex-1 overflow-hidden ${variante === 'panel' ? 'h-2 rounded-full bg-celadon' : 'h-[5px] bg-celadon'}`}
+      class={`overflow-hidden rounded-full bg-celadon ${variante === 'panel' ? 'h-2 flex-1' : 'mt-1 h-1.5 shrink-0'}`}
     >
       <div
         class="progreso-relleno h-full rounded-full bg-bottle transition-[width] duration-lenta ease-salida"

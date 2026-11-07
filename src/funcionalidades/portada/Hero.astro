@@ -14,7 +14,7 @@ const { config: c } = Astro.props;
 
 <section id="inicio" aria-labelledby="hero-titulo" data-escenario class="hero relative isolate overflow-hidden">
   <div class="mx-auto grid max-w-sitio md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] md:items-center md:gap-x-12 md:px-margen md:py-[clamp(28px,4vw,52px)]">
-    <div class="order-2 flex min-w-0 flex-col px-margen pt-5 pb-7 md:order-none md:px-0 md:py-0">
+    <div class="order-2 flex min-w-0 flex-col px-margen pt-4 pb-7 md:order-none md:px-0 md:py-0">
       <h1 id="hero-titulo" class="m-0 text-[clamp(28px,3.4vw,46px)] leading-[1.12] font-semibold tracking-[-0.01em] text-bottle">
         <span class="hero-linea block" style="--retraso: 0ms">Tus medicamentos,</span>
         <span class="hero-linea block" style="--retraso: 60ms">revisados por {profesionConArticulo(c.profesional.profesion)}</span>
@@ -28,6 +28,7 @@ const { config: c } = Astro.props;
           Escribir por WhatsApp
         </Boton>
       </div>
+      {c.profesional.frase && <p class="mt-5 mb-0 border-l-[3px] border-bottle pl-3 text-[15px] leading-snug text-muted md:hidden">«{c.profesional.frase}»</p>}
       <ul aria-label="Datos de la droguería" class="mt-7 mb-0 flex list-none flex-col gap-2 p-0 text-[14.5px] leading-snug md:mt-10">
         <li class="flex items-start gap-2.5">
           <Icono nombre="escudo" class="mt-px text-bottle" />

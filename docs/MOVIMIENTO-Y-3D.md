@@ -22,10 +22,10 @@ Hay tres, en `src/compartido/movimiento/3d/`. Todas son decorativas: `aria-hidde
 - `three` desde npm. Importa solo lo necesario. No uses react-three-fiber.
 - `motor.ts` es común a todas las escenas: renderer transparente, cámara, luces, niebla en el color del fondo, ajuste de tamaño y limpieza. `cargador.ts` decide si se cargan y cuándo.
 - Hero y servicios son la isla `Escena3d.tsx`, con `client:visible`, que importa cada escena de forma dinámica.
-- **Profundidad del hero:** un solo canvas encima de la tarjeta, con `pointer-events:none`. Un plano invisible del tamaño de la tarjeta (`colorWrite: false`) escribe solo profundidad: lo que pasa por detrás queda tapado y lo que pasa por delante se ve sobre la foto. Las órbitas van a la altura de la foto y las del fondo siempre van detrás, para que las piezas no tapen el texto de la tarjeta.
+- **Profundidad del hero:** un solo canvas encima de la tarjeta, con `pointer-events:none`. Un plano invisible del tamaño de la tarjeta (`colorWrite: false`) escribe solo profundidad: lo que pasa por detrás queda tapado y lo que pasa por delante se ve sobre la foto. En escritorio las órbitas van a la altura de la foto; en celular, encima y debajo de la tarjeta horizontal. Las del fondo siempre van detrás: las piezas no tapan el texto de la tarjeta.
 - Las cápsulas usan `InstancedMesh`: dos, una por mitad, con colores `#133B34`/`#FFFFFF`, `#133B34`/`#D5E5DB` y `#4A5A55`/`#F3F5F1`. Material mate (`roughness` alrededor de 0,4), sin sombras ni postprocesado. El frasco es la excepción aprobada al uso de `amber`.
 - `setPixelRatio` con un tope de 1,5. En pantallas chicas o táctiles no hay antialias y las geometrías llevan menos segmentos.
-- La escena no afecta la distribución: en celular la banda tiene 300 px fijos y en escritorio el canvas se ubica de forma absoluta sobre el hero, que toma su alto del contenido.
+- La escena no afecta la distribución: en celular la banda tiene 220 px fijos y en escritorio el canvas se ubica de forma absoluta sobre el hero, que toma su alto del contenido.
 - Se pausa con `IntersectionObserver` cuando la escena sale de pantalla y con `visibilitychange` cuando la pestaña se oculta. Libera la geometría, el material y el renderer al desmontar y al cambiar de página.
 
 **Cuándo NO se carga three.js** (se muestra la imagen estática: en el hero, SVG en línea generados con `scripts/generar-capsulas.mjs` desde la misma tabla; en servicios, su dibujo SVG; la celebración no se dispara):

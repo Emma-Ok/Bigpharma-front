@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { csvAObjetos } from '../csv';
-import { camposPorLlenar, FRASE_MAX, validarAnuncios, validarConfiguracion, validarProductos } from '../validacion';
+import { AVISO_MAX, camposPorLlenar, FRASE_MAX, validarAnuncios, validarConfiguracion, validarProductos } from '../validacion';
 
 const leer = (archivo: string) => csvAObjetos(readFileSync(`datos/${archivo}`, 'utf8'));
 
@@ -154,5 +154,19 @@ describe('frase del profesional', () => {
   it(`avisa si pasa de ${FRASE_MAX} caracteres`, () => {
     expect(validarConfiguracion(claves('a'.repeat(FRASE_MAX))).avisos).toEqual([]);
     expect(validarConfiguracion(claves('a'.repeat(FRASE_MAX + 1))).avisos[0]).toContain('profesional_frase');
+  });
+});
+
+describe('avisos de la barra', () => {
+  const claves = (aviso: string) =>
+    Object.entries({
+      nombre_drogueria: 'D', whatsapp: '573001234567', domicilio_gratis_desde: '60000', tiempo_entrega: '1 h',
+      zonas_cobertura: 'Z', horario: 'H', profesional_nombre: 'N', profesional_profesion: 'P', profesional_registro: 'R',
+      drogueria_codigo_inscripcion: 'C', aviso_2: aviso,
+    }).map(([clave, valor]) => ({ clave, valor }));
+
+  it(`avisa si un anuncio pasa de ${AVISO_MAX} caracteres`, () => {
+    expect(validarConfiguracion(claves('a'.repeat(AVISO_MAX))).avisos).toEqual([]);
+    expect(validarConfiguracion(claves('a'.repeat(AVISO_MAX + 1))).avisos[0]).toContain('aviso_2');
   });
 });

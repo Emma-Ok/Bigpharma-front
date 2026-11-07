@@ -19,5 +19,5 @@ export function progresoDomicilio(total: number, umbral: number): ProgresoDomici
 export function textoDomicilio(total: number, unidades: number, umbral: number): string {
   const { falta, gratis } = progresoDomicilio(total, umbral);
   if (unidades === 0) return `Domicilio gratis desde ${formatearPrecio(umbral)}`;
-  return gratis ? 'Tu domicilio es gratis' : `Te faltan ${formatearPrecio(falta)} para el domicilio gratis`;
+  return gratis ? 'Tu domicilio es gratis' : `Te faltan ${formatearPrecio(falta)} para domicilio gratis`;
 }

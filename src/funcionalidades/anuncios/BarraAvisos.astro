@@ -20,8 +20,8 @@ const varios = avisos.length > 1;
       class="foco-claro bg-bottle text-blanco"
       data-avisos
     >
-      <div class="mx-auto flex min-h-11 max-w-sitio items-center gap-1 px-1 sm:px-margen">
-        <div class="min-w-0 flex-1 py-1.5">
+      <div class="relative mx-auto flex min-h-11 max-w-sitio items-center gap-1 px-1 sm:px-margen">
+        <div class="min-w-0 flex-1 py-1.5 max-[48rem]:pr-7">
           <div class="carrusel-pista flex w-full snap-x snap-mandatory overflow-x-hidden" data-aviso-pista>
             {avisos.map((aviso, i) => (
               <p
@@ -30,7 +30,7 @@ const varios = avisos.length > 1;
                 aria-label={`Aviso ${i + 1} de ${avisos.length}`}
                 aria-hidden={i > 0 ? 'true' : undefined}
                 inert={i > 0}
-                class="m-0 flex w-full shrink-0 snap-start items-center justify-center px-1 text-center text-[14.5px] leading-snug font-medium"
+                class="m-0 flex w-full shrink-0 snap-start items-center justify-center px-1 text-center text-[14.5px] leading-snug font-medium max-[48rem]:block max-[48rem]:truncate max-[48rem]:text-sm"
               >
                 {aviso}
               </p>
@@ -43,7 +43,7 @@ const varios = avisos.length > 1;
             type="button"
             data-aviso-pausa
             aria-label="Pausar avisos"
-            class="group flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[10px] text-blanco transition-opacity duration-rapida"
+            class="group flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[10px] text-blanco transition-opacity duration-rapida max-[48rem]:absolute max-[48rem]:inset-y-0 max-[48rem]:right-0 max-[48rem]:my-auto"
           >
             <Icono nombre="pausa" tamano={14} grosor={2.6} class="group-data-[pausado=true]:hidden" />
             <Icono nombre="reproducir" tamano={14} grosor={2.2} class="hidden group-data-[pausado=true]:block" />

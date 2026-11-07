@@ -35,7 +35,7 @@ export interface Pieza {
   giro: [number, number, number];
   velocidad: [number, number];
   fase: number;
-  /** Da la vuelta a la tarjeta, por delante y por detrás de la foto: radio en píxeles y ángulo inicial. */
+  /** Da la vuelta a la tarjeta, por delante y por detrás, con centro en (x, y): radio en píxeles y ángulo inicial. */
   orbita?: { radio: number; angulo: number };
 }
 
@@ -85,16 +85,18 @@ export const ENCUADRES: Record<NombreEncuadre, Encuadre> = {
     ],
     frasco: { x: 215, y: 285, z: -1, escala: 1.15 },
   },
+  // Tarjeta horizontal: el ancla es la foto, en su extremo izquierdo. Lo que va en primer plano o en órbita pasa
+  // por encima y por debajo de la tarjeta, nunca sobre el nombre o el registro.
   celular: {
     pxPorUnidad: 32,
     piezas: [
-      pieza('derecha', -8, -82, 3, 1.5, 0, [0.35, 0.3, -0.6], 0.4),
-      pieza('izquierda', 2, -96, 2.5, 1.25, 1, [0.3, 0.4, 0.7], 1.9),
-      pieza('tarjeta', 0, 24, 0, 0.8, 2, [0.4, 0.2, 0.5], 0.8, { radio: 172, angulo: Math.PI + 0.2 }),
-      pieza('tarjeta', -163, 130, -3, 0.6, 2, [0.6, 0.4, 0.9], 2.7),
-      pieza('tarjeta', 40, 197, -3.5, 0.55, 0, [1.2, 0.2, 1.3], 3.6),
+      pieza('derecha', -8, -80, 3, 1.3, 0, [0.35, 0.3, -1.1], 0.4),
+      pieza('izquierda', 2, -72, 2.5, 1.1, 1, [0.3, 0.4, 1.05], 1.9),
+      pieza('tarjeta', 116, 74, 0, 0.7, 2, [0.4, 0.2, 1.2], 0.8, { radio: 170, angulo: Math.PI + 0.2 }),
+      pieza('tarjeta', -63, 74, -3, 0.6, 2, [0.6, 0.4, 0.9], 2.7),
+      pieza('tarjeta', 150, -80, -3.5, 0.55, 0, [1.2, 0.2, 1.3], 3.6),
     ],
-    frasco: { x: 160, y: 142, z: -1, escala: 0.8 },
+    frasco: { x: 270, y: 66, z: -1, escala: 0.62 },
   },
 };
 
@@ -106,7 +108,7 @@ const DERIVA_PX = 8;
 export function ubicar(p: Pieza, segundos: number, avance = 0) {
   if (p.orbita) {
     const a = p.orbita.angulo + segundos * VELOCIDAD_ORBITA + avance;
-    return { x: Math.cos(a) * p.orbita.radio, y: p.y + Math.sin(segundos * 0.35 + p.fase) * 6, z: Math.sin(a) * FONDO_ORBITA };
+    return { x: p.x + Math.cos(a) * p.orbita.radio, y: p.y + Math.sin(segundos * 0.35 + p.fase) * 6, z: Math.sin(a) * FONDO_ORBITA };
   }
   return {
     x: p.x + Math.sin(segundos * 0.15 + p.fase) * DERIVA_PX,
