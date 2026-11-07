@@ -51,10 +51,10 @@ Slug del producto: `nombre` normalizado (sin tildes, minúsculas, guiones) + `id
 
 ## 5. Componentes
 
-- **BarraAvisos:** mensajes de `Configuracion.aviso_1..3` con flechas anterior y siguiente, sin rotación automática; en escritorio, WhatsApp a la derecha.
+- **BarraAvisos:** mensajes de `Configuracion.aviso_1..3` con flechas anterior y siguiente, puntos y botón de pausa; avanza solo cada 6 s (se detiene con el puntero o el foco encima y con la pestaña oculta, y arranca en pausa con movimiento reducido); en escritorio, WhatsApp a la derecha.
 - **Encabezado:** marca, navegación (Catálogo, Inyectables a domicilio, Preguntas frecuentes), botón de lupa que abre el buscador y botón de WhatsApp. En celular, menú desplegable (`aria-expanded`).
 - **PresentacionProfesional:** foto retrato grande (320–400 px de alto, `object-position: center 22%`), ficha superpuesta con nombre (`h2`), profesión, registro profesional, frase en primera persona y «Escríbeme por WhatsApp». Debajo: inscripción de la droguería, horario y domicilio.
-- **CarruselAnuncios + AnuncioLateral:** título y texto en HTML (no dentro de la imagen), foto con `alt`, flechas y puntos accesibles, sin autoplay.
+- **CarruselAnuncios + AnuncioLateral:** título y texto en HTML (no dentro de la imagen), foto con `alt`, flechas y puntos accesibles y botón de pausa. Avanza solo cada 6 s, con las mismas pausas que la barra de avisos, y también se desliza con el dedo.
 - **Buscador (diálogo):** se abre desde el campo del catálogo o la lupa. Campo con botón de buscar y ✕; a la izquierda categorías y «Lo más buscado»; a la derecha «Productos destacados» o «Resultados para «…» (n)» con flechas. Búsqueda sin tildes por nombre, categoría y síntomas (palabras clave por categoría). Esc cierra y devuelve el foco.
 - **CategoriasIconos:** fila de botones circulares con ícono y nombre (`aria-pressed`); en celular se desliza horizontalmente.
 - **TarjetaProducto:** imagen, insignia («Con fórmula médica», «Ahorra 15 %», «Agotado»), categoría, nombre (enlace a la ficha), presentación, precio y «Antes», y botón «Agregar» que pasa a − / +. Para fórmula: «Consultar por WhatsApp». Agotado: «Preguntar disponibilidad».
@@ -124,7 +124,7 @@ Solo estas combinaciones llevan texto. Todas cumplen WCAG 2.2 AA (≥ 4,5:1, con
 
 ### Tipografía
 
-`--font-sans: "Lexend Variable", "Lexend", system-ui, sans-serif`, que Tailwind usa como fuente por defecto del sitio. Lexend se sirve desde el propio sitio con `@fontsource-variable/lexend` (un archivo variable; se precarga el subconjunto latino). Lexend en 400, 500, 600 y 700 (`font-normal`, `font-medium`, `font-semibold`, `font-bold`) con `font-display: swap`; cuerpo de 16 px (`text-base`).
+`--font-sans: "Lexend Variable", "Lexend Fallback", "Lexend", system-ui, sans-serif`, que Tailwind usa como fuente por defecto del sitio. «Lexend Fallback» es una fuente local ajustada con `size-adjust` a las métricas de Lexend, para que el cambio de fuente no mueva el contenido (CLS). Lexend se sirve desde el propio sitio con `@fontsource-variable/lexend` (un archivo variable; se precarga el subconjunto latino). Lexend en 400, 500, 600 y 700 (`font-normal`, `font-medium`, `font-semibold`, `font-bold`) con `font-display: swap`; cuerpo de 16 px (`text-base`).
 
 ### Forma, medida y sombra
 
@@ -170,7 +170,7 @@ En `global.css`, fuera de `@theme`, van la regla de movimiento reducido y los es
 
 ### Movimiento y 3D
 
-Ver `docs/MOVIMIENTO-Y-3D.md`: escena de cápsulas flotantes con three.js en la portada (solo escritorio, carga diferida, imagen estática de respaldo) y transiciones que responden a las acciones del cliente (View Transitions entre páginas y al abrir la ficha, agregar al pedido, buscador, categorías, domicilio gratis).
+Ver `docs/MOVIMIENTO-Y-3D.md`: escenas 3D con three.js en la portada, los servicios, las cabeceras del catálogo y de la página 404, la ficha sin foto y las celebraciones (también en celular, cargadas con la primera interacción, con imagen estática de respaldo) y transiciones que responden a las acciones del cliente (View Transitions entre páginas y al abrir la ficha, agregar al pedido, buscador, categorías, domicilio gratis).
 
 ## 7. Cómo leer los mockups (`diseno/`)
 
@@ -193,4 +193,4 @@ Son prototipos del canvas de diseño (formato `.dc.html`): marcado HTML con esti
 - El mensaje de WhatsApp coincide con el formato de la sección 2 (prueba unitaria).
 - Cambiar un precio en la hoja y ejecutar el deploy hook lo refleja en el sitio.
 - Con `prefers-reduced-motion: reduce` no hay desplazamientos ni escalas y no se descarga three.js.
-- La escena 3D no afecta el LCP (el elemento LCP es el titular) y se pausa fuera de pantalla.
+- Las escenas 3D no afectan el LCP (el elemento LCP es el titular) y se pausan fuera de pantalla.
