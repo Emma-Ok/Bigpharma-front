@@ -40,7 +40,7 @@ El proyecto ya trae el adaptador `@astrojs/cloudflare` y `wrangler.jsonc`; todo 
    | `SHEETS_CONFIGURACION_CSV_URL` | Enlace CSV de la pestaña Configuracion |
    | `VALIDAR_HOJA` | `estricto` cuando la hoja esté llena: el build falla si queda un campo `[entre corchetes]` o un aviso de datos. Sin ella, solo avisa |
 
-3. Haz push a `main` (o usa «Run workflow»). El primer despliegue crea el Worker `bigpharma` y el registro del paso «Desplegar a Cloudflare» muestra su URL (`https://bigpharma.<tu-subdominio>.workers.dev`). Ponla en `SITIO_URL` y vuelve a correr el workflow para que la URL canónica y el sitemap queden bien.
+3. Haz push a `main` (o usa «Run workflow»). El workflow construye con `CLOUDFLARE_ENV=qa` y despliega al Worker de prueba **`bigpharma-qa`** (`env.qa` en `wrangler.jsonc`; producción será `bigpharma`). Con la configuración que genera Astro, `wrangler deploy --env` no aplica: el ambiente se elige en el build. Antes del primer despliegue, la cuenta necesita un subdominio de workers.dev (Workers & Pages lo pide la primera vez); sin él, wrangler falla en CI. La URL queda `https://bigpharma-qa.<tu-subdominio>.workers.dev`. Ponla en `SITIO_URL` y vuelve a correr el workflow para que la URL canónica y el sitemap queden bien.
 4. Cuando tengas dominio: en Cloudflare, el Worker → Settings → Domains & Routes; luego cambia `SITIO_URL`.
 
 ### Botón «Publicar sitio» en la hoja (opcional)

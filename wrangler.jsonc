@@ -10,5 +10,12 @@
 	},
 	"observability": {
 		"enabled": true
+	},
+	// Ambiente de prueba. Se elige al construir (CLOUDFLARE_ENV=qa npm run build): el adaptador de Astro
+	// genera dist/client/wrangler.json con este nombre, y `wrangler deploy` no usa --env con esa configuración.
+	"env": {
+		"qa": {
+			"name": "bigpharma-qa"
+		}
 	}
 }
