@@ -66,41 +66,23 @@ Slug del producto: `nombre` normalizado (sin tildes, minúsculas, guiones) + `id
 
 ## 6. Diseño (tokens)
 
-Los tokens van en `@theme` dentro de `src/styles/global.css` (Tailwind CSS v4 con `@tailwindcss/vite`, sin `tailwind.config.js`). Cada token genera sus utilidades: `--color-azul` da `bg-azul`, `text-azul`, `border-azul`, `ring-azul`, etc. `@theme` empieza con `--color-*: initial`, así que la paleta por defecto de Tailwind (`bg-blue-600`, `bg-white`) no existe. No se usan valores arbitrarios de color (`bg-[#1E5AA0]`): si hace falta un color nuevo, se agrega en esta sección y en `global.css`. Las transparencias usan el modificador de opacidad sobre un token (`bg-tinta/45` para el fondo de un diálogo).
+Los tokens van en `@theme` dentro de `src/styles/global.css` (Tailwind CSS v4 con `@tailwindcss/vite`, sin `tailwind.config.js`). Cada token genera sus utilidades: `--color-bottle` da `bg-bottle`, `text-bottle`, `border-bottle`, `ring-bottle`, etc. `@theme` empieza con `--color-*: initial`, así que la paleta por defecto de Tailwind (`bg-blue-600`, `bg-white`) no existe. No se usan valores arbitrarios de color (`bg-[#133B34]`): si hace falta un color nuevo, se agrega en esta sección y en `global.css`. Las transparencias usan el modificador de opacidad sobre un token (`bg-ink/45` para el fondo de un diálogo).
 
 ### Color
 
 | Token | Valor | Utilidad | Uso |
 |---|---|---|---|
-| `--color-azul` | `#1E5AA0` | `bg-azul`, `text-azul` | Botones, enlaces, selección |
-| `--color-azul-oscuro` | `#173F72` | `bg-azul-oscuro` | Barra de avisos |
-| `--color-azul-claro` | `#EAF2FB` | `bg-azul-claro` | Fondos de sección y pie |
-| `--color-tinta` | `#1B2A3A` | `text-tinta` | Texto principal |
-| `--color-texto-cuerpo` | `#3B4A5A` | `text-texto-cuerpo` | Párrafos largos (hero, anuncios, preguntas) |
-| `--color-texto-2` | `#52606F` | `text-texto-2` | Texto secundario (≥ 4,5:1 sobre blanco y azul claro) |
-| `--color-borde` | `#D5DFEA` | `border-borde` | Bordes de paneles y campos |
-| `--color-borde-suave` | `#E4EAF1` | `border-borde-suave` | Bordes de tarjetas y separadores |
-| `--color-borde-control` | `#C5D3E2` | `border-borde-control` | Bordes de botones secundarios y chips (unifica el `#A9BCD0` de los mockups) |
-| `--color-miel` | `#FBEBD6` | `bg-miel` | Sección de servicios y anuncios cálidos |
-| `--color-formula` | `#7B3F5E` | `text-formula`, `bg-formula` | Medicamentos con fórmula |
-| `--color-formula-fondo` | `#F6E9EF` | `bg-formula-fondo` | Fondo de medicamentos con fórmula |
-| `--color-descuento` | `#8A4B14` | `bg-descuento` | Insignia de ahorro |
-| `--color-blanco` | `#FFFFFF` | `bg-blanco`, `text-blanco` | Fondo de página y tarjetas, texto sobre azul |
+| `--color-paper` | `#F3F5F1` | `bg-paper` | Fondo general |
+| `--color-bottle` | `#133B34` | `bg-bottle`, `text-bottle` | Botones primarios, títulos, enlaces, barra de avisos |
+| `--color-celadon` | `#D5E5DB` | `bg-celadon`, `border-celadon` | Fondos suaves, burbuja del pedido, bordes decorativos. Dentro de un control, solo marca lo seleccionado |
+| `--color-amber` | `#A8621A` | `bg-amber` | **Solo** fórmula y descuentos: etiquetas y botones, con texto blanco. Excepción aprobada: el frasco de vidrio del hero |
+| `--color-amber-ink` | `#8A4E12` | `text-amber-ink` | **Solo** fórmula y descuentos, cuando el ámbar es texto sobre fondo claro (precio antes, enlaces de fórmula) |
+| `--color-ink` | `#1C2623` | `text-ink` | Texto principal |
+| `--color-muted` | `#4A5A55` | `text-muted`, `border-muted` | Texto secundario y bordes de controles |
+| `--color-error` | `#A3312A` | `text-error`, `border-error` | **Solo** errores de formulario: borde del campo, texto e ícono |
+| `--color-blanco` | `#FFFFFF` | `bg-blanco`, `text-blanco` | Tarjetas, paneles y campos; texto sobre `bottle` y `amber` |
 
-Colores por categoría (punto, ícono y fondo del ícono). Son decorativos: nunca se usan para texto, porque varios no llegan a 4,5:1.
-
-| Categoría | Color | Fondo |
-|---|---|---|
-| dolor | `--color-cat-dolor` `#D9963F` | `--color-cat-dolor-fondo` `#FBEBD6` |
-| gripa | `--color-cat-gripa` `#6E9FC4` | `--color-cat-gripa-fondo` `#E4EEF6` |
-| estómago | `--color-cat-estomago` `#7FB08F` | `--color-cat-estomago-fondo` `#E5F0E8` |
-| piel | `--color-cat-piel` `#E7B9A0` | `--color-cat-piel-fondo` `#FBE8DE` |
-| bebés | `--color-cat-bebes` `#B9A6D8` | `--color-cat-bebes-fondo` `#EEE9F7` |
-| primeros auxilios | `--color-cat-auxilios` `#1E5AA0` | `--color-cat-auxilios-fondo` `#EAF2FB` |
-| fórmula | `--color-cat-formula` `#7B3F5E` | `--color-cat-formula-fondo` `#F6E9EF` |
-| todo | `--color-cat-todo` `#52606F` | `--color-cat-todo-fondo` `#F1F4F8` |
-
-Utilidades: `bg-cat-piel`, `bg-cat-piel-fondo`, `text-cat-piel` (solo en íconos SVG con `currentColor`).
+Las categorías no tienen tokens propios (`src/components/estilosCategoria.ts`): el fondo del ícono es `celadon`, el punto y los rellenos son `bottle`, y en la categoría de fórmula pasan a `amber`. Son decorativos y nunca llevan texto. La categoría seleccionada lleva círculo `bottle` relleno con el ícono en `blanco`.
 
 ### Combinaciones de texto y fondo permitidas
 
@@ -108,19 +90,19 @@ Solo estas combinaciones llevan texto. Todas cumplen WCAG 2.2 AA (≥ 4,5:1, con
 
 | Texto | Fondos permitidos (contraste) |
 |---|---|
-| `text-tinta` | `blanco` 14,59; `azul-claro` 12,92; `miel` 12,48; `formula-fondo` 12,38; cualquier `cat-*-fondo` ≥ 12,26 |
-| `text-texto-cuerpo` | `blanco` 9,08; `azul-claro` 8,04; `miel` 7,76; `formula-fondo` 7,70; cualquier `cat-*-fondo` ≥ 7,62 |
-| `text-texto-2` | `blanco` 6,44; `azul-claro` 5,70; `miel` 5,51; `formula-fondo` 5,46; cualquier `cat-*-fondo` ≥ 5,41 |
-| `text-azul` | `blanco` 6,94; `azul-claro` 6,15; `miel` 5,94; `formula-fondo` 5,89 |
-| `text-azul-oscuro` | `blanco` 10,55; `azul-claro` 9,34; `miel` 9,02 |
-| `text-formula` | `blanco` 7,74; `formula-fondo` 6,56 |
-| `text-descuento` | `blanco` 6,78; `miel` 5,80 |
-| `text-blanco` | `tinta` 14,59; `azul-oscuro` 10,55; `formula` 7,74; `azul` 6,94; `descuento` 6,78; `texto-2` 6,44 |
+| `text-ink` | `blanco` 15,55; `paper` 14,17; `celadon` 11,89 |
+| `text-muted` | `blanco` 7,28; `paper` 6,64; `celadon` 5,57 |
+| `text-bottle` | `blanco` 12,33; `paper` 11,24; `celadon` 9,43 |
+| `text-amber-ink` | `blanco` 6,61; `paper` 6,02; `celadon` 5,05 |
+| `text-error` | `blanco` 6,93; `paper` 6,32 |
+| `text-blanco` | `bottle` 12,33; `ink` 15,55; `muted` 7,28; `amber` 4,74 |
+| `text-paper` | `bottle` 11,24 |
+| `text-celadon` | `bottle` 9,43 |
 
-- No hay texto de un color de marca sobre otro (por ejemplo, `azul` sobre `azul-oscuro` da 1,52:1) ni `blanco` sobre fondos claros (≤ 1,19:1).
-- Los colores de categoría sin `-fondo` (`cat-dolor`, `cat-gripa`, `cat-estomago`, `cat-piel`, `cat-bebes`, `cat-auxilios`, `cat-formula`, `cat-todo`) son **solo decorativos**: puntos, íconos y rellenos de ilustración. Sobre blanco van de 1,77:1 a 2,83:1, así que nunca llevan texto ni son la única señal de un estado.
-- Bordes: `borde`, `borde-suave` y `borde-control` son decorativos. Cuando el borde es lo único que delimita un control (un campo de texto), usa `border-texto-2` (6,44:1 sobre blanco) para cumplir el 3:1 de contraste no textual.
-- Foco visible: contorno `tinta` sobre fondos claros y `blanco` sobre `azul-oscuro` (barra de avisos) o `azul`.
+- `amber` nunca es color de texto: sobre `paper` da 4,32:1 y sobre `celadon` 3,63:1. Para texto se usa `amber-ink`.
+- Los errores de formulario van en `error` con ícono y texto, y el fondo del campo sigue blanco: el color nunca es la única señal. «Quitar», «Vaciar pedido» y «Quedan pocas unidades» van en `ink`; esta última lleva ícono de aviso.
+- Bordes: `celadon` y `muted/40` son decorativos. Cuando el borde es lo único que delimita un control (un campo de texto), usa `border-muted` (7,28:1 sobre blanco) para cumplir el 3:1 de contraste no textual.
+- Foco visible: contorno `ink` sobre fondos claros y `blanco` sobre `bottle`.
 
 ### Tipografía
 

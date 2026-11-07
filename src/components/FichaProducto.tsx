@@ -20,9 +20,9 @@ interface Props {
 }
 
 const DISPONIBILIDAD = {
-  disponible: { texto: 'Disponible para domicilio', clase: 'text-azul' },
-  pocas: { texto: 'Quedan pocas unidades', clase: 'text-descuento' },
-  agotado: { texto: 'Agotado por ahora', clase: 'text-formula' },
+  disponible: { texto: 'Disponible para domicilio', clase: 'text-bottle', icono: 'info' },
+  pocas: { texto: 'Quedan pocas unidades', clase: 'text-ink', icono: 'aviso' },
+  agotado: { texto: 'Agotado por ahora', clase: 'text-ink', icono: 'info' },
 } as const;
 
 /**
@@ -95,7 +95,7 @@ export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, i
             </span>
             {!p.fotos.length && <div ref={escena} aria-hidden="true" class="escena-empaque pointer-events-none absolute inset-0" />}
             {p.condicionVenta === 'libre' && p.descuentoPct && (
-              <span class="absolute top-3.5 left-3.5 rounded-full bg-descuento px-3 py-1 text-[13px] font-semibold text-blanco">
+              <span class="absolute top-3.5 left-3.5 rounded-full bg-amber px-3 py-1 text-[13px] font-semibold text-blanco">
                 Ahorra {p.descuentoPct} %
               </span>
             )}
@@ -110,7 +110,7 @@ export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, i
                     aria-pressed={i === foto}
                     onClick={() => setFoto(i)}
                     class={`flex h-16 w-full cursor-pointer items-center justify-center overflow-hidden rounded-boton bg-blanco p-1 ${
-                      i === foto ? 'border-2 border-azul' : 'border border-borde-control'
+                      i === foto ? 'border-2 border-bottle' : 'border border-muted/40'
                     }`}
                   >
                     <img src={src} alt="" loading="lazy" class="max-h-full w-auto object-contain" />
@@ -122,7 +122,7 @@ export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, i
         </div>
 
         <div class="flex min-w-0 flex-[1_1_340px] flex-col gap-3 pt-1">
-          <p class="m-0 flex items-center gap-2 pr-14 text-sm text-texto-2">
+          <p class="m-0 flex items-center gap-2 pr-14 text-sm text-muted">
             <span aria-hidden="true" class={`size-2.5 shrink-0 rounded-full ${PUNTO_CATEGORIA[p.categoria]}`} />
             {categoria(p.categoria).nombre}
           </p>
@@ -133,19 +133,19 @@ export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, i
           >
             {p.nombre}
           </Titulo>
-          <p class="m-0 text-[15px] text-texto-2">
+          <p class="m-0 text-[15px] text-muted">
             {p.laboratorioMarca}, {p.presentacion}
           </p>
           <div class="flex flex-wrap items-center gap-x-3.5 gap-y-2">
             <span
               class={`rounded-full px-3 py-1 text-[13.5px] font-semibold ${
-                rx ? 'bg-formula-fondo text-formula' : 'bg-azul-claro text-azul-oscuro'
+                rx ? 'bg-celadon text-amber-ink' : 'bg-celadon text-bottle'
               }`}
             >
               {condicion}
             </span>
             <span class={`inline-flex items-center gap-1.5 text-sm font-medium ${disp.clase}`}>
-              <Icono nombre="info" tamano={16} grosor={2.4} />
+              <Icono nombre={disp.icono} tamano={16} grosor={2.4} />
               {disp.texto}
             </span>
           </div>
@@ -155,19 +155,19 @@ export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, i
               <p class="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <span class="text-[32px] leading-tight font-bold">{formatearPrecio(p.precio)}</span>
                 {p.precioAntes && (
-                  <span class="text-[15px] text-texto-2">
+                  <span class="text-[15px] text-amber-ink">
                     Antes <s>{formatearPrecio(p.precioAntes)}</s>
                   </span>
                 )}
               </p>
               {p.precioPorUnidad && p.unidad && (
-                <p class="m-0 text-sm text-texto-2">
+                <p class="m-0 text-sm text-muted">
                   Precio por unidad: {formatearPrecio(p.precioPorUnidad)} por {p.unidad}
                 </p>
               )}
             </div>
           ) : (
-            <p class="mt-1 mb-0 rounded-boton bg-formula-fondo px-3.5 py-3 text-[15px] leading-normal text-formula">
+            <p class="mt-1 mb-0 rounded-boton bg-celadon px-3.5 py-3 text-[15px] leading-normal text-amber-ink">
               Para comprarlo, envíanos la foto de tu fórmula médica vigente. Te confirmamos disponibilidad y precio por
               WhatsApp.
             </p>
@@ -177,21 +177,21 @@ export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, i
             {rx ? (
               <a
                 href={enlaceWhatsApp(whatsapp, mensajeFormula(p.nombre))}
-                class="flex min-h-13.5 w-full items-center justify-center rounded-[14px] bg-formula text-base font-semibold text-blanco no-underline"
+                class="flex min-h-13.5 w-full items-center justify-center rounded-[14px] bg-amber text-base font-semibold text-blanco no-underline"
               >
                 Enviar fórmula por WhatsApp
               </a>
             ) : p.disponibilidad === 'agotado' ? (
               <a
                 href={enlaceWhatsApp(whatsapp, mensajeDisponibilidad(p.nombre))}
-                class="flex min-h-13.5 w-full items-center justify-center rounded-[14px] border-2 border-texto-2 bg-blanco text-base font-semibold text-tinta no-underline"
+                class="flex min-h-13.5 w-full items-center justify-center rounded-[14px] border-2 border-muted bg-blanco text-base font-semibold text-ink no-underline"
               >
                 Preguntar disponibilidad por WhatsApp
               </a>
             ) : (
               <ControlCantidad producto={p} tamano="ficha" />
             )}
-            <p class="m-0 flex items-start gap-2 text-sm leading-normal text-texto-2">
+            <p class="m-0 flex items-start gap-2 text-sm leading-normal text-muted">
               <Icono nombre="ubicacion" tamano={18} class="mt-0.5" />
               {entrega}
             </p>
@@ -200,14 +200,14 @@ export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, i
       </div>
 
       <div class="flex flex-wrap items-start gap-x-10 gap-y-6">
-        <div class="min-w-0 flex-[1_1_340px] border-t border-borde">
+        <div class="min-w-0 flex-[1_1_340px] border-t border-celadon">
           <Seccion titulo="Para qué sirve" texto={p.paraQueSirve} abierta />
           <Seccion titulo="Cómo se usa" texto={p.comoSeUsa} />
           <Seccion titulo="Advertencias" texto={p.advertencias} />
         </div>
         <section
           aria-labelledby={`${idTitulo}-info`}
-          class="min-w-0 flex-[1_1_340px] rounded-tarjeta bg-cat-todo-fondo px-5 py-4.5"
+          class="min-w-0 flex-[1_1_340px] rounded-tarjeta bg-celadon px-5 py-4.5"
         >
           <Subtitulo id={`${idTitulo}-info`} class="m-0 mb-2.5 text-[16.5px] font-semibold">
             Información del producto
@@ -216,8 +216,8 @@ export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, i
             {filas
               .filter((f): f is [string, string] => !!f[1])
               .map(([k, v]) => (
-                <div key={k} class="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-3 border-b border-borde-suave py-2">
-                  <dt class="text-sm text-texto-2">{k}</dt>
+                <div key={k} class="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-3 border-b border-celadon/60 py-2">
+                  <dt class="text-sm text-muted">{k}</dt>
                   <dd class="m-0 text-[14.5px] font-medium">{v}</dd>
                 </div>
               ))}
@@ -226,7 +226,7 @@ export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, i
       </div>
 
       {med && (
-        <p class="m-0 rounded-boton bg-azul-claro px-4 py-3 text-[15px] font-semibold text-azul-oscuro">
+        <p class="m-0 rounded-boton bg-celadon px-4 py-3 text-[15px] font-semibold text-bottle">
           {rx ? 'Este medicamento requiere fórmula médica.' : 'Si los síntomas persisten, consulte a su médico.'}
         </p>
       )}
@@ -236,9 +236,9 @@ export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, i
 
 function Seccion({ titulo, texto, abierta = false }: { titulo: string; texto: string; abierta?: boolean }) {
   return (
-    <details open={abierta} class="border-b border-borde">
+    <details open={abierta} class="border-b border-celadon">
       <summary class="min-h-11 cursor-pointer py-3.5 text-[16.5px] font-semibold">{titulo}</summary>
-      <p class="m-0 mb-4 text-[15px] leading-relaxed whitespace-pre-line text-texto-cuerpo">{texto}</p>
+      <p class="m-0 mb-4 text-[15px] leading-relaxed whitespace-pre-line text-muted">{texto}</p>
     </details>
   );
 }

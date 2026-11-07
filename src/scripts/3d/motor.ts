@@ -12,7 +12,7 @@ import {
   type Object3D,
 } from 'three';
 
-export const FONDO_AZUL_CLARO = 0xeaf2fb;
+export const FONDO_CELADON = 0xd5e5db;
 
 export interface OpcionesMotor {
   /** Celular o equipo modesto: menos resolución y sin antialias. */
@@ -70,11 +70,11 @@ export function crearMotor(contenedor: HTMLElement, o: OpcionesMotor): Motor {
   camara.position.set(0, 0, o.distancia ?? 16);
   const clave = new DirectionalLight(0xffffff, 1.7);
   clave.position.set(5, 7, 9);
-  const contorno = new DirectionalLight(0xfbebd6, 1.4);
+  const contorno = new DirectionalLight(0xf3f5f1, 1.4);
   contorno.position.set(-6, 3, -8);
-  const relleno = new DirectionalLight(0x6e9fc4, 0.5);
+  const relleno = new DirectionalLight(0xd5e5db, 0.5);
   relleno.position.set(-4, -6, 6);
-  escena.add(new HemisphereLight(0xffffff, 0xc5d3e2, 1.5), clave, contorno, relleno);
+  escena.add(new HemisphereLight(0xffffff, 0xd5e5db, 1.5), clave, contorno, relleno);
 
   let ancho = 1;
   let alto = 1;

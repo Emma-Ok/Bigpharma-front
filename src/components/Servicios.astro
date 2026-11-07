@@ -15,13 +15,13 @@ const pasos = [
 ];
 ---
 
-<section id="servicios" aria-labelledby="serv-titulo" class="bg-miel">
+<section id="servicios" aria-labelledby="serv-titulo" class="bg-celadon">
   <div class="mx-auto flex max-w-sitio flex-wrap items-start gap-x-14 gap-y-8 px-margen py-[clamp(36px,5vw,60px)]">
     <div class="flex min-w-0 flex-[1_1_360px] flex-col gap-4">
       <h2 id="serv-titulo" class="m-0 max-w-[20ch] text-[clamp(26px,2.6vw,34px)] leading-tight font-semibold">
         Aplicación de inyectables en tu casa
       </h2>
-      <p class="m-0 max-w-[52ch] leading-relaxed text-texto-cuerpo">
+      <p class="m-0 max-w-[52ch] leading-relaxed text-muted">
         Te atiende {config.profesional.nombre}, {config.profesional.profesion.toLowerCase()}. Llevamos el material estéril y desechable.
       </p>
       <p class="m-0 flex max-w-[52ch] items-start gap-2.5 text-[15.5px] leading-snug font-semibold">
@@ -30,7 +30,7 @@ const pasos = [
       </p>
       <a
         href={enlaceWhatsApp(config.whatsapp, MENSAJE_INYECTOLOGIA)}
-        class="inline-flex min-h-13 min-w-55 items-center justify-center self-start rounded-boton bg-azul px-6 font-semibold text-blanco no-underline"
+        class="inline-flex min-h-13 min-w-55 items-center justify-center self-start rounded-boton bg-bottle px-6 font-semibold text-blanco no-underline"
       >
         Agendar visita
       </a>
@@ -39,20 +39,20 @@ const pasos = [
     <div class="relative h-56 overflow-hidden rounded-panel sm:h-64" aria-hidden="true" data-escena="servicios">
       <!-- Imagen estática (movimiento reducido, sin WebGL o antes de cargar la escena 3D). -->
       <svg class="imagen-servicios absolute inset-0 size-full transition-opacity duration-lenta" viewBox="0 0 400 240" fill="none" stroke-width="2.5" stroke-linejoin="round">
-        <g transform="rotate(-36 170 120)" class="stroke-tinta">
+        <g transform="rotate(-36 170 120)" class="stroke-ink">
           <rect x="150" y="30" width="44" height="150" rx="6" class="fill-blanco" />
-          <rect x="154" y="92" width="36" height="84" rx="3" class="fill-cat-gripa" />
-          <rect x="152" y="80" width="40" height="12" class="fill-tinta" />
+          <rect x="154" y="92" width="36" height="84" rx="3" class="fill-bottle" />
+          <rect x="152" y="80" width="40" height="12" class="fill-ink" />
           <rect x="166" y="-14" width="12" height="94" class="fill-blanco" />
           <rect x="146" y="-22" width="52" height="10" rx="3" class="fill-blanco" />
           <rect x="130" y="24" width="84" height="8" rx="3" class="fill-blanco" />
           <path d="M160 180 L184 180 L178 198 L166 198 Z" class="fill-blanco" />
-          <path d="M172 198 V250" stroke-linecap="round" class="stroke-texto-2" />
+          <path d="M172 198 V250" stroke-linecap="round" class="stroke-muted" />
         </g>
-        <g class="stroke-tinta">
+        <g class="stroke-ink">
           <path d="M268 112 h52 v14 l10 12 v74 a8 8 0 0 1 -8 8 h-56 a8 8 0 0 1 -8 -8 v-74 l10 -12 z" class="fill-blanco" />
-          <rect x="270" y="92" width="48" height="22" rx="4" class="fill-azul" />
-          <rect x="260" y="160" width="70" height="30" class="fill-cat-gripa" />
+          <rect x="270" y="92" width="48" height="22" rx="4" class="fill-bottle" />
+          <rect x="260" y="160" width="70" height="30" class="fill-bottle" />
         </g>
       </svg>
     </div>
@@ -60,7 +60,7 @@ const pasos = [
       {
         pasos.map((paso, i) => (
           <li class="grid grid-cols-[44px_minmax(0,1fr)] items-start gap-3.5">
-            <span aria-hidden="true" class="flex size-11 items-center justify-center rounded-full bg-azul text-lg font-semibold text-blanco">
+            <span aria-hidden="true" class="flex size-11 items-center justify-center rounded-full bg-bottle text-lg font-semibold text-blanco">
               {i + 1}
             </span>
             <span class="pt-[9px] leading-normal">{paso}</span>

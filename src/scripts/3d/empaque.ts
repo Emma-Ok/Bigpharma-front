@@ -17,9 +17,9 @@ interface Opciones {
 
 function modelo(forma: Forma, color: string, seg: number): Group {
   const blanco = new MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 });
-  const lateral = new MeshStandardMaterial({ color: 0xf1f4f8, roughness: 0.55 });
+  const lateral = new MeshStandardMaterial({ color: 0xf3f5f1, roughness: 0.55 });
   const marca = new MeshStandardMaterial({ color, roughness: 0.4 });
-  const texto = new MeshStandardMaterial({ color: 0x1b2a3a, roughness: 0.6 });
+  const texto = new MeshStandardMaterial({ color: 0x1c2623, roughness: 0.6 });
   const g = new Group();
   if (forma === 'caja' || forma === 'paquete') {
     const [an, al, pr] = forma === 'caja' ? [1.5, 2.3, 0.85] : [2, 2.5, 0.42];

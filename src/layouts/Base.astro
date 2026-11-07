@@ -43,7 +43,7 @@ const aJson = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
     <meta property="og:title" content={titulo} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:url" content={urlCanonica} />
-    <meta name="theme-color" content="#173F72" />
+    <meta name="theme-color" content="#133B34" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href={lexendLatin} as="font" type="font/woff2" crossorigin />
     <link rel="sitemap" href="/sitemap-index.xml" />
@@ -51,10 +51,10 @@ const aJson = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
     <ClientRouter />
     <slot name="head" />
   </head>
-  <body class="flex min-h-dvh flex-col bg-blanco font-sans text-tinta antialiased">
+  <body class="flex min-h-dvh flex-col bg-paper font-sans text-ink antialiased">
     <a
       href="#contenido"
-      class="absolute -top-16 left-3 z-50 rounded-boton bg-tinta px-4 py-3 font-semibold text-blanco no-underline focus:top-3"
+      class="absolute -top-16 left-3 z-50 rounded-boton bg-ink px-4 py-3 font-semibold text-blanco no-underline focus:top-3"
     >
       Saltar al contenido
     </a>

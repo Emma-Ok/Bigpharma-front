@@ -140,7 +140,7 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
         ref={rango}
         tabIndex={-1}
         aria-live="polite"
-        class="m-0 text-[15px] text-texto-2 focus:outline-none"
+        class="m-0 text-[15px] text-muted focus:outline-none"
         id="resultados-rango"
       >
         {lista.length
@@ -157,7 +157,7 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
         <label htmlFor="q-catalogo" class="text-[15px] font-semibold">
           Busca por nombre o síntoma
         </label>
-        <div class="flex h-13.5 overflow-hidden rounded-[14px] border-2 border-texto-2 bg-blanco focus-within:border-azul">
+        <div class="flex h-13.5 overflow-hidden rounded-[14px] border-2 border-muted bg-blanco focus-within:border-bottle">
           <input
             id="q-catalogo"
             type="search"
@@ -166,12 +166,12 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
             placeholder="Ej.: ibuprofeno, suero, gripa"
             autoComplete="off"
             aria-controls="resultados"
-            class="min-w-0 flex-1 border-0 bg-transparent px-4 text-base text-tinta outline-none"
+            class="min-w-0 flex-1 border-0 bg-transparent px-4 text-base text-ink outline-none"
           />
           <button
             type="submit"
             aria-label="Buscar"
-            class="flex w-14 shrink-0 cursor-pointer items-center justify-center border-0 border-l border-borde bg-azul-claro text-azul"
+            class="flex w-14 shrink-0 cursor-pointer items-center justify-center border-0 border-l border-celadon bg-celadon text-bottle"
           >
             <Icono nombre="lupa" tamano={22} grosor={2.2} />
           </button>
@@ -188,20 +188,20 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
           onKeyDown={(e) => {
             if (e.key === 'Escape' && filtrosAbiertos) cerrarFiltros(true);
           }}
-          class="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-boton border-2 border-azul bg-blanco px-4 text-[15px] font-semibold text-azul lg:hidden"
+          class="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-boton border-2 border-bottle bg-blanco px-4 text-[15px] font-semibold text-bottle lg:hidden"
         >
           <Icono nombre="menu" tamano={18} />
           {totalFiltros ? `Filtros (${totalFiltros})` : 'Filtros'}
         </button>
         <div class="ml-auto flex items-center gap-2">
-          <label htmlFor="orden" class="text-sm text-texto-2">
+          <label htmlFor="orden" class="text-sm text-muted">
             Ordenar por
           </label>
           <select
             id="orden"
             value={estado.orden}
             onChange={(e) => cambiar({ orden: e.currentTarget.value as Orden }, true)}
-            class="min-h-11 cursor-pointer rounded-boton border-2 border-texto-2 bg-blanco px-3 text-[15px] text-tinta"
+            class="min-h-11 cursor-pointer rounded-boton border-2 border-muted bg-blanco px-3 text-[15px] text-ink"
           >
             {Object.entries(ORDENES).map(([valor, texto]) => (
               <option key={valor} value={valor}>
@@ -221,7 +221,7 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
           onKeyDown={(e) => {
             if (e.key === 'Escape' && filtrosAbiertos) cerrarFiltros(true);
           }}
-          class={`${filtrosAbiertos ? 'flex' : 'hidden'} absolute inset-x-0 top-0 z-30 max-h-[75dvh] flex-col gap-5 overflow-y-auto rounded-panel border border-borde bg-blanco p-5 shadow-flotante lg:sticky lg:top-6 lg:flex lg:max-h-none lg:w-65 lg:shrink-0 lg:overflow-visible lg:shadow-none`}
+          class={`${filtrosAbiertos ? 'flex' : 'hidden'} absolute inset-x-0 top-0 z-30 max-h-[75dvh] flex-col gap-5 overflow-y-auto rounded-panel border border-celadon bg-blanco p-5 shadow-flotante lg:sticky lg:top-6 lg:flex lg:max-h-none lg:w-65 lg:shrink-0 lg:overflow-visible lg:shadow-none`}
         >
           <fieldset class="m-0 border-0 p-0">
             <legend class="mb-2 p-0 text-base font-semibold">Categoría</legend>
@@ -231,11 +231,11 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
                 name="categoria"
                 checked={!estado.categoria}
                 onChange={() => cambiar({ categoria: undefined }, true)}
-                class="size-4.5 accent-azul"
+                class="size-4.5 accent-bottle"
               />
               <span aria-hidden="true" class={`size-2.5 rounded-full ${PUNTO_CATEGORIA.todo}`} />
               <span class="flex-1">Todas</span>
-              <span class="text-sm text-texto-2">{base.length}</span>
+              <span class="text-sm text-muted">{base.length}</span>
             </label>
             {CATEGORIAS.map((c) => (
               <label key={c.id} class="flex min-h-10 cursor-pointer items-center gap-2.5 text-[15px]">
@@ -244,11 +244,11 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
                   name="categoria"
                   checked={estado.categoria === c.id}
                   onChange={() => cambiar({ categoria: c.id }, true)}
-                  class="size-4.5 accent-azul"
+                  class="size-4.5 accent-bottle"
                 />
                 <span aria-hidden="true" class={`size-2.5 rounded-full ${PUNTO_CATEGORIA[c.id]}`} />
                 <span class="flex-1">{c.nombre}</span>
-                <span class="text-sm text-texto-2">{conteo[c.id]}</span>
+                <span class="text-sm text-muted">{conteo[c.id]}</span>
               </label>
             ))}
           </fieldset>
@@ -261,7 +261,7 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
                   name="tipo"
                   checked={estado.tipo === t}
                   onChange={() => cambiar({ tipo: t }, true)}
-                  class="size-4.5 accent-azul"
+                  class="size-4.5 accent-bottle"
                 />
                 {t ? TIPOS[t] : 'Todos'}
               </label>
@@ -272,7 +272,7 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
               type="checkbox"
               checked={estado.descuento}
               onChange={(e) => cambiar({ descuento: e.currentTarget.checked }, true)}
-              class="size-4.5 accent-azul"
+              class="size-4.5 accent-bottle"
             />
             Solo productos con descuento
           </label>
@@ -280,7 +280,7 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
             <button
               type="button"
               onClick={() => cambiar({ ...INICIAL, orden: estado.orden }, true)}
-              class="min-h-11 cursor-pointer self-start rounded-boton border-0 bg-transparent px-0 text-[15px] font-semibold text-azul underline"
+              class="min-h-11 cursor-pointer self-start rounded-boton border-0 bg-transparent px-0 text-[15px] font-semibold text-bottle underline"
             >
               Borrar filtros
             </button>
@@ -288,7 +288,7 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
           <button
             type="button"
             onClick={() => cerrarFiltros(true)}
-            class="min-h-12 cursor-pointer rounded-boton border-0 bg-azul px-5 text-[15px] font-semibold text-blanco lg:hidden"
+            class="min-h-12 cursor-pointer rounded-boton border-0 bg-bottle px-5 text-[15px] font-semibold text-blanco lg:hidden"
           >
             {lista.length === 1 ? 'Ver 1 producto' : `Ver ${lista.length} productos`}
           </button>
@@ -296,20 +296,20 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
 
         <div id="resultados" class="flex min-w-0 flex-1 flex-col gap-6">
           {!lista.length && (
-            <div class="flex flex-col gap-2.5 rounded-tarjeta border border-dashed border-texto-2 p-5">
+            <div class="flex flex-col gap-2.5 rounded-tarjeta border border-dashed border-muted p-5">
               <p class="m-0 text-[17px] font-semibold">No hay productos con esos filtros</p>
-              <p class="m-0 text-[15px] text-texto-cuerpo">Cambia la búsqueda o pregúntanos si lo conseguimos.</p>
+              <p class="m-0 text-[15px] text-muted">Cambia la búsqueda o pregúntanos si lo conseguimos.</p>
               <div class="flex flex-wrap gap-2.5">
                 <a
                   href={enlaceWhatsApp(whatsapp, estado.q.trim() ? mensajeBusqueda(estado.q) : MENSAJE_GENERAL)}
-                  class="inline-flex min-h-11.5 items-center rounded-boton bg-azul px-4.5 text-[15px] font-semibold text-blanco no-underline"
+                  class="inline-flex min-h-11.5 items-center rounded-boton bg-bottle px-4.5 text-[15px] font-semibold text-blanco no-underline"
                 >
                   Preguntar por WhatsApp
                 </a>
                 <button
                   type="button"
                   onClick={() => cambiar({ ...INICIAL, orden: estado.orden }, true)}
-                  class="min-h-11.5 cursor-pointer rounded-boton border-2 border-azul bg-blanco px-4.5 text-[15px] font-semibold text-azul"
+                  class="min-h-11.5 cursor-pointer rounded-boton border-2 border-bottle bg-blanco px-4.5 text-[15px] font-semibold text-bottle"
                 >
                   Borrar filtros
                 </button>
@@ -340,7 +340,7 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
                     disabled={pagina === 1}
                     onClick={() => irAPagina(pagina - 1)}
                     aria-label="Página anterior"
-                    class="flex size-11 cursor-pointer items-center justify-center rounded-full border-2 border-azul bg-blanco text-azul disabled:cursor-default disabled:border-borde-control disabled:text-texto-2"
+                    class="flex size-11 cursor-pointer items-center justify-center rounded-full border-2 border-bottle bg-blanco text-bottle disabled:cursor-default disabled:border-muted/40 disabled:text-muted"
                   >
                     <Icono nombre="anterior" tamano={18} grosor={2.4} />
                   </button>
@@ -353,7 +353,7 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
                       aria-label={`Página ${n}`}
                       aria-current={n === pagina ? 'page' : undefined}
                       class={`flex size-11 cursor-pointer items-center justify-center rounded-full text-[15px] font-semibold ${
-                        n === pagina ? 'border-0 bg-azul text-blanco' : 'border border-borde-control bg-blanco text-tinta'
+                        n === pagina ? 'border-0 bg-bottle text-blanco' : 'border border-muted/40 bg-blanco text-ink'
                       }`}
                     >
                       {n}
@@ -366,7 +366,7 @@ export default function Catalogo({ productos, whatsapp, entrega }: Props) {
                     disabled={pagina === paginas}
                     onClick={() => irAPagina(pagina + 1)}
                     aria-label="Página siguiente"
-                    class="flex size-11 cursor-pointer items-center justify-center rounded-full border-2 border-azul bg-blanco text-azul disabled:cursor-default disabled:border-borde-control disabled:text-texto-2"
+                    class="flex size-11 cursor-pointer items-center justify-center rounded-full border-2 border-bottle bg-blanco text-bottle disabled:cursor-default disabled:border-muted/40 disabled:text-muted"
                   >
                     <Icono nombre="siguiente" tamano={18} grosor={2.4} />
                   </button>

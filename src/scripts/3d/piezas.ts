@@ -5,11 +5,11 @@
 import { Euler, LatheGeometry, Vector2 } from 'three';
 
 export const PARES: [string, string][] = [
-  ['#1E5AA0', '#FFFFFF'],
-  ['#6E9FC4', '#FFFFFF'],
-  ['#D9963F', '#FBEBD6'],
+  ['#133B34', '#FFFFFF'],
+  ['#133B34', '#D5E5DB'],
+  ['#4A5A55', '#F3F5F1'],
 ];
-export const TABLETAS = ['#FFFFFF', '#FBEBD6', '#EAF2FB'];
+export const TABLETAS = ['#FFFFFF', '#F3F5F1', '#D5E5DB'];
 export const RADIO = 0.32;
 export const LARGO = 0.55;
 export const RADIO_TABLETA = 0.42;

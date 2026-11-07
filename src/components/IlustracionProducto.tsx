@@ -31,12 +31,12 @@ export default function IlustracionProducto({ categoria, presentacion, ancho, gr
       fill="none"
       stroke-width={grosor}
       stroke-linejoin="round"
-      class="stroke-tinta"
+      class="stroke-ink"
     >
       {forma === 'caja' && (
         <>
           <path d="M20 32 L40 20 L84 20 L64 32 Z" class="fill-blanco" />
-          <path d="M64 32 L84 20 L84 90 L64 102 Z" class="fill-cat-todo-fondo" />
+          <path d="M64 32 L84 20 L84 90 L64 102 Z" class="fill-paper" />
           <rect x="20" y="32" width="44" height="70" class="fill-blanco" />
           <rect x="20" y="58" width="44" height="16" class={color} />
           <path d="M27 42 H50 M27 48 H44" stroke-linecap="round" />

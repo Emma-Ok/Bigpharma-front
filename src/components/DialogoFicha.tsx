@@ -94,7 +94,7 @@ export default function DialogoFicha({ abierto, whatsapp, entrega, onCerrar, onM
       ref={dialogo}
       aria-modal="true"
       aria-labelledby="ficha-rapida-titulo"
-      class="dialogo-ficha m-auto max-h-[calc(100dvh-32px)] w-[calc(100%-24px)] max-w-245 overflow-y-auto rounded-panel border-0 bg-blanco p-[clamp(18px,3vw,36px)] text-tinta shadow-flotante backdrop:bg-tinta/45"
+      class="dialogo-ficha m-auto max-h-[calc(100dvh-32px)] w-[calc(100%-24px)] max-w-245 overflow-y-auto rounded-panel border-0 bg-blanco p-[clamp(18px,3vw,36px)] text-ink shadow-flotante backdrop:bg-ink/45"
       onClick={(e) => {
         if (e.target === e.currentTarget) e.currentTarget.close();
       }}
@@ -106,13 +106,13 @@ export default function DialogoFicha({ abierto, whatsapp, entrega, onCerrar, onM
             aria-label="Cerrar detalles del producto"
             ref={cerrar}
             onClick={() => dialogo.current?.close()}
-            class="absolute top-0 right-0 z-10 flex size-11.5 cursor-pointer items-center justify-center rounded-boton border-2 border-tinta bg-blanco text-tinta"
+            class="absolute top-0 right-0 z-10 flex size-11.5 cursor-pointer items-center justify-center rounded-boton border-2 border-ink bg-blanco text-ink"
           >
             <Icono nombre="cerrar" grosor={2.4} />
           </button>
           <FichaProducto producto={ficha} whatsapp={whatsapp} entrega={entrega} nivel={2} idTitulo="ficha-rapida-titulo" />
           <p class="mt-6 mb-0">
-            <a href={urlProducto(ficha)} class="inline-flex min-h-11 items-center gap-2 font-semibold text-azul">
+            <a href={urlProducto(ficha)} class="inline-flex min-h-11 items-center gap-2 font-semibold text-bottle">
               Ver la página completa del producto
               <Icono nombre="flecha" tamano={18} />
             </a>

@@ -54,7 +54,7 @@ export default function TarjetaProducto({
   };
 
   return (
-    <article class="group flex w-full min-w-0 flex-col overflow-hidden rounded-tarjeta border border-borde-suave bg-blanco text-[15px] leading-snug transition-colors duration-rapida hover-fino:border-azul">
+    <article class="group flex w-full min-w-0 flex-col overflow-hidden rounded-tarjeta border border-celadon/60 bg-blanco text-[15px] leading-snug transition-colors duration-rapida hover-fino:border-bottle">
       <a
         href={url}
         onClick={abrir}
@@ -73,23 +73,23 @@ export default function TarjetaProducto({
           )}
         </span>
         {rx && (
-          <span class="absolute top-2.5 left-2.5 rounded-full bg-formula px-2.5 py-0.5 text-xs font-semibold text-blanco">
+          <span class="absolute top-2.5 left-2.5 rounded-full bg-amber px-2.5 py-0.5 text-xs font-semibold text-blanco">
             Con fórmula médica
           </span>
         )}
         {p.condicionVenta === 'libre' && p.descuentoPct && (
-          <span class="absolute top-2.5 left-2.5 rounded-full bg-descuento px-2.5 py-0.5 text-xs font-semibold text-blanco">
+          <span class="absolute top-2.5 left-2.5 rounded-full bg-amber px-2.5 py-0.5 text-xs font-semibold text-blanco">
             Ahorra {p.descuentoPct} %
           </span>
         )}
         {agotado && (
-          <span class="absolute top-2.5 right-2.5 rounded-full bg-texto-2 px-2.5 py-0.5 text-xs font-semibold text-blanco">
+          <span class="absolute top-2.5 right-2.5 rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold text-blanco">
             Agotado
           </span>
         )}
       </a>
       <div class="flex flex-1 flex-col gap-1 px-3.5 pt-3 pb-3.5">
-        <p class="m-0 flex items-center gap-1.5 text-[12.5px] text-texto-2">
+        <p class="m-0 flex items-center gap-1.5 text-[12.5px] text-muted">
           <span aria-hidden="true" class={`size-2 shrink-0 rounded-full ${PUNTO_CATEGORIA[p.categoria]}`} />
           {categoria(p.categoria).nombre}
         </p>
@@ -97,7 +97,7 @@ export default function TarjetaProducto({
           <a
             href={url}
             onClick={abrir}
-            class="text-tinta no-underline hover:underline"
+            class="text-ink no-underline hover:underline"
             {...(sinTransicion ? {} : atributosTransicion(vt.nombre))}
             onPointerEnter={() => onPrecargar?.(p)}
             onFocus={() => onPrecargar?.(p)}
@@ -105,25 +105,25 @@ export default function TarjetaProducto({
             {p.nombre}
           </a>
         </Titulo>
-        <p class="m-0 text-[13px] leading-snug text-texto-2">{p.presentacion}</p>
+        <p class="m-0 text-[13px] leading-snug text-muted">{p.presentacion}</p>
         <div class="mt-auto flex flex-col gap-2.5 pt-2">
           {p.condicionVenta === 'libre' ? (
             <p class="m-0 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
               <span class="text-[19px] leading-tight font-bold">{formatearPrecio(p.precio)}</span>
               {p.precioAntes && (
-                <span class="text-[12.5px] text-texto-2">
+                <span class="text-[12.5px] text-amber-ink">
                   Antes <s>{formatearPrecio(p.precioAntes)}</s>
                 </span>
               )}
             </p>
           ) : (
-            <p class="m-0 text-[13px] text-texto-2">Precio según disponibilidad</p>
+            <p class="m-0 text-[13px] text-muted">Precio según disponibilidad</p>
           )}
           {rx ? (
             <a
               href={enlaceWhatsApp(whatsapp, mensajeFormula(p.nombre))}
               aria-label={`Consultar por WhatsApp con fórmula: ${p.nombre}`}
-              class="flex min-h-11 w-full items-center justify-center rounded-boton border-2 border-formula bg-blanco text-center text-sm font-semibold text-formula no-underline"
+              class="flex min-h-11 w-full items-center justify-center rounded-boton bg-amber text-center text-sm font-semibold text-blanco no-underline"
             >
               Consultar por WhatsApp
             </a>
@@ -131,7 +131,7 @@ export default function TarjetaProducto({
             <a
               href={enlaceWhatsApp(whatsapp, mensajeDisponibilidad(p.nombre))}
               aria-label={`Preguntar disponibilidad por WhatsApp: ${p.nombre}`}
-              class="flex min-h-11 w-full items-center justify-center rounded-boton border-2 border-texto-2 bg-blanco text-center text-sm font-semibold text-tinta no-underline"
+              class="flex min-h-11 w-full items-center justify-center rounded-boton border-2 border-muted bg-blanco text-center text-sm font-semibold text-ink no-underline"
             >
               Preguntar disponibilidad
             </a>

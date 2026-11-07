@@ -17,15 +17,15 @@ const enlaces = [
 const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
 ---
 
-<header class="relative z-40 border-b border-borde-suave bg-blanco" data-encabezado>
+<header class="relative z-40 border-b border-celadon bg-paper" data-encabezado>
   <div class="mx-auto flex max-w-sitio items-center justify-between gap-3 px-margen py-2.5">
-    <a href="/" class="flex min-h-11 items-center gap-2.5 text-tinta no-underline">
-      <span aria-hidden="true" class="flex size-9.5 shrink-0 items-center justify-center rounded-[11px] bg-azul text-blanco">
+    <a href="/" class="flex min-h-11 items-center gap-2.5 text-ink no-underline">
+      <span aria-hidden="true" class="flex size-9.5 shrink-0 items-center justify-center rounded-[11px] bg-bottle text-blanco">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 6v12M6 12h12"></path></svg>
       </span>
       <span class="flex flex-col">
         <span class="text-lg leading-tight font-semibold">{nombre}</span>
-        <span class="text-[13px] text-texto-2">Droguería a domicilio</span>
+        <span class="text-[13px] text-muted">Droguería a domicilio</span>
       </span>
     </a>
 
@@ -35,7 +35,7 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
           <a
             href={e.href}
             aria-current={e.actual ? 'page' : undefined}
-            class="inline-flex min-h-11 items-center px-3 text-[15px] font-medium text-tinta no-underline aria-[current=page]:underline aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8"
+            class="inline-flex min-h-11 items-center px-3 text-[15px] font-medium text-ink no-underline aria-[current=page]:underline aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8"
           >
             {e.texto}
           </a>
@@ -46,7 +46,7 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
         data-abrir-buscador
         aria-haspopup="dialog"
         aria-label="Buscar productos"
-        class="ml-1 inline-flex size-11 items-center justify-center rounded-boton border border-texto-2 text-tinta"
+        class="ml-1 inline-flex size-11 items-center justify-center rounded-boton border border-muted text-ink"
       >
         <Icono nombre="lupa" />
       </a>
@@ -54,19 +54,19 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
         href="/pedido"
         data-contador-enlace
         aria-label="Tu pedido: 0 productos"
-        class="relative ml-1 inline-flex size-11 items-center justify-center rounded-boton border border-texto-2 text-tinta"
+        class="relative ml-1 inline-flex size-11 items-center justify-center rounded-boton border border-muted text-ink"
       >
         <Icono nombre="bolsa" />
         <span
           data-contador-pedido
           aria-hidden="true"
-          class="invisible absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-azul px-1 text-xs font-bold text-blanco"
+          class="invisible absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-bottle px-1 text-xs font-bold text-blanco"
           >0</span
         >
       </a>
       <a
         href={whatsappUrl}
-        class="ml-2 inline-flex min-h-11 items-center rounded-boton bg-azul px-4.5 text-[15px] font-semibold text-blanco no-underline"
+        class="ml-2 inline-flex min-h-11 items-center rounded-boton bg-bottle px-4.5 text-[15px] font-semibold text-blanco no-underline"
       >
         Escribir por WhatsApp
       </a>
@@ -78,7 +78,7 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
         data-abrir-buscador
         aria-haspopup="dialog"
         aria-label="Buscar productos"
-        class="flex size-11.5 shrink-0 items-center justify-center rounded-boton border border-texto-2 text-tinta"
+        class="flex size-11.5 shrink-0 items-center justify-center rounded-boton border border-muted text-ink"
       >
         <Icono nombre="lupa" tamano={21} />
       </a>
@@ -88,7 +88,7 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
         aria-expanded="false"
         aria-controls="menu-movil"
         aria-label="Menú"
-        class="flex size-11.5 shrink-0 cursor-pointer items-center justify-center rounded-boton border border-texto-2 bg-blanco text-tinta"
+        class="flex size-11.5 shrink-0 cursor-pointer items-center justify-center rounded-boton border border-muted bg-blanco text-ink"
       >
         <Icono nombre="menu" tamano={22} />
       </button>
@@ -98,7 +98,7 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
   <nav
     id="menu-movil"
     aria-label="Principal"
-    class="absolute inset-x-0 top-full max-h-[calc(100dvh-80px)] overflow-y-auto rounded-b-panel border-b border-borde bg-blanco px-margen pb-3 shadow-flotante lg:hidden"
+    class="absolute inset-x-0 top-full max-h-[calc(100dvh-80px)] overflow-y-auto rounded-b-panel border-b border-celadon bg-blanco px-margen pb-3 shadow-flotante lg:hidden"
     hidden
     data-menu
   >
@@ -109,7 +109,7 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
             <a
               href={e.href}
               aria-current={e.actual ? 'page' : undefined}
-              class="flex min-h-12 items-center border-b border-borde-suave text-[17px] font-medium text-tinta no-underline"
+              class="flex min-h-12 items-center border-b border-celadon/60 text-[17px] font-medium text-ink no-underline"
             >
               {e.texto}
             </a>
@@ -117,12 +117,12 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
         ))
       }
       <li>
-        <a href="/pedido" class="flex min-h-12 items-center border-b border-borde-suave text-[17px] font-medium text-tinta no-underline">
+        <a href="/pedido" class="flex min-h-12 items-center border-b border-celadon/60 text-[17px] font-medium text-ink no-underline">
           Tu pedido
         </a>
       </li>
       <li>
-        <a href={whatsappUrl} class="flex min-h-12 items-center text-[17px] font-semibold text-azul no-underline">
+        <a href={whatsappUrl} class="flex min-h-12 items-center text-[17px] font-semibold text-bottle no-underline">
           Escribir por WhatsApp
         </a>
       </li>

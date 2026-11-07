@@ -24,22 +24,22 @@ export default function PanelPedido({ umbral, productos }: Props) {
   return (
     <aside
       aria-labelledby="pedido-titulo"
-      class="sticky top-6 flex min-w-0 flex-col gap-3.5 rounded-panel border border-borde bg-blanco p-5.5"
+      class="sticky top-6 flex min-w-0 flex-col gap-3.5 rounded-panel border border-celadon bg-blanco p-5.5"
     >
       <h3 id="pedido-titulo" ref={titulo} tabIndex={-1} class="m-0 focus:outline-none text-[21px] leading-tight font-semibold">
         Tu pedido
       </h3>
       <div class="flex flex-col gap-3">
         {lineas.length === 0 ? (
-          <p class="m-0 text-[14.5px] leading-normal text-texto-2">Aún no tienes productos. Usa Agregar en el catálogo.</p>
+          <p class="m-0 text-[14.5px] leading-normal text-muted">Aún no tienes productos. Usa Agregar en el catálogo.</p>
         ) : (
           <>
             <ul class="m-0 list-none p-0">
               {lineas.map((l) => (
-                <li key={l.producto.id} class="flex items-start justify-between gap-2.5 border-b border-borde-suave py-2.5">
+                <li key={l.producto.id} class="flex items-start justify-between gap-2.5 border-b border-celadon/60 py-2.5">
                   <span class="flex min-w-0 flex-col gap-0.5">
                     <span class="text-[14.5px] leading-tight font-semibold">{l.producto.nombre}</span>
-                    <span class="text-[13.5px] text-texto-2">
+                    <span class="text-[13.5px] text-muted">
                       {l.cantidad} {l.cantidad === 1 ? 'unidad' : 'unidades'} de {formatearPrecio(l.producto.precio)}
                     </span>
                     <button
@@ -50,7 +50,7 @@ export default function PanelPedido({ umbral, productos }: Props) {
                         // El botón desaparece: el foco pasa al título del panel.
                         titulo.current?.focus();
                       }}
-                      class="min-h-8 cursor-pointer self-start border-0 bg-transparent p-0 text-[13.5px] font-semibold text-formula underline"
+                      class="min-h-8 cursor-pointer self-start border-0 bg-transparent p-0 text-[13.5px] font-semibold text-ink underline"
                     >
                       Quitar
                     </button>
@@ -66,7 +66,7 @@ export default function PanelPedido({ umbral, productos }: Props) {
             <VaciarPedido onVaciado={() => titulo.current?.focus()} />
           </>
         )}
-        <div class="flex flex-col gap-2 rounded-boton bg-azul-claro p-3">
+        <div class="flex flex-col gap-2 rounded-boton bg-celadon p-3">
           <p aria-live="polite" class="m-0 text-[14.5px] leading-snug font-semibold">{textoDomicilio(total, unidades, umbral)}</p>
           <ProgresoDomicilio total={total} umbral={umbral} variante="panel" />
         </div>
@@ -74,12 +74,12 @@ export default function PanelPedido({ umbral, productos }: Props) {
       {lineas.length > 0 && (
         <a
           href="/pedido"
-          class="flex min-h-13 items-center justify-center rounded-boton bg-azul font-semibold text-blanco no-underline"
+          class="flex min-h-13 items-center justify-center rounded-boton bg-bottle font-semibold text-blanco no-underline"
         >
           Continuar con el pedido
         </a>
       )}
-      <p class="m-0 text-[13.5px] leading-normal text-texto-2">El total final se confirma por WhatsApp antes de cobrar.</p>
+      <p class="m-0 text-[13.5px] leading-normal text-muted">El total final se confirma por WhatsApp antes de cobrar.</p>
     </aside>
   );
 }

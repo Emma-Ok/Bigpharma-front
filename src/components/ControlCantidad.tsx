@@ -37,7 +37,7 @@ export default function ControlCantidad({ producto, tamano }: Props) {
           enfocar.current = 'mas';
           agregarAlPedido(producto, e.currentTarget);
         }}
-        class={`w-full cursor-pointer border-0 bg-azul font-semibold text-blanco transition-colors duration-rapida ${
+        class={`w-full cursor-pointer border-0 bg-bottle font-semibold text-blanco transition-colors duration-rapida ${
           ficha ? 'min-h-13.5 rounded-[14px] text-[17px]' : 'min-h-11 rounded-boton text-[15px]'
         }`}
       >
@@ -50,7 +50,7 @@ export default function ControlCantidad({ producto, tamano }: Props) {
     <div
       role="group"
       aria-label={`Cantidad de ${producto.nombre}`}
-      class={`control-cantidad flex items-center justify-between border-2 border-azul bg-azul-claro text-azul ${
+      class={`control-cantidad flex items-center justify-between border-2 border-bottle bg-celadon text-bottle ${
         ficha ? 'rounded-[14px]' : 'rounded-boton'
       }`}
     >
@@ -61,19 +61,19 @@ export default function ControlCantidad({ producto, tamano }: Props) {
           if (cantidad === 1) enfocar.current = 'agregar';
           cambiarCantidad(producto, cantidad - 1);
         }}
-        class={`flex cursor-pointer items-center justify-center border-0 bg-transparent text-2xl font-semibold text-azul ${
+        class={`flex cursor-pointer items-center justify-center border-0 bg-transparent text-2xl font-semibold text-bottle ${
           ficha ? 'h-12.5 w-13' : 'h-10 w-11'
         }`}
       >
         −
       </button>
-      <span class={`min-w-8 text-center font-bold text-tinta ${ficha ? 'text-lg' : 'text-base'}`}>{cantidad}</span>
+      <span class={`min-w-8 text-center font-bold text-ink ${ficha ? 'text-lg' : 'text-base'}`}>{cantidad}</span>
       <button
         ref={masRef}
         type="button"
         aria-label={`Agregar una unidad: ${producto.nombre}`}
         onClick={() => cambiarCantidad(producto, cantidad + 1)}
-        class={`flex cursor-pointer items-center justify-center border-0 bg-transparent text-2xl font-semibold text-azul ${
+        class={`flex cursor-pointer items-center justify-center border-0 bg-transparent text-2xl font-semibold text-bottle ${
           ficha ? 'h-12.5 w-13' : 'h-10 w-11'
         }`}
       >
@@ -86,7 +86,7 @@ export default function ControlCantidad({ producto, tamano }: Props) {
   return (
     <div class="flex items-center gap-3.5">
       {grupo}
-      <p class="m-0 text-[15px] font-medium text-azul">En tu pedido</p>
+      <p class="m-0 text-[15px] font-medium text-bottle">En tu pedido</p>
     </div>
   );
 }

@@ -40,7 +40,7 @@ Se corren dentro del contenedor (ver «Entorno»).
 ## Diseño
 
 - Para cualquier decisión visual (composición, tipografía, color, movimiento, nuevos componentes) carga y sigue la skill `frontend-design` en `.claude/skills/frontend-design`. Los tokens de `docs/ESPECIFICACION.md` sección 6 y los mockups de `diseno/` mandan sobre cualquier gusto por defecto.
-- Estilos con las utilidades de los tokens (`bg-azul`, `text-tinta`, `rounded-tarjeta`, `duration-media`, `ease-salida`). Nunca valores arbitrarios de color (`bg-[#1E5AA0]`) ni la paleta por defecto de Tailwind: `@theme` la desactiva con `--color-*: initial`. Las transparencias usan el modificador de opacidad sobre un token (`bg-tinta/45`). Si falta un token, se agrega en `global.css` y en la sección 6 de la especificación.
+- Estilos con las utilidades de los tokens (`bg-bottle`, `text-ink`, `rounded-tarjeta`, `duration-media`, `ease-salida`). Nunca valores arbitrarios de color (`bg-[#133B34]`) ni la paleta por defecto de Tailwind: `@theme` la desactiva con `--color-*: initial`. Las transparencias usan el modificador de opacidad sobre un token (`bg-ink/45`). Si falta un token, se agrega en `global.css` y en la sección 6 de la especificación.
 - Se quedan en CSS (en `global.css`, fuera de `@theme`): la regla de `prefers-reduced-motion` y los estilos de View Transitions (`::view-transition-*`).
 - Movimiento: escenas 3D decorativas en varias vistas, también en celular; lo demás responde a acciones del cliente, salvo la rotación de los carruseles. Respeta `prefers-reduced-motion` en cada animación: sin three.js y con los carruseles en pausa.
 

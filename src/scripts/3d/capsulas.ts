@@ -1,13 +1,13 @@
 /**
  * Cápsulas y tabletas flotantes (docs/MOVIMIENTO-Y-3D.md, sección 1).
  * - hero: portada; banda: cabecera del catálogo y página 404.
- * - Entrada: las piezas llegan volando desde el fondo. Niebla en el azul claro y luz de contorno cálida.
+ * - Entrada: las piezas llegan volando desde el fondo. Niebla en celadon y luz de contorno suave.
  * - Puntero: parallax suave (6° máx.) y las piezas cercanas se apartan y giran.
  * - Scroll: la cámara se aleja y la escena se desvanece.
  * Las zonas con texto se calculan como fracción de la pantalla: ninguna pieza queda detrás de un texto.
  */
 import { Color, Euler, InstancedMesh, MeshStandardMaterial, Object3D, Quaternion, Vector2 } from 'three';
-import { crearMotor, esLigero, FONDO_AZUL_CLARO } from './motor';
+import { crearMotor, esLigero, FONDO_CELADON } from './motor';
 import {
   CAMARA,
   crearPiezas,
@@ -26,7 +26,7 @@ const suavizar = (t: number) => 1 - Math.pow(1 - t, 3);
 
 export function iniciarCapsulas(contenedor: HTMLElement, variante: Variante): () => void {
   const ligero = esLigero();
-  const motor = crearMotor(contenedor, { ligero, fov: CAMARA.fov, distancia: CAMARA.z, niebla: FONDO_AZUL_CLARO });
+  const motor = crearMotor(contenedor, { ligero, fov: CAMARA.fov, distancia: CAMARA.z, niebla: FONDO_CELADON });
   // En contenedores bajos (bandas) la cámara hace zoom: las piezas se ven del mismo tamaño que en el hero.
   const zoom = Math.max(1, 620 / motor.alto());
   motor.camara.zoom = zoom;

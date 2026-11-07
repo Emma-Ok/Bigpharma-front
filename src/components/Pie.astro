@@ -11,15 +11,15 @@ const pagos = FORMAS_DE_PAGO.map((p) => (p.startsWith('Tarjeta') ? 'tarjetas' : 
 const mediosDePago = `${pagos.slice(0, -1).join(', ')} y ${pagos.at(-1)}`;
 ---
 
-<footer id="contacto" class="bg-azul-claro text-tinta">
+<footer id="contacto" class="bg-celadon text-ink">
   <div class="mx-auto flex max-w-sitio flex-wrap gap-x-14 gap-y-7 px-margen py-[clamp(32px,4vw,52px)]">
     <div class="flex min-w-0 flex-[2_1_300px] flex-col gap-2.5">
       <p class="m-0 text-xl leading-tight font-semibold">{config.nombreDrogueria}</p>
-      <ul class="m-0 flex list-none flex-col gap-1 p-0 text-[15px] text-texto-cuerpo">
+      <ul class="m-0 flex list-none flex-col gap-1 p-0 text-[15px] text-muted">
         <li>Horario: {config.horario}</li>
         <li>Cobertura: {config.zonasCobertura}</li>
         <li>
-          WhatsApp: <a href={enlaceWhatsApp(config.whatsapp, MENSAJE_GENERAL)} class="font-semibold text-azul">{numeroVisible(config.whatsapp)}</a>
+          WhatsApp: <a href={enlaceWhatsApp(config.whatsapp, MENSAJE_GENERAL)} class="font-semibold text-bottle">{numeroVisible(config.whatsapp)}</a>
         </li>
         <li>Medios de pago: {mediosDePago}</li>
       </ul>
@@ -27,18 +27,18 @@ const mediosDePago = `${pagos.slice(0, -1).join(', ')} y ${pagos.at(-1)}`;
     <nav aria-label="Información legal" class="min-w-0 flex-[1_1_220px]">
       <ul class="m-0 flex list-none flex-col p-0">
         <li>
-          <a href="/politica-de-datos" class="flex min-h-11 items-center text-[15px] font-semibold text-azul">
+          <a href="/politica-de-datos" class="flex min-h-11 items-center text-[15px] font-semibold text-bottle">
             Política de tratamiento de datos
           </a>
         </li>
         <li>
-          <a href="/terminos" class="flex min-h-11 items-center text-[15px] font-semibold text-azul">
+          <a href="/terminos" class="flex min-h-11 items-center text-[15px] font-semibold text-bottle">
             Términos y condiciones de las promociones
           </a>
         </li>
       </ul>
     </nav>
-    <p class="m-0 flex-[1_1_100%] border-t border-borde-control pt-4.5 text-[13.5px] leading-relaxed text-texto-2">
+    <p class="m-0 flex-[1_1_100%] border-t border-muted/40 pt-4.5 text-[13.5px] leading-relaxed text-muted">
       {config.razonSocial}, NIT {config.nit}. Droguería inscrita ante {config.autoridadSalud} con el código
       {' '}{config.codigoInscripcion}. Si los síntomas persisten, consulte a su médico.
     </p>

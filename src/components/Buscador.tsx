@@ -79,7 +79,7 @@ export default function Buscador({ whatsapp }: { whatsapp: string }) {
       ref={dialogo}
       aria-modal="true"
       aria-labelledby="buscador-titulo"
-      class="buscador mx-auto mt-[clamp(8px,6vh,64px)] mb-auto max-h-[calc(100dvh-24px)] w-[calc(100%-16px)] max-w-295 overflow-y-auto rounded-panel border-0 bg-transparent p-0 text-tinta backdrop:bg-tinta/45"
+      class="buscador mx-auto mt-[clamp(8px,6vh,64px)] mb-auto max-h-[calc(100dvh-24px)] w-[calc(100%-16px)] max-w-295 overflow-y-auto rounded-panel border-0 bg-transparent p-0 text-ink backdrop:bg-ink/45"
       onClick={(e) => {
         if (e.target === e.currentTarget) e.currentTarget.close();
       }}
@@ -98,7 +98,7 @@ export default function Buscador({ whatsapp }: { whatsapp: string }) {
         <form
           role="search"
           onSubmit={(e) => e.preventDefault()}
-          class="flex h-14.5 min-w-0 flex-1 overflow-hidden rounded-[14px] border-2 border-azul bg-blanco"
+          class="flex h-14.5 min-w-0 flex-1 overflow-hidden rounded-[14px] border-2 border-bottle bg-blanco"
         >
           <label htmlFor="q-buscar" class="visualmente-oculto">
             Busca por nombre o síntoma
@@ -115,12 +115,12 @@ export default function Buscador({ whatsapp }: { whatsapp: string }) {
             placeholder="Busca por nombre o síntoma"
             autoComplete="off"
             aria-controls="resultados-busqueda"
-            class="min-w-0 flex-1 border-0 bg-transparent px-4 text-[16.5px] text-tinta outline-none"
+            class="min-w-0 flex-1 border-0 bg-transparent px-4 text-[16.5px] text-ink outline-none"
           />
           <button
             type="submit"
             aria-label="Buscar"
-            class="flex w-14 shrink-0 cursor-pointer items-center justify-center border-0 border-l border-borde bg-azul-claro text-azul"
+            class="flex w-14 shrink-0 cursor-pointer items-center justify-center border-0 border-l border-celadon bg-celadon text-bottle"
           >
             <Icono nombre="lupa" tamano={22} grosor={2.2} />
           </button>
@@ -129,13 +129,13 @@ export default function Buscador({ whatsapp }: { whatsapp: string }) {
           type="button"
           onClick={cerrar}
           aria-label="Cerrar búsqueda"
-          class="flex size-13 shrink-0 cursor-pointer items-center justify-center rounded-boton border-2 border-tinta bg-blanco text-tinta"
+          class="flex size-13 shrink-0 cursor-pointer items-center justify-center rounded-boton border-2 border-ink bg-blanco text-ink"
         >
           <Icono nombre="cerrar" grosor={2.4} />
         </button>
       </div>
 
-      <div class="buscador-panel mt-2.5 flex flex-row-reverse flex-wrap gap-x-9 gap-y-6 rounded-[18px] border border-borde bg-blanco p-[clamp(16px,2vw,24px)] shadow-flotante">
+      <div class="buscador-panel mt-2.5 flex flex-row-reverse flex-wrap gap-x-9 gap-y-6 rounded-[18px] border border-celadon bg-blanco p-[clamp(16px,2vw,24px)] shadow-flotante">
         <div id="resultados-busqueda" class="flex min-w-0 flex-[3_1_480px] flex-col gap-3.5">
           <div class="flex items-center justify-between gap-3">
             <p aria-live="polite" class="m-0 text-[17px] font-semibold">
@@ -148,7 +148,7 @@ export default function Buscador({ whatsapp }: { whatsapp: string }) {
                   disabled={actual === 0}
                   onClick={() => setPagina(actual - 1)}
                   aria-label="Productos anteriores"
-                  class="flex size-11 cursor-pointer items-center justify-center rounded-full border-2 border-azul bg-blanco text-azul disabled:cursor-default disabled:border-borde-control disabled:text-texto-2"
+                  class="flex size-11 cursor-pointer items-center justify-center rounded-full border-2 border-bottle bg-blanco text-bottle disabled:cursor-default disabled:border-muted/40 disabled:text-muted"
                 >
                   <Icono nombre="flecha-atras" tamano={18} grosor={2.4} />
                 </button>
@@ -157,7 +157,7 @@ export default function Buscador({ whatsapp }: { whatsapp: string }) {
                   disabled={actual >= paginas - 1}
                   onClick={() => setPagina(actual + 1)}
                   aria-label="Productos siguientes"
-                  class="flex size-11 cursor-pointer items-center justify-center rounded-full border-2 border-azul bg-blanco text-azul disabled:cursor-default disabled:border-borde-control disabled:text-texto-2"
+                  class="flex size-11 cursor-pointer items-center justify-center rounded-full border-2 border-bottle bg-blanco text-bottle disabled:cursor-default disabled:border-muted/40 disabled:text-muted"
                 >
                   <Icono nombre="flecha" tamano={18} grosor={2.4} />
                 </button>
@@ -165,11 +165,11 @@ export default function Buscador({ whatsapp }: { whatsapp: string }) {
             )}
           </div>
           {hayConsulta && !fuente.length && (
-            <div class="flex flex-col gap-2.5 rounded-[14px] border border-dashed border-texto-2 p-4.5">
-              <p class="m-0 text-[15.5px] text-texto-cuerpo">Revisa cómo lo escribiste o pregúntanos si lo conseguimos.</p>
+            <div class="flex flex-col gap-2.5 rounded-[14px] border border-dashed border-muted p-4.5">
+              <p class="m-0 text-[15.5px] text-muted">Revisa cómo lo escribiste o pregúntanos si lo conseguimos.</p>
               <a
                 href={enlaceWhatsApp(whatsapp, mensajeBusqueda(q))}
-                class="inline-flex min-h-11.5 items-center self-start rounded-boton bg-azul px-4.5 text-[15.5px] font-semibold text-blanco no-underline"
+                class="inline-flex min-h-11.5 items-center self-start rounded-boton bg-bottle px-4.5 text-[15.5px] font-semibold text-blanco no-underline"
               >
                 Preguntar por WhatsApp
               </a>
@@ -184,7 +184,7 @@ export default function Buscador({ whatsapp }: { whatsapp: string }) {
           </ul>
           <a
             href={hayConsulta ? `/catalogo?q=${encodeURIComponent(q.trim())}` : '/catalogo'}
-            class="inline-flex min-h-11 items-center self-start text-[15.5px] font-semibold text-azul"
+            class="inline-flex min-h-11 items-center self-start text-[15.5px] font-semibold text-bottle"
           >
             {hayConsulta ? 'Ver todos los resultados en el catálogo' : 'Ver todo el catálogo'}
           </a>
@@ -199,7 +199,7 @@ export default function Buscador({ whatsapp }: { whatsapp: string }) {
                 <li key={c.id}>
                   <a
                     href={`/catalogo?categoria=${c.id}`}
-                    class="flex min-h-11 items-center gap-2.5 text-[15.5px] text-tinta no-underline hover:underline"
+                    class="flex min-h-11 items-center gap-2.5 text-[15.5px] text-ink no-underline hover:underline"
                   >
                     <span aria-hidden="true" class={`size-2.5 shrink-0 rounded-full ${PUNTO_CATEGORIA[c.id]}`} />
                     {c.nombre}
@@ -220,7 +220,7 @@ export default function Buscador({ whatsapp }: { whatsapp: string }) {
                     setPagina(0);
                     campo.current?.focus();
                   }}
-                  class="min-h-11 cursor-pointer rounded-full border border-texto-2 bg-blanco px-3.5 text-[14.5px] text-tinta"
+                  class="min-h-11 cursor-pointer rounded-full border border-muted bg-blanco px-3.5 text-[14.5px] text-ink"
                 >
                   {t}
                 </button>

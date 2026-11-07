@@ -34,10 +34,10 @@ export default function ProgresoDomicilio({ total, umbral, variante }: Props) {
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={porcentaje}
-      class={`flex-1 overflow-hidden ${variante === 'panel' ? 'h-2 rounded-full bg-blanco' : 'h-[5px] bg-borde-suave'}`}
+      class={`flex-1 overflow-hidden ${variante === 'panel' ? 'h-2 rounded-full bg-blanco' : 'h-[5px] bg-celadon'}`}
     >
       <div
-        class="progreso-relleno h-full rounded-full bg-azul transition-[width] duration-lenta ease-salida"
+        class="progreso-relleno h-full rounded-full bg-bottle transition-[width] duration-lenta ease-salida"
         style={{ width: `${porcentaje}%` }}
       />
     </div>
@@ -47,7 +47,7 @@ export default function ProgresoDomicilio({ total, umbral, variante }: Props) {
     <div class="flex items-center gap-2">
       {barra}
       {gratis && (
-        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" class="check-gratis shrink-0 text-azul">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" class="check-gratis shrink-0 text-bottle">
           <path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       )}

@@ -8,7 +8,7 @@ const EXTENSIONES = new Set(['.astro', '.tsx', '.ts']);
 const PROPIEDADES = '(?:bg|text|border|ring|outline|fill|stroke|from|via|to|decoration|shadow|accent|caret|divide|placeholder)';
 const ARBITRARIO = new RegExp(`\\b${PROPIEDADES}-\\[(?:#|rgb|hsl|oklch|color:)`, 'g');
 const PALETA = new RegExp(
-  `\\b${PROPIEDADES}-(?:white|black|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-\\d{2,3})?\\b`,
+  `\\b${PROPIEDADES}-(?:white|black|slate|gray|zinc|neutral|stone|red|orange|amber-\\d{2,3}|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-\\d{2,3})?\\b`,
   'g',
 );
 
@@ -31,7 +31,7 @@ for await (const archivo of archivos(RAIZ)) {
 }
 
 if (hallazgos.length) {
-  console.error(`Colores fuera de los tokens (usa bg-azul, text-tinta, etc.):\n  ${hallazgos.join('\n  ')}`);
+  console.error(`Colores fuera de los tokens (usa bg-bottle, text-ink, etc.):\n  ${hallazgos.join('\n  ')}`);
   process.exit(1);
 }
 console.log('revisar-tokens: sin colores arbitrarios.');

@@ -74,16 +74,16 @@ export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) 
             aria-roledescription="anuncio"
             aria-label={`Anuncio ${i + 1} de ${n}`}
             class={`flex w-[88%] shrink-0 snap-start flex-wrap-reverse items-center gap-4.5 rounded-panel p-[clamp(18px,2.4vw,28px)] sm:w-full ${
-              a.categoria ? FONDO_CATEGORIA[a.categoria] : 'bg-azul-claro'
+              a.categoria ? FONDO_CATEGORIA[a.categoria] : 'bg-celadon'
             }`}
           >
             <div class="flex min-w-0 flex-[1_1_260px] flex-col gap-2.5">
               <h3 class="m-0 text-[clamp(24px,2.4vw,32px)] leading-tight font-semibold">{a.titulo}</h3>
-              {a.texto && <p class="m-0 text-[15.5px] leading-relaxed text-texto-cuerpo">{a.texto}</p>}
+              {a.texto && <p class="m-0 text-[15.5px] leading-relaxed text-muted">{a.texto}</p>}
               {a.enlace && a.botonTexto && (
                 <a
                   href={a.enlace}
-                  class="mt-1 inline-flex min-h-12 items-center self-start rounded-boton bg-azul px-5 text-[15.5px] font-semibold text-blanco no-underline"
+                  class="mt-1 inline-flex min-h-12 items-center self-start rounded-boton bg-bottle px-5 text-[15.5px] font-semibold text-blanco no-underline"
                 >
                   {a.botonTexto}
                 </a>
@@ -93,7 +93,7 @@ export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) 
               {a.foto ? (
                 <img src={a.foto} alt={a.altFoto} loading="lazy" width="480" height="210" class="block size-full object-cover" />
               ) : (
-                <span aria-hidden="true" class="flex size-36 items-center justify-center rounded-full bg-blanco text-tinta">
+                <span aria-hidden="true" class="flex size-36 items-center justify-center rounded-full bg-blanco text-ink">
                   <Icono nombre={(a.categoria ? `cat-${a.categoria}` : 'escudo') as NombreIcono} tamano={64} grosor={1.4} />
                 </span>
               )}
@@ -110,7 +110,7 @@ export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) 
             type="button"
             onClick={() => ir(actual - 1)}
             aria-label="Anuncio anterior"
-            class="flex size-11 cursor-pointer items-center justify-center rounded-full border border-texto-2 bg-blanco text-tinta"
+            class="flex size-11 cursor-pointer items-center justify-center rounded-full border border-muted bg-blanco text-ink"
           >
             <Icono nombre="anterior" tamano={18} grosor={2.4} />
           </button>
@@ -126,7 +126,7 @@ export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) 
               <span
                 aria-hidden="true"
                 class={`h-2.5 rounded-full transition-[width,background-color] duration-media ease-salida ${
-                  j === actual ? 'w-6.5 bg-azul' : 'w-2.5 bg-texto-2'
+                  j === actual ? 'w-6.5 bg-bottle' : 'w-2.5 bg-muted'
                 }`}
               />
             </button>
@@ -135,7 +135,7 @@ export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) 
             type="button"
             onClick={() => ir(actual + 1)}
             aria-label="Anuncio siguiente"
-            class="flex size-11 cursor-pointer items-center justify-center rounded-full border border-texto-2 bg-blanco text-tinta"
+            class="flex size-11 cursor-pointer items-center justify-center rounded-full border border-muted bg-blanco text-ink"
           >
             <Icono nombre="siguiente" tamano={18} grosor={2.4} />
           </button>
@@ -143,7 +143,7 @@ export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) 
             ref={botonPausa}
             type="button"
             aria-label={pausado ? 'Reanudar anuncios' : 'Pausar anuncios'}
-            class="ml-1 flex size-11 cursor-pointer items-center justify-center rounded-full border border-texto-2 bg-blanco text-tinta"
+            class="ml-1 flex size-11 cursor-pointer items-center justify-center rounded-full border border-muted bg-blanco text-ink"
           >
             <Icono nombre={pausado ? 'reproducir' : 'pausa'} tamano={16} grosor={pausado ? 2.2 : 2.6} />
           </button>

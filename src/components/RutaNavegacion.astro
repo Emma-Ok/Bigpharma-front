@@ -9,19 +9,19 @@ const { migas } = Astro.props;
 ---
 
 <nav aria-label="Ruta de navegación" class="text-sm">
-  <ol class="m-0 flex list-none flex-wrap items-center gap-x-2 gap-y-1 p-0 text-texto-2">
+  <ol class="m-0 flex list-none flex-wrap items-center gap-x-2 gap-y-1 p-0 text-muted">
     {
       migas.map((m, i) =>
         i === migas.length - 1 ? (
           <li>
-            <span aria-current="page" class="text-tinta">
+            <span aria-current="page" class="text-ink">
               {m.nombre}
             </span>
           </li>
         ) : (
           <>
             <li>
-              <a href={m.ruta} class="inline-flex min-h-11 items-center text-azul">
+              <a href={m.ruta} class="inline-flex min-h-11 items-center text-bottle">
                 {m.nombre}
               </a>
             </li>

@@ -38,37 +38,15 @@
 @theme {
   --color-*: initial;
 
-  --color-azul: #1E5AA0;
-  --color-azul-oscuro: #173F72;
-  --color-azul-claro: #EAF2FB;
-  --color-tinta: #1B2A3A;
-  --color-texto-cuerpo: #3B4A5A;
-  --color-texto-2: #52606F;
-  --color-borde: #D5DFEA;
-  --color-borde-suave: #E4EAF1;
-  --color-borde-control: #C5D3E2;
-  --color-miel: #FBEBD6;
-  --color-formula: #7B3F5E;
-  --color-formula-fondo: #F6E9EF;
-  --color-descuento: #8A4B14;
+  --color-paper: #F3F5F1;
+  --color-bottle: #133B34;
+  --color-celadon: #D5E5DB;
+  --color-amber: #A8621A;
+  --color-amber-ink: #8A4E12;
+  --color-ink: #1C2623;
+  --color-muted: #4A5A55;
+  --color-error: #A3312A;
   --color-blanco: #FFFFFF;
-
-  --color-cat-dolor: #D9963F;
-  --color-cat-dolor-fondo: #FBEBD6;
-  --color-cat-gripa: #6E9FC4;
-  --color-cat-gripa-fondo: #E4EEF6;
-  --color-cat-estomago: #7FB08F;
-  --color-cat-estomago-fondo: #E5F0E8;
-  --color-cat-piel: #E7B9A0;
-  --color-cat-piel-fondo: #FBE8DE;
-  --color-cat-bebes: #B9A6D8;
-  --color-cat-bebes-fondo: #EEE9F7;
-  --color-cat-auxilios: #1E5AA0;
-  --color-cat-auxilios-fondo: #EAF2FB;
-  --color-cat-formula: #7B3F5E;
-  --color-cat-formula-fondo: #F6E9EF;
-  --color-cat-todo: #52606F;
-  --color-cat-todo-fondo: #F1F4F8;
 
   --font-sans: "Lexend Variable", "Lexend Fallback", "Lexend", system-ui, sans-serif;
 
@@ -84,9 +62,9 @@
   --container-sitio: 1280px;
   --spacing-margen: clamp(16px, 4vw, 32px);
 
-  --shadow-ficha: 0 14px 36px rgb(23 63 114 / 0.18);
-  --shadow-flotante: 0 18px 48px rgb(27 42 58 / 0.18);
-  --shadow-barra: 0 -8px 24px rgb(27 42 58 / 0.08);
+  --shadow-ficha: 0 14px 36px rgb(19 59 52 / 0.18);
+  --shadow-flotante: 0 18px 48px rgb(28 38 35 / 0.18);
+  --shadow-barra: 0 -8px 24px rgb(28 38 35 / 0.08);
 
   --transition-duration-rapida: 150ms;
   --transition-duration-media: 240ms;
@@ -122,7 +100,7 @@
   }
 
   html {
-    color: var(--color-tinta);
+    color: var(--color-ink);
     background: var(--color-blanco);
     -webkit-text-size-adjust: 100%;
   }
@@ -133,11 +111,11 @@
   }
 
   a {
-    color: var(--color-azul);
+    color: var(--color-bottle);
   }
 
   :focus-visible {
-    outline: 3px solid var(--color-tinta);
+    outline: 3px solid var(--color-ink);
     outline-offset: 3px;
   }
 

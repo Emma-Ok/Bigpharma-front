@@ -14,22 +14,22 @@ import {
 } from 'three';
 import { crearMotor, esLigero } from './motor';
 
-const MIEL = 0xfbebd6;
-const AZUL = 0x1e5aa0;
-const AZUL_LIQUIDO = 0x6e9fc4;
-const TINTA = 0x1b2a3a;
+const CELADON = 0xd5e5db;
+const BOTTLE = 0x133b34;
+const LIQUIDO = 0x4a5a55;
+const INK = 0x1c2623;
 
 export function iniciarServicios(contenedor: HTMLElement): () => void {
   const ligero = esLigero();
-  const motor = crearMotor(contenedor, { ligero, fov: 30, distancia: 12, niebla: MIEL });
+  const motor = crearMotor(contenedor, { ligero, fov: 30, distancia: 12, niebla: CELADON });
   const seg = ligero ? 20 : 32;
 
   const vidrio = new MeshStandardMaterial({ color: 0xffffff, roughness: 0.08, metalness: 0, transparent: true, opacity: 0.32, depthWrite: false });
-  const liquido = new MeshStandardMaterial({ color: AZUL_LIQUIDO, roughness: 0.25 });
+  const liquido = new MeshStandardMaterial({ color: LIQUIDO, roughness: 0.25 });
   const plastico = new MeshStandardMaterial({ color: 0xffffff, roughness: 0.45 });
-  const goma = new MeshStandardMaterial({ color: TINTA, roughness: 0.6 });
-  const metal = new MeshStandardMaterial({ color: 0xc5d3e2, roughness: 0.2, metalness: 0.85 });
-  const azul = new MeshStandardMaterial({ color: AZUL, roughness: 0.35, metalness: 0.2 });
+  const goma = new MeshStandardMaterial({ color: INK, roughness: 0.6 });
+  const metal = new MeshStandardMaterial({ color: CELADON, roughness: 0.2, metalness: 0.85 });
+  const bottle = new MeshStandardMaterial({ color: BOTTLE, roughness: 0.35, metalness: 0.2 });
 
   // ---------- Jeringa ----------
   const jeringa = new Group();
@@ -43,7 +43,7 @@ export function iniciarServicios(contenedor: HTMLElement): () => void {
   const aletas = new Mesh(new CylinderGeometry(0.85, 0.85, 0.07, seg), plastico);
   aletas.scale.z = 0.45;
   const cono = new Mesh(new CylinderGeometry(radio, 0.14, 0.38, seg), plastico);
-  const base = new Mesh(new CylinderGeometry(0.11, 0.11, 0.28, 12), azul);
+  const base = new Mesh(new CylinderGeometry(0.11, 0.11, 0.28, 12), bottle);
   const aguja = new Mesh(new CylinderGeometry(0.02, 0.02, 1.7, 8), metal);
   aletas.position.y = largo / 2;
   cono.position.y = -largo / 2 - 0.19;
@@ -86,9 +86,9 @@ export function iniciarServicios(contenedor: HTMLElement): () => void {
   liquidoFrasco.position.y = -0.4;
   const etiqueta = new Mesh(new CylinderGeometry(0.8, 0.8, 0.7, seg, 1, true), plastico);
   etiqueta.position.y = -0.15;
-  const franja = new Mesh(new CylinderGeometry(0.805, 0.805, 0.16, seg, 1, true), azul);
+  const franja = new Mesh(new CylinderGeometry(0.805, 0.805, 0.16, seg, 1, true), bottle);
   franja.position.y = -0.05;
-  const tapa = new Mesh(new CylinderGeometry(0.42, 0.42, 0.3, seg), azul);
+  const tapa = new Mesh(new CylinderGeometry(0.42, 0.42, 0.3, seg), bottle);
   tapa.position.y = 1.15;
   const goma2 = new Mesh(new CylinderGeometry(0.22, 0.22, 0.06, seg), goma);
   goma2.position.y = 1.32;

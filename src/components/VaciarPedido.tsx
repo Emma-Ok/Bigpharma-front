@@ -36,7 +36,7 @@ export default function VaciarPedido({ onVaciado }: Props) {
         ref={boton}
         type="button"
         onClick={() => setConfirmando(true)}
-        class="inline-flex min-h-11 cursor-pointer items-center gap-2 self-start border-0 bg-transparent p-0 text-[14.5px] font-semibold text-formula underline underline-offset-4"
+        class="inline-flex min-h-11 cursor-pointer items-center gap-2 self-start border-0 bg-transparent p-0 text-[14.5px] font-semibold text-ink underline underline-offset-4"
       >
         <Icono nombre="papelera" tamano={18} />
         Vaciar pedido
@@ -48,9 +48,9 @@ export default function VaciarPedido({ onVaciado }: Props) {
     <div
       role="group"
       aria-labelledby={idPregunta}
-      class="flex flex-col gap-2.5 rounded-boton border border-formula bg-formula-fondo p-3"
+      class="flex flex-col gap-2.5 rounded-boton border border-bottle bg-celadon p-3"
     >
-      <p id={idPregunta} class="m-0 text-[14.5px] font-semibold text-formula">
+      <p id={idPregunta} class="m-0 text-[14.5px] font-semibold text-ink">
         ¿Quitar todos los productos de tu pedido?
       </p>
       <div class="flex flex-wrap gap-2">
@@ -61,7 +61,7 @@ export default function VaciarPedido({ onVaciado }: Props) {
             vaciarPedido();
             onVaciado();
           }}
-          class="min-h-11 cursor-pointer rounded-boton border-0 bg-formula px-4 text-[14.5px] font-semibold text-blanco"
+          class="min-h-11 cursor-pointer rounded-boton border-0 bg-bottle px-4 text-[14.5px] font-semibold text-blanco"
         >
           Sí, vaciar
         </button>
@@ -73,7 +73,7 @@ export default function VaciarPedido({ onVaciado }: Props) {
             volverAlBoton.current = true;
             setConfirmando(false);
           }}
-          class="min-h-11 cursor-pointer rounded-boton border-2 border-formula bg-blanco px-4 text-[14.5px] font-semibold text-formula"
+          class="min-h-11 cursor-pointer rounded-boton border-2 border-bottle bg-blanco px-4 text-[14.5px] font-semibold text-bottle"
         >
           Cancelar
         </button>

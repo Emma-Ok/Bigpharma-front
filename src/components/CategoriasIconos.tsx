@@ -34,19 +34,19 @@ export default function CategoriasIconos({ seleccion, onElegir }: Props) {
             type="button"
             aria-pressed={activa}
             onClick={() => onElegir(c.id)}
-            class="flex min-w-22 flex-[1_0_88px] cursor-pointer flex-col items-center gap-2 border-0 bg-transparent px-0.5 py-1 text-tinta"
+            class="flex min-w-22 flex-[1_0_88px] cursor-pointer flex-col items-center gap-2 border-0 bg-transparent px-0.5 py-1 text-ink"
           >
             <span
               aria-hidden="true"
-              class={`anillo-categoria flex size-17.5 items-center justify-center rounded-full text-tinta transition-shadow duration-media ease-salida ${c.fondo} ${
-                activa ? 'shadow-[0_0_0_3px_var(--color-azul)]' : 'shadow-[0_0_0_1px_var(--color-borde)]'
+              class={`anillo-categoria flex size-17.5 items-center justify-center rounded-full transition-colors duration-media ease-salida ${
+                activa ? 'bg-bottle text-blanco' : `${c.fondo} text-ink`
               }`}
             >
               <Icono nombre={c.icono} tamano={30} grosor={1.8} />
             </span>
             <span
               class={`text-center text-[13.5px] leading-tight font-medium ${
-                activa ? 'text-azul underline decoration-2 underline-offset-4' : 'text-tinta'
+                activa ? 'text-bottle underline decoration-2 underline-offset-4' : 'text-ink'
               }`}
             >
               {c.nombre}

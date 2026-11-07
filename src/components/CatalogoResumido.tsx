@@ -40,9 +40,9 @@ export default function CatalogoResumido({ productos, whatsapp, entrega, umbral 
         type="button"
         data-abrir-buscador
         aria-haspopup="dialog"
-        class="mb-4.5 flex h-14.5 w-full cursor-text items-center gap-3 rounded-[14px] border-2 border-texto-2 bg-blanco px-4.5 text-left text-[16.5px] text-texto-2"
+        class="mb-4.5 flex h-14.5 w-full cursor-text items-center gap-3 rounded-[14px] border-2 border-muted bg-blanco px-4.5 text-left text-[16.5px] text-muted"
       >
-        <Icono nombre="lupa" tamano={22} grosor={2.2} class="text-azul" />
+        <Icono nombre="lupa" tamano={22} grosor={2.2} class="text-bottle" />
         Busca por nombre o síntoma
       </button>
 
@@ -50,7 +50,7 @@ export default function CatalogoResumido({ productos, whatsapp, entrega, umbral 
 
       <div class="mt-2.5 flex flex-wrap items-start gap-8">
         <div class="flex min-w-0 flex-[999_1_560px] flex-col gap-4.5">
-          <p aria-live="polite" class="m-0 text-[15px] text-texto-2">
+          <p aria-live="polite" class="m-0 text-[15px] text-muted">
             {cat ? `${enCategoria.length} productos en ${nombreCat}` : 'Lo más pedido y en promoción'}
           </p>
           <ul class="m-0 grid list-none grid-cols-2 gap-3.5 p-0 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -69,7 +69,7 @@ export default function CatalogoResumido({ productos, whatsapp, entrega, umbral 
           </ul>
           <a
             href={cat ? `/catalogo?categoria=${cat}` : '/catalogo'}
-            class="inline-flex min-h-12.5 items-center gap-2.5 self-center rounded-boton border-2 border-azul bg-blanco px-6 font-semibold text-azul no-underline"
+            class="inline-flex min-h-12.5 items-center gap-2.5 self-center rounded-boton border-2 border-bottle bg-blanco px-6 font-semibold text-bottle no-underline"
           >
             {cat ? `Ver más en ${nombreCat} (${enCategoria.length})` : `Ver más productos (${productos.length})`}
             <Icono nombre="flecha" tamano={18} grosor={2.2} />

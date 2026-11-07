@@ -87,12 +87,12 @@ export default function PaginaPedido({ productos, whatsapp, umbral }: Props) {
 
   if (!lineas.length) {
     return (
-      <div class="flex flex-col items-start gap-4 rounded-panel border border-dashed border-texto-2 p-6">
+      <div class="flex flex-col items-start gap-4 rounded-panel border border-dashed border-muted p-6">
         <p ref={vacio} tabIndex={-1} class="m-0 text-lg font-semibold focus:outline-none">
           Tu pedido está vacío
         </p>
-        <p class="m-0 text-texto-cuerpo">Agrega productos desde el catálogo y vuelve aquí para enviarlo por WhatsApp.</p>
-        <a href="/catalogo" class="inline-flex min-h-12 items-center rounded-boton bg-azul px-5 font-semibold text-blanco no-underline">
+        <p class="m-0 text-muted">Agrega productos desde el catálogo y vuelve aquí para enviarlo por WhatsApp.</p>
+        <a href="/catalogo" class="inline-flex min-h-12 items-center rounded-boton bg-bottle px-5 font-semibold text-blanco no-underline">
           Ver catálogo
         </a>
       </div>
@@ -114,10 +114,10 @@ export default function PaginaPedido({ productos, whatsapp, umbral }: Props) {
         </h2>
         <ul class="m-0 flex list-none flex-col p-0">
           {lineas.map((l) => (
-            <li key={l.producto.id} class="flex items-center justify-between gap-3 border-b border-borde-suave py-3.5">
+            <li key={l.producto.id} class="flex items-center justify-between gap-3 border-b border-celadon/60 py-3.5">
               <div class="min-w-0">
                 <p class="m-0 font-semibold">{l.producto.nombre}</p>
-                <p class="m-0 text-sm text-texto-2">
+                <p class="m-0 text-sm text-muted">
                   {l.producto.presentacion}, {formatearPrecio(l.producto.precio)} c/u
                 </p>
                 <p class="m-0 mt-0.5 font-bold">{formatearPrecio(l.subtotal)}</p>
@@ -125,7 +125,7 @@ export default function PaginaPedido({ productos, whatsapp, umbral }: Props) {
               <div
                 role="group"
                 aria-label={`Cantidad de ${l.producto.nombre}`}
-                class="flex shrink-0 items-center rounded-boton border-2 border-azul bg-azul-claro text-azul"
+                class="flex shrink-0 items-center rounded-boton border-2 border-bottle bg-celadon text-bottle"
               >
                 <button
                   type="button"
@@ -135,16 +135,16 @@ export default function PaginaPedido({ productos, whatsapp, umbral }: Props) {
                     // Si la línea desaparece, el foco pasa al título de la lista.
                     if (l.cantidad === 1) titulo.current?.focus();
                   }}
-                  class="flex h-11 w-11 cursor-pointer items-center justify-center border-0 bg-transparent text-2xl font-semibold text-azul"
+                  class="flex h-11 w-11 cursor-pointer items-center justify-center border-0 bg-transparent text-2xl font-semibold text-bottle"
                 >
                   −
                 </button>
-                <span class="min-w-7 text-center font-bold text-tinta">{l.cantidad}</span>
+                <span class="min-w-7 text-center font-bold text-ink">{l.cantidad}</span>
                 <button
                   type="button"
                   aria-label={`Agregar una unidad: ${l.producto.nombre}`}
                   onClick={() => cambiarCantidad(l.producto, l.cantidad + 1)}
-                  class="flex h-11 w-11 cursor-pointer items-center justify-center border-0 bg-transparent text-2xl font-semibold text-azul"
+                  class="flex h-11 w-11 cursor-pointer items-center justify-center border-0 bg-transparent text-2xl font-semibold text-bottle"
                 >
                   +
                 </button>
@@ -156,13 +156,13 @@ export default function PaginaPedido({ productos, whatsapp, umbral }: Props) {
           <dt class="font-semibold">Subtotal</dt>
           <dd class="m-0 text-right text-lg font-bold">{formatearPrecio(total)}</dd>
           <dt class="font-semibold">Domicilio</dt>
-          <dd class="m-0 text-right text-texto-cuerpo">
+          <dd class="m-0 text-right text-muted">
             {gratis ? 'Gratis' : `Te faltan ${formatearPrecio(falta)} para que sea gratis`}
           </dd>
         </dl>
         <ProgresoDomicilio total={total} umbral={umbral} variante="panel" />
         <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
-          <a href="/catalogo" class="inline-flex min-h-11 items-center gap-2 font-semibold text-azul">
+          <a href="/catalogo" class="inline-flex min-h-11 items-center gap-2 font-semibold text-bottle">
             <Icono nombre="flecha-atras" tamano={18} />
             Seguir comprando
           </a>
@@ -170,7 +170,7 @@ export default function PaginaPedido({ productos, whatsapp, umbral }: Props) {
         </div>
       </section>
 
-      <form noValidate onSubmit={enviar} class="flex min-w-0 flex-1 flex-col gap-5 rounded-panel border border-borde p-[clamp(18px,3vw,28px)]">
+      <form noValidate onSubmit={enviar} class="flex min-w-0 flex-1 flex-col gap-5 rounded-panel border border-celadon p-[clamp(18px,3vw,28px)]">
         <fieldset class="m-0 flex flex-col gap-4 border-0 p-0">
           <legend class="mb-1 p-0 text-lg font-semibold">Datos de entrega</legend>
           <div class="flex flex-col gap-1.5">
@@ -187,10 +187,11 @@ export default function PaginaPedido({ productos, whatsapp, umbral }: Props) {
               value={nombre}
               onInput={(e) => setNombre(e.currentTarget.value)}
               {...campo('nombre')}
-              class="min-h-12 rounded-boton border-2 border-texto-2 bg-blanco px-3.5 text-base text-tinta aria-invalid:border-formula"
+              class="min-h-12 rounded-boton border-2 border-muted bg-blanco px-3.5 text-base text-ink aria-invalid:border-error"
             />
             {errores.nombre && (
-              <p id="nombre-error" class="m-0 text-sm font-semibold text-formula">
+              <p id="nombre-error" class="m-0 flex items-start gap-1.5 text-sm font-semibold text-error">
+                <Icono nombre="aviso" tamano={18} />
                 {errores.nombre}
               </p>
             )}
@@ -209,13 +210,14 @@ export default function PaginaPedido({ productos, whatsapp, umbral }: Props) {
               value={direccion}
               onInput={(e) => setDireccion(e.currentTarget.value)}
               {...campo('direccion')}
-              class="min-h-12 rounded-boton border-2 border-texto-2 bg-blanco px-3.5 text-base text-tinta aria-invalid:border-formula"
+              class="min-h-12 rounded-boton border-2 border-muted bg-blanco px-3.5 text-base text-ink aria-invalid:border-error"
             />
-            <span id="direccion-ayuda" class="text-sm text-texto-2">
+            <span id="direccion-ayuda" class="text-sm text-muted">
               Incluye torre, apartamento o un punto de referencia.
             </span>
             {errores.direccion && (
-              <p id="direccion-error" class="m-0 text-sm font-semibold text-formula">
+              <p id="direccion-error" class="m-0 flex items-start gap-1.5 text-sm font-semibold text-error">
+                <Icono nombre="aviso" tamano={18} />
                 {errores.direccion}
               </p>
             )}
@@ -232,7 +234,7 @@ export default function PaginaPedido({ productos, whatsapp, umbral }: Props) {
                 value={f}
                 checked={pago === f}
                 onChange={() => setPago(f)}
-                class="size-5 accent-azul"
+                class="size-5 accent-bottle"
               />
               {f}
             </label>
@@ -249,18 +251,19 @@ export default function PaginaPedido({ productos, whatsapp, umbral }: Props) {
               checked={autorizo}
               onChange={(e) => setAutorizo(e.currentTarget.checked)}
               {...campo('autorizo')}
-              class="mt-0.5 size-5 shrink-0 accent-azul"
+              class="mt-0.5 size-5 shrink-0 accent-bottle"
             />
             <span>
               Autorizo el tratamiento de mis datos según la{' '}
-              <a href="/politica-de-datos" class="font-semibold text-azul">
+              <a href="/politica-de-datos" class="font-semibold text-bottle">
                 política de tratamiento de datos
               </a>
               .
             </span>
           </label>
           {errores.autorizo && (
-            <p id="autorizo-error" class="m-0 text-sm font-semibold text-formula">
+            <p id="autorizo-error" class="m-0 flex items-start gap-1.5 text-sm font-semibold text-error">
+              <Icono nombre="aviso" tamano={18} />
               {errores.autorizo}
             </p>
           )}
@@ -270,23 +273,23 @@ export default function PaginaPedido({ productos, whatsapp, umbral }: Props) {
           <h2 id="vista-previa" class="m-0 text-lg font-semibold">
             Así llega tu mensaje
           </h2>
-          <div class="rounded-boton bg-azul-claro p-4 text-[15px] leading-relaxed whitespace-pre-wrap text-tinta">{vistaPrevia}</div>
-          <p class="m-0 text-sm text-texto-2">
+          <div class="rounded-boton bg-celadon p-4 text-[15px] leading-relaxed whitespace-pre-wrap text-ink">{vistaPrevia}</div>
+          <p class="m-0 text-sm text-muted">
             Se abre WhatsApp con tu pedido listo. Te confirmamos el total con domicilio antes de cobrar.
           </p>
         </section>
 
         <button
           type="submit"
-          class="flex min-h-13.5 cursor-pointer items-center justify-center gap-2.5 rounded-[14px] border-0 bg-azul text-[17px] font-semibold text-blanco"
+          class="flex min-h-13.5 cursor-pointer items-center justify-center gap-2.5 rounded-[14px] border-0 bg-bottle text-[17px] font-semibold text-blanco"
         >
           <Icono nombre="chat" />
           Enviar pedido por WhatsApp
         </button>
         {enviado && (
-          <p role="status" class="m-0 text-[15px] text-texto-cuerpo">
+          <p role="status" class="m-0 text-[15px] text-muted">
             Abrimos WhatsApp con tu pedido. Si no se abrió,{' '}
-            <a href={enviado} class="font-semibold text-azul">
+            <a href={enviado} class="font-semibold text-bottle">
               toca aquí para enviarlo
             </a>
             .

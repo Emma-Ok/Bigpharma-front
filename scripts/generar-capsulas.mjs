@@ -7,7 +7,7 @@ import { CAMARA, LARGO, PARES, RADIO, RADIO_TABLETA, TABLETAS, crearPiezas } fro
 
 const ANCHO = 1440;
 const ALTO = 750;
-const FONDO = new Color('#EAF2FB');
+const FONDO = new Color('#D5E5DB');
 const NIEBLA = { cerca: CAMARA.z - 2, lejos: CAMARA.z + 16 };
 
 const camara = new PerspectiveCamera(CAMARA.fov, ANCHO / ALTO, 0.1, 100);

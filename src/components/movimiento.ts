@@ -67,7 +67,7 @@ export function animarAgregado(origen: HTMLElement) {
     width: '10px',
     height: '10px',
     borderRadius: '50%',
-    background: 'var(--color-azul)',
+    background: 'var(--color-bottle)',
     pointerEvents: 'none',
     zIndex: '60',
   });

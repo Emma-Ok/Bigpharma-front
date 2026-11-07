@@ -34,9 +34,9 @@ const preguntas = [
       <h2 id="faq-titulo" class="m-0 mb-3 text-[clamp(26px,2.6vw,34px)] leading-tight font-semibold">Preguntas frecuentes</h2>
       {
         preguntas.map((p) => (
-          <details class="border-b border-borde">
+          <details class="border-b border-celadon">
             <summary class="min-h-11 cursor-pointer py-4 text-[16.5px] leading-snug font-semibold">{p.pregunta}</summary>
-            <p class="m-0 mb-4.5 text-[15.5px] leading-relaxed text-texto-cuerpo">{p.respuesta}</p>
+            <p class="m-0 mb-4.5 text-[15.5px] leading-relaxed text-muted">{p.respuesta}</p>
           </details>
         ))
       }
