@@ -1,71 +1,66 @@
 ---
+// Escenario del hero: la tarjeta del profesional con la escena 3D alrededor. La imagen estática va debajo
+// de la tarjeta (movimiento reducido, sin WebGL o antes de cargar la escena) y es SVG en línea: nunca es el LCP.
+// El canvas va encima de la tarjeta (compartido/movimiento/3d/hero.ts).
+import capsulas from '@/assets/capsulas.svg?raw';
+import Escena3d from '@/compartido/movimiento/3d/Escena3d';
 import Icono from '@/compartido/ui/Icono.astro';
 import type { Configuracion } from '@/dominio/sitio';
-import { enlaceWhatsApp, MENSAJE_GENERAL } from '@/dominio/whatsapp';
 
 interface Props {
   config: Configuracion;
+  class?: string;
 }
 
-const { config } = Astro.props;
+const { config, class: clase } = Astro.props;
 const { profesional: p } = config;
 ---
 
-<aside id="quien" aria-labelledby="quien-titulo" class="ficha-profesional flex w-full max-w-130 min-w-0 flex-[2_1_340px] flex-col">
-  <div class="relative h-[clamp(320px,30vw,400px)] overflow-hidden rounded-panel-grande bg-celadon">
-    {
-      p.foto ? (
-        <img
-          src={p.foto}
-          alt={`${p.nombre}, ${p.profesion}`}
-          width="520"
-          height="400"
-          class="block size-full object-cover object-[center_22%]"
-        />
-      ) : (
-        <div class="flex size-full items-end justify-center text-muted/40">
-          <svg aria-hidden="true" width="230" height="250" viewBox="0 0 230 250" fill="currentColor">
-            <circle cx="115" cy="82" r="54" />
-            <path d="M14 250 C20 172 62 148 115 148 C168 148 210 172 216 250 Z" />
-          </svg>
-        </div>
-      )
-    }
-  </div>
-  <div class="relative mx-3.5 -mt-18 flex flex-col gap-2.5 rounded-[18px] bg-blanco px-5 pt-4.5 pb-5 shadow-ficha">
-    <div class="flex flex-col gap-0.5">
-      <h2 id="quien-titulo" class="m-0 text-[22px] leading-tight font-semibold">{p.nombre}</h2>
-      <p class="m-0 text-[15px] text-muted">{p.profesion}. Atiende personalmente cada pedido.</p>
+<div
+  data-escenario
+  class:list={[
+    'relative flex h-75 items-center justify-center overflow-hidden bg-celadon md:aspect-square md:h-auto md:rounded-panel-grande lg:aspect-[5/4]',
+    clase,
+  ]}
+>
+  <div class="imagen-estatica absolute inset-0 transition-opacity duration-lenta [&>svg]:size-full" aria-hidden="true" set:html={capsulas} />
+  <aside
+    id="quien"
+    aria-labelledby="quien-titulo"
+    data-tarjeta-hero
+    class="ficha-profesional relative z-10 w-60 overflow-hidden rounded-[20px] bg-blanco shadow-ficha md:w-72"
+  >
+    <div data-foto-hero class="h-34 overflow-hidden bg-paper md:h-56">
+      {
+        p.foto ? (
+          <img
+            src={p.foto}
+            alt={`${p.nombre}, ${p.profesion}`}
+            width="288"
+            height="224"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            class="block size-full object-cover object-[center_22%]"
+          />
+        ) : (
+          <div class="flex size-full items-end justify-center text-muted/40">
+            <svg aria-hidden="true" class="h-[88%] w-auto" viewBox="0 0 230 250" fill="currentColor">
+              <circle cx="115" cy="82" r="54" />
+              <path d="M14 250 C20 172 62 148 115 148 C168 148 210 172 216 250 Z" />
+            </svg>
+          </div>
+        )
+      }
     </div>
-    <p class="m-0 inline-flex items-center gap-2 self-start rounded-[10px] bg-celadon px-3 py-1.5 text-sm font-semibold text-bottle">
-      <Icono nombre="escudo" tamano={18} />
-      Registro profesional {p.registro}
-    </p>
-    {
-      p.frase && (
-        <p class="m-0 border-l-[3px] border-bottle pl-3 text-[15px] leading-relaxed text-muted">«{p.frase}»</p>
-      )
-    }
-    <a
-      href={enlaceWhatsApp(config.whatsapp, MENSAJE_GENERAL)}
-      class="inline-flex min-h-11 items-center gap-2 self-start text-[15.5px] font-semibold text-bottle"
-    >
-      <Icono nombre="chat" tamano={18} />
-      Escríbeme por WhatsApp
-    </a>
-  </div>
-  <ul aria-label="Datos de la droguería" class="mx-3.5 mt-4.5 mb-0 flex list-none flex-col gap-2 p-0 text-[14.5px] leading-snug">
-    <li class="flex items-start gap-2.5">
-      <Icono nombre="escudo" class="mt-px text-bottle" />
-      Droguería inscrita ante {config.autoridadSalud}, código {config.codigoInscripcion}
-    </li>
-    <li class="flex items-start gap-2.5">
-      <Icono nombre="reloj" class="mt-px text-bottle" />
-      Atendemos {config.horario}
-    </li>
-    <li class="flex items-start gap-2.5">
-      <Icono nombre="ubicacion" class="mt-px text-bottle" />
-      Domicilio en {config.tiempoEntrega} a {config.zonasCobertura}
-    </li>
-  </ul>
-</aside>
+    <div class="flex flex-col gap-1.5 px-3.5 pt-2.5 pb-3 md:gap-2 md:px-4.5 md:pt-3.5 md:pb-4">
+      <h2 id="quien-titulo" class="m-0 text-[17px] leading-tight font-semibold md:text-xl">{p.nombre}</h2>
+      <p class="m-0 hidden text-[15px] leading-snug text-muted md:block">{p.profesion}. Atiende personalmente cada pedido.</p>
+      <p class="m-0 inline-flex items-center gap-1.5 self-start rounded-[10px] bg-celadon px-2.5 py-1 text-[13px] leading-tight font-semibold text-bottle md:text-sm">
+        <Icono nombre="escudo" tamano={16} />
+        Registro profesional {p.registro}
+      </p>
+    </div>
+  </aside>
+  <Escena3d client:visible escena="hero" class="z-20" />
+</div>

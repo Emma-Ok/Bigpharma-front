@@ -1,14 +1,12 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
-import { cuandoConvenga3d } from '@/compartido/movimiento/3d/cargador';
+import { useState } from 'preact/hooks';
 import { categoria, TIPOS } from '@/dominio/categorias';
 import type { Producto } from '@/dominio/producto';
 import { formatearPrecio } from '@/dominio/formato';
 import { enlaceWhatsApp, mensajeDisponibilidad, mensajeFormula } from '@/dominio/whatsapp';
 import ControlCantidad from '@/funcionalidades/pedido/ControlCantidad';
 import Icono from '@/compartido/ui/Icono';
-import { formaDe } from '@/dominio/producto';
 import IlustracionProducto from './IlustracionProducto';
-import { FONDO_CATEGORIA, HEX_CATEGORIA, PUNTO_CATEGORIA } from '@/compartido/ui/estilosCategoria';
+import { FONDO_CATEGORIA, PUNTO_CATEGORIA } from '@/compartido/ui/estilosCategoria';
 import { atributosTransicion, nombresDeTransicion } from './transiciones';
 
 interface Props {
@@ -33,30 +31,6 @@ const DISPONIBILIDAD = {
  */
 export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, idTitulo = 'ficha-titulo' }: Props) {
   const [foto, setFoto] = useState(0);
-  const escena = useRef<HTMLDivElement>(null);
-
-  // Sin foto: el empaque 3D (caja, frasco, tubo o paquete) reemplaza al dibujo cuando conviene cargarlo.
-  useEffect(() => {
-    const el = escena.current;
-    if (!el) return;
-    let vigente = true;
-    let destruir: (() => void) | undefined;
-    cuandoConvenga3d(async () => {
-      if (!vigente) return;
-      const { iniciarEmpaque } = await import('@/compartido/movimiento/3d/empaque');
-      if (vigente && el.isConnected) {
-        destruir = iniciarEmpaque(el, {
-          forma: formaDe(p.presentacion, p.categoria),
-          color: HEX_CATEGORIA[p.categoria].color,
-          fondo: HEX_CATEGORIA[p.categoria].fondo,
-        });
-      }
-    });
-    return () => {
-      vigente = false;
-      destruir?.();
-    };
-  }, [p.id]);
   const Titulo = `h${nivel}` as 'h1' | 'h2';
   const Subtitulo = `h${nivel + 1}` as 'h2' | 'h3';
   const rx = p.condicionVenta === 'formula';
@@ -95,7 +69,6 @@ export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, i
                 <IlustracionProducto categoria={p.categoria} presentacion={p.presentacion} ancho={160} grosor={1.6} />
               )}
             </span>
-            {!p.fotos.length && <div ref={escena} aria-hidden="true" class="escena-empaque pointer-events-none absolute inset-0" />}
             {p.condicionVenta === 'libre' && p.descuentoPct && (
               <span class="absolute top-3.5 left-3.5 rounded-full bg-amber px-3 py-1 text-[13px] font-semibold text-blanco">
                 Ahorra {p.descuentoPct} %

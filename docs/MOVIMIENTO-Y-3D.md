@@ -1,46 +1,46 @@
 # Movimiento y 3D
 
-La idea es que el sitio se sienta vivo sin volverse lento ni marear a nadie. Hay **escenas 3D decorativas en varias vistas**, también en celular, y el resto del movimiento **responde a lo que hace el cliente**: abrir, agregar, filtrar o confirmar. Solo se mueven por su cuenta las escenas 3D y los carruseles, que se pueden pausar, y todo respeta `prefers-reduced-motion`.
+La idea es que el sitio se sienta vivo sin volverse lento ni marear a nadie. Hay **tres escenas 3D decorativas** (hero, servicios y celebración), también en celular, y el resto del movimiento **responde a lo que hace el cliente**: abrir, agregar, filtrar o confirmar. Solo se mueven por su cuenta las escenas 3D y los carruseles, que se pueden pausar, y todo respeta `prefers-reduced-motion`.
 
 Para cualquier decisión visual nueva, usa la skill `frontend-design` (`.claude/skills/frontend-design`).
 
 ## 1. Escenas 3D
 
-Todas son decorativas: `aria-hidden="true"`, sin foco ni clics, y ninguna pieza queda detrás de un texto.
+Hay tres, en `src/compartido/movimiento/3d/`. Todas son decorativas: `aria-hidden="true"`, sin foco ni clics. Cada una carga three solo cuando se va a usar: el catálogo, la ficha, el pedido y la página 404 no lo descargan si no hay celebración.
 
 | Escena | Dónde | Qué pasa |
 |---|---|---|
-| Cápsulas y tabletas (`hero`) | Portada | Llegan volando desde el fondo, flotan y se apartan del puntero. Parallax de 6° como máximo. Al hacer scroll, la cámara se aleja y la escena se desvanece |
-| Cápsulas y tabletas (`banda`) | Cabecera del catálogo y página 404 | La misma escena con menos piezas; la cámara hace zoom para que se vean del mismo tamaño en un contenedor bajo |
-| Inyectología | Sección de servicios de la portada | Jeringa y frasco flotan y se inclinan hacia el puntero; cada pocos segundos el émbolo baja y salen gotas |
-| Empaque | Ficha del producto sin foto | Caja, frasco, tubo o paquete con la franja del color de su categoría; gira como en una vitrina y se inclina hacia el puntero |
-| Celebración | Al llegar al domicilio gratis y al enviar el pedido | Las piezas salen del botón o la barra y caen con gravedad. Dura menos de 2 s |
+| Hero (`hero.ts`) | Alrededor de la tarjeta del profesional | Cápsulas y un frasco de vidrio ámbar flotan despacio. Unas cápsulas dan la vuelta a la tarjeta, por delante y por detrás de la foto; otras flotan a los lados, detrás. Parallax de 6° como máximo con el puntero en escritorio y con el scroll en celular |
+| Inyectología (`servicios.ts`) | Sección de servicios de la portada | Jeringa y frasco flotan y se inclinan hacia el puntero; cada pocos segundos el émbolo baja y salen gotas |
+| Celebración (`celebracion.ts`) | Al llegar al domicilio gratis y al enviar el pedido | Las piezas salen del botón o la barra y caen con gravedad. Dura menos de 2 s |
 
-**Cantidad de piezas (cápsulas + tabletas):** en la portada, 22 + 10 en escritorio y 10 + 6 en celular; en las bandas, 10 + 5 y 5 + 3. En celular las piezas se ubican en los bordes para no tapar el texto.
+**Cantidad de objetos del hero:** 13 cápsulas y el frasco en escritorio, 5 cápsulas y el frasco en celular.
 
 **Implementación:**
 - `three` desde npm. Importa solo lo necesario. No uses react-three-fiber.
-- `src/scripts/3d/motor.ts` es común a todas las escenas: renderer transparente, cámara, luces, niebla en el color del fondo, ajuste de tamaño y limpieza. `src/scripts/3d/cargador.ts` decide si se cargan y cuándo.
-- Las cápsulas y tabletas usan `InstancedMesh`: dos por cápsula, una por mitad, con colores `#1E5AA0`/`#FFFFFF`, `#6E9FC4`/`#FFFFFF` y `#D9963F`/`#FBEBD6`. Material mate (`roughness` alrededor de 0,4), sin sombras ni postprocesado.
-- `setPixelRatio` con un tope de 1,5 en escritorio y 1,25 en pantallas chicas o táctiles, donde además no hay antialias y las geometrías llevan menos segmentos.
-- El canvas va dentro de su contenedor con `position:absolute; inset:0; pointer-events:none` y `aria-hidden="true"`. El texto queda por encima y el titular sigue siendo el LCP.
+- `motor.ts` es común a todas las escenas: renderer transparente, cámara, luces, niebla en el color del fondo, ajuste de tamaño y limpieza. `cargador.ts` decide si se cargan y cuándo.
+- Hero y servicios son la isla `Escena3d.tsx`, con `client:visible`, que importa cada escena de forma dinámica.
+- **Profundidad del hero:** un solo canvas encima de la tarjeta, con `pointer-events:none`. Un plano invisible del tamaño de la tarjeta (`colorWrite: false`) escribe solo profundidad: lo que pasa por detrás queda tapado y lo que pasa por delante se ve sobre la foto. Las piezas nunca pasan por delante del texto: las órbitas van a la altura de la foto o por encima y las laterales siempre van detrás.
+- Las cápsulas usan `InstancedMesh`: dos, una por mitad, con colores `#133B34`/`#FFFFFF`, `#133B34`/`#D5E5DB` y `#4A5A55`/`#F3F5F1`. Material mate (`roughness` alrededor de 0,4), sin sombras ni postprocesado. El frasco es la excepción aprobada al uso de `amber`.
+- `setPixelRatio` con un tope de 1,5. En pantallas chicas o táctiles no hay antialias y las geometrías llevan menos segmentos.
+- El escenario reserva su espacio: 300 px de alto en celular y `aspect-ratio` en escritorio.
 - Se pausa con `IntersectionObserver` cuando la escena sale de pantalla y con `visibilitychange` cuando la pestaña se oculta. Libera la geometría, el material y el renderer al desmontar y al cambiar de página.
 
-**Cuándo NO se carga three.js** (se muestra la imagen estática, un SVG en línea generado con `scripts/generar-capsulas.mjs` a partir de la misma escena; en servicios y en la ficha, su dibujo SVG):
+**Cuándo NO se carga three.js** (se muestra la imagen estática: en el hero, un SVG en línea generado con `scripts/generar-capsulas.mjs` a partir de la misma escena; en servicios, su dibujo SVG; la celebración no se dispara):
 - `prefers-reduced-motion: reduce`
 - `navigator.connection?.saveData === true`
 - `navigator.deviceMemory < 2`, cuando el dato exista
 - WebGL no disponible
 
-El respaldo es SVG y no una imagen `.webp` porque la imagen pasaba a ser el elemento LCP en lugar del titular.
+El respaldo es SVG en línea y no una imagen `.webp` para que nunca compita como elemento LCP.
 
-**Carga:** `import()` dinámico en reposo, después del evento `load` y de la primera interacción (mover el puntero, tocar, desplazar o usar el teclado). Cada escena se monta solo cuando su contenedor está a menos de 300 px de la pantalla. La celebración se carga cuando ocurre la acción. Nunca bloquea el primer render.
+**Carga:** `import()` dinámico en reposo, después del evento `load` y de la primera interacción (mover el puntero, tocar, desplazar o usar el teclado). Hasta entonces se ve la imagen estática. Se probó cargar en reposo justo después de `load`, sin esperar la interacción: Lighthouse móvil dio 77 de Rendimiento con 1070 ms de TBT, contra 100 y 10 ms con la interacción. La celebración se importa al dispararse. Nunca bloquea el primer render.
 
 ## 2. Transiciones de interfaz
 
 | Momento | Qué pasa | Duración |
 |---|---|---|
-| Entrada de la portada (una sola vez) | Las líneas del titular suben 12 px y aparecen en secuencia (60 ms entre una y otra); la ficha del profesional sube. Las cápsulas llegan después, con la primera interacción | ≤ 900 ms en total |
+| Entrada de la portada (una sola vez) | Las líneas del titular suben 12 px y aparecen en secuencia (60 ms entre una y otra); la tarjeta del profesional sube. La escena 3D llega después, con la primera interacción | ≤ 900 ms en total |
 | Cambio de página | View Transitions de Astro (`<ClientRouter />`); la imagen y el nombre del producto se transforman de la tarjeta a la página (`transition:name="producto-{id}"`) | 280 ms |
 | Abrir la ficha rápida | `document.startViewTransition`: la imagen crece desde la tarjeta. Respaldo: escala de 0,96 a 1 con fundido | 240 ms |
 | Abrir el buscador | El panel baja 8 px con fundido y el fondo oscuro aparece; al escribir, los resultados cambian con fundido, sin desplazarse | 180 ms |
@@ -89,6 +89,7 @@ Con movimiento reducido solo se permiten fundidos de opacidad de 120 ms como má
 ## 5. Pruebas
 
 - Playwright con `reducedMotion: 'reduce'`: no existe ningún `<canvas>`, se ve la imagen estática y no se descarga three.js.
-- Playwright en escritorio: el canvas de la portada aparece con la primera interacción y no antes, tiene `aria-hidden="true"` y no recibe foco ni clics; también hay escenas en servicios, en el catálogo y en la ficha.
+- Playwright en escritorio: el canvas del hero aparece con la primera interacción y no antes, tiene `aria-hidden="true"` y no recibe foco ni clics; hay escena en servicios y no hay canvas en el catálogo, la ficha ni la página 404.
+- Playwright en celular: en 390×844 el título y un botón se ven sin hacer scroll.
 - Playwright: los carruseles avanzan solos y se pueden pausar.
 - axe sin violaciones con las animaciones activas y desactivadas.

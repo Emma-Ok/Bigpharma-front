@@ -1,7 +1,6 @@
 ---
 import Base from '@/layouts/Base.astro';
 import RutaNavegacion from '@/compartido/ui/RutaNavegacion.astro';
-import EscenaCapsulas from '@/compartido/movimiento/3d/EscenaCapsulas.astro';
 import Catalogo from '@/funcionalidades/catalogo/Catalogo';
 import { cargarDatos } from '@/hoja/cargarDatos';
 import { resumir } from '@/dominio/producto';
@@ -20,12 +19,9 @@ const entrega = `Domicilio en ${configuracion.tiempoEntrega} a ${configuracion.z
   descripcion="Medicamentos de venta libre, cuidado personal, bebés y primeros auxilios a domicilio. Busca por nombre o síntoma y arma tu pedido por WhatsApp."
   jsonLd={migasJsonLd(migas, Astro.site!)}
 >
-  <div class="relative isolate overflow-hidden bg-celadon">
-    <EscenaCapsulas variante="banda" />
-    <div class="relative z-10 mx-auto flex min-h-52 w-full max-w-sitio flex-col justify-center gap-2 px-margen pt-4 pb-8">
-      <RutaNavegacion migas={migas} />
-      <h1 class="m-0 text-[clamp(28px,3vw,38px)] leading-tight font-semibold">Catálogo de productos</h1>
-    </div>
+  <div class="mx-auto flex w-full max-w-sitio flex-col gap-2 px-margen pt-4">
+    <RutaNavegacion migas={migas} />
+    <h1 class="m-0 text-[clamp(28px,3vw,38px)] leading-tight font-semibold">Catálogo de productos</h1>
   </div>
   <div class="mx-auto flex w-full max-w-sitio flex-col gap-3 px-margen pt-6 pb-14">
     <Catalogo

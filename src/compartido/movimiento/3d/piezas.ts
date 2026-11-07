@@ -1,6 +1,7 @@
 /**
  * Piezas de las escenas (datos y geometrías, sin renderer): cápsulas de dos colores y tabletas.
- * Lo usan las escenas 3D y scripts/generar-capsulas.mjs (imagen estática), por eso solo importa three.
+ * Las tabletas solo salen en la celebración. Lo usan las escenas 3D y scripts/generar-capsulas.mjs
+ * (imagen estática), por eso solo importa three.
  */
 import { Euler, LatheGeometry, Vector2 } from 'three';
 
@@ -18,17 +19,27 @@ export const GROSOR_TABLETA = 0.16;
 export const CAMARA = { fov: 35, z: 16 };
 export const MITAD_ALTO = Math.tan(((CAMARA.fov / 2) * Math.PI) / 180) * CAMARA.z;
 
-export type Variante = 'hero' | 'banda';
-type Distribucion = 'escritorio' | 'celular';
+/** Geometría del escenario en unidades de la escena, en el plano z = 0 (la tarjeta está ahí). */
+export interface Medidas {
+  /** Mitad del ancho visible. */
+  mitadAncho: number;
+  /** Centro y mitad del ancho de la tarjeta. */
+  centroX: number;
+  mitadTarjeta: number;
+  /** Borde inferior de la foto: por debajo está el texto, que ninguna pieza puede tapar. */
+  bajoFoto: number;
+}
 
 export interface Pieza {
-  tipo: 'capsula' | 'tableta';
-  x: number;
-  y: number;
-  z: number;
+  /** orbita: da la vuelta a la tarjeta, por delante y por detrás de la foto. lateral: flota a un costado, detrás. */
+  tipo: 'orbita' | 'lateral';
+  /** Posición entre 0 y 1 dentro de la franja que le toca. */
+  fx: number;
+  fy: number;
+  lado: 1 | -1;
+  fase: number;
   giro: Euler;
   velocidad: Vector2;
-  fase: number;
   color: number;
   escala: number;
 }
@@ -41,65 +52,61 @@ function aleatorio(semilla: number) {
   };
 }
 
-/** ¿La posición (fracción de pantalla, -1 a 1) cae sobre texto o sobre algo opaco? */
-function ocupada(variante: Variante, d: Distribucion, fx: number, fy: number): boolean {
-  if (variante === 'hero' && d === 'escritorio') {
-    const titular = fx > -0.95 && fx < 0.07 && fy > -0.66 && fy < 0.62;
-    const profesional = fx > 0.11 && fx < 0.91 && fy > -1.05 && fy < 0.92;
-    return titular || profesional;
-  }
-  if (d === 'celular') return variante === 'banda' && fx < 0;
-  return fx < 0.12;
-}
-
-/** Fracción del ancho (desde el centro) donde pueden quedar las piezas en celular. */
-const BORDES_CELULAR: Record<Variante, [number, number]> = { hero: [1.06, 1.3], banda: [0.86, 1.25] };
-
-const CANTIDADES: Record<Variante, Record<Distribucion, [number, number]>> = {
-  hero: { escritorio: [22, 10], celular: [10, 6] },
-  banda: { escritorio: [10, 5], celular: [5, 3] },
-};
-
-/** `mitadAlto`: mitad del alto visible en el plano z = 0 (menor cuando la cámara hace zoom en contenedores bajos). */
-export function crearPiezas(variante: Variante = 'hero', aspecto = 1440 / 750, mitadAlto = MITAD_ALTO): Pieza[] {
-  const d: Distribucion = aspecto < 1 ? 'celular' : 'escritorio';
-  const [nCapsulas, nTabletas] = CANTIDADES[variante][d];
-  const azar = aleatorio(variante === 'hero' ? 7 : 11);
-  const mitadAncho = mitadAlto * aspecto;
-  const crear = (tipo: Pieza['tipo'], i: number): Pieza => {
-    let x = 0;
-    let y = 0;
-    let z = 0;
-    let intentos = 0;
-    do {
-      z = -azar() * 8 + 1.5;
-      // Las piezas lejanas se ven más cerca del centro: se reparten en el área visible a su profundidad.
-      const k = (CAMARA.z - z) / CAMARA.z;
-      // En celular el texto ocupa todo el ancho: las piezas solo asoman por fuera de los márgenes.
-      const borde = BORDES_CELULAR[variante];
-      x =
-        d === 'celular'
-          ? (azar() < 0.5 ? -1 : 1) * (borde[0] + azar() * (borde[1] - borde[0])) * mitadAncho * k
-          : (azar() * 2 - 1) * mitadAncho * 1.12 * k;
-      y = (azar() * 2 - 1) * mitadAlto * k;
-      intentos++;
-    } while (ocupada(variante, d, x / (mitadAncho * ((CAMARA.z - z) / CAMARA.z)), y / (mitadAlto * ((CAMARA.z - z) / CAMARA.z))) && intentos < 200);
+/** Cápsulas del hero: 13 en escritorio y 5 en celular; con el frasco son ~14 y ~6 objetos. */
+export function crearPiezas(ligero: boolean): Pieza[] {
+  const azar = aleatorio(7);
+  const orbitas = ligero ? 3 : 7;
+  const total = ligero ? 5 : 13;
+  return Array.from({ length: total }, (_, i) => {
+    const orbita = i < orbitas;
     return {
-      tipo,
-      x,
-      y,
-      z,
+      tipo: orbita ? 'orbita' : 'lateral',
+      fx: azar(),
+      fy: orbita ? (i + 0.5) / orbitas : ((i - orbitas + azar() * 0.6) / (total - orbitas)) * 0.9,
+      lado: i % 2 ? 1 : -1,
+      fase: orbita ? (i / orbitas) * Math.PI * 2 : azar() * Math.PI * 2,
       giro: new Euler(azar() * Math.PI, azar() * Math.PI, azar() * Math.PI),
       velocidad: new Vector2((azar() - 0.5) * 0.3, (azar() - 0.5) * 0.3),
-      fase: azar() * Math.PI * 2,
-      color: tipo === 'capsula' ? i % PARES.length : i % TABLETAS.length,
-      escala: (tipo === 'capsula' ? 0.8 + azar() * 0.55 : 0.75 + azar() * 0.4) * (d === 'celular' ? 0.85 : 1),
+      color: i % PARES.length,
+      escala: 0.75 + azar() * 0.4,
     };
+  });
+}
+
+const FONDO_ORBITA = 2.6;
+const VELOCIDAD_ORBITA = 0.11;
+
+/**
+ * Posición de una pieza. Las órbitas solo pasan a la altura de la foto o por encima, nunca del texto;
+ * las laterales van detrás de la tarjeta (z < 0), que las tapa si se acercan.
+ */
+export function ubicar(p: Pieza, m: Medidas, segundos: number, avance = 0) {
+  if (p.tipo === 'orbita') {
+    const a = p.fase + segundos * VELOCIDAD_ORBITA + avance;
+    const radio = Math.min(m.mitadAncho * 0.92, m.mitadTarjeta + 1.6);
+    const piso = m.bajoFoto + 1.1;
+    return {
+      x: m.centroX + Math.cos(a) * radio,
+      y: piso + p.fy * (MITAD_ALTO - piso) + Math.sin(segundos * 0.35 + p.fase) * 0.12,
+      z: Math.sin(a) * FONDO_ORBITA,
+    };
+  }
+  const cerca = m.mitadTarjeta + 0.5;
+  const lejos = Math.max(cerca, Math.min(m.mitadAncho - 0.5, cerca + 3.5));
+  return {
+    x: m.centroX + p.lado * (cerca + p.fx * (lejos - cerca)) + Math.sin(segundos * 0.15 + p.fase) * 0.2,
+    y: MITAD_ALTO * (0.8 - 1.7 * p.fy) + Math.cos(segundos * 0.12 + p.fase) * 0.2,
+    z: -1.2 - p.fx * 1.6,
   };
-  return [
-    ...Array.from({ length: nCapsulas }, (_, i) => crear('capsula', i)),
-    ...Array.from({ length: nTabletas }, (_, i) => crear('tableta', i)),
-  ];
+}
+
+/** Frasco: abajo, a un costado, medio escondido detrás de la tarjeta. */
+export function ubicarFrasco(m: Medidas, segundos: number) {
+  return {
+    x: m.centroX + m.mitadTarjeta + 0.55,
+    y: -MITAD_ALTO * 0.5 + Math.sin(segundos * 0.3) * 0.12,
+    z: -0.9,
+  };
 }
 
 export function geometriaMediaCapsula(segmentos = 24) {

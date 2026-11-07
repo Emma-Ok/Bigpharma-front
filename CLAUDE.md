@@ -10,7 +10,7 @@ Lee `docs/ESPECIFICACION.md` antes de cualquier tarea. Los mockups de referencia
 - Estilos: Tailwind CSS v4 con el plugin oficial de Vite (`@tailwindcss/vite`), sin `tailwind.config.js`. Los tokens van en `@theme` dentro de `src/styles/global.css`. Sin librerías de componentes de UI.
 - Datos: Google Sheets publicado como CSV, leído **en build** (`src/hoja/`). Copia local de respaldo en `datos/productos.csv` para desarrollo sin red.
 - Carrito: estado en el navegador (`localStorage`, con try/catch) compartido entre páginas.
-- Movimiento: View Transitions de Astro (`<ClientRouter />`), CSS y Web Animations API. `three` para las escenas 3D decorativas (portada, servicios, cabeceras, ficha sin foto y celebraciones), cargado con la primera interacción. Detalle en `docs/MOVIMIENTO-Y-3D.md`.
+- Movimiento: View Transitions de Astro (`<ClientRouter />`), CSS y Web Animations API. `three` para tres escenas decorativas, cada una cargada solo cuando se va a usar: hero y jeringa de servicios (islas con `client:visible`, tras la primera interacción) y celebración (import dinámico al dispararse). Detalle en `docs/MOVIMIENTO-Y-3D.md`.
 - Despliegue: Cloudflare Pages. Un deploy hook reconstruye el sitio cuando cambia la hoja.
 
 ## Entorno
@@ -42,7 +42,7 @@ Se corren dentro del contenedor (ver «Entorno»).
 - Para cualquier decisión visual (composición, tipografía, color, movimiento, nuevos componentes) carga y sigue la skill `frontend-design` en `.claude/skills/frontend-design`. Los tokens de `docs/ESPECIFICACION.md` sección 6 y los mockups de `diseno/` mandan sobre cualquier gusto por defecto.
 - Estilos con las utilidades de los tokens (`bg-bottle`, `text-ink`, `rounded-tarjeta`, `duration-media`, `ease-salida`). Nunca valores arbitrarios de color (`bg-[#133B34]`) ni la paleta por defecto de Tailwind: `@theme` la desactiva con `--color-*: initial`. Las transparencias usan el modificador de opacidad sobre un token (`bg-ink/45`). Si falta un token, se agrega en `global.css` y en la sección 6 de la especificación.
 - Se quedan en CSS (en `global.css`, fuera de `@theme`): la regla de `prefers-reduced-motion` y los estilos de View Transitions (`::view-transition-*`).
-- Movimiento: escenas 3D decorativas en varias vistas, también en celular; lo demás responde a acciones del cliente, salvo la rotación de los carruseles. Respeta `prefers-reduced-motion` en cada animación: sin three.js y con los carruseles en pausa.
+- Movimiento: escenas 3D en el hero, en servicios y en la celebración, también en celular; lo demás responde a acciones del cliente, salvo la rotación de los carruseles. Respeta `prefers-reduced-motion` en cada animación: sin three.js y con los carruseles en pausa.
 
 ## Reglas que no se negocian
 

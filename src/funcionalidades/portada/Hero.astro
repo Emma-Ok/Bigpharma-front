@@ -1,0 +1,60 @@
+---
+import Icono from '@/compartido/ui/Icono.astro';
+import type { Configuracion } from '@/dominio/sitio';
+import { enlaceWhatsApp, MENSAJE_GENERAL } from '@/dominio/whatsapp';
+import PresentacionProfesional from './PresentacionProfesional.astro';
+
+interface Props {
+  config: Configuracion;
+}
+
+const { config: c } = Astro.props;
+const boton = 'inline-flex min-h-12.5 w-full items-center justify-center rounded-boton px-5.5 font-semibold no-underline sm:w-auto';
+---
+
+<section id="inicio" aria-labelledby="hero-titulo" class="hero">
+  <div class="mx-auto grid max-w-sitio md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] md:grid-rows-[auto_auto] md:gap-x-12 md:gap-y-7 md:px-margen md:py-[clamp(28px,4vw,52px)]">
+    <div class="order-2 flex min-w-0 flex-col gap-3 px-margen pt-5 md:order-none md:self-end md:px-0 md:pt-0">
+      <h1 id="hero-titulo" class="m-0 text-[clamp(30px,3.4vw,46px)] leading-[1.12] font-semibold tracking-[-0.01em] text-bottle">
+        <span class="hero-linea block" style="--retraso: 0ms">Droguería a domicilio</span>
+        <span class="hero-linea block" style="--retraso: 60ms">en {c.barrio}</span>
+      </h1>
+      <p style="--retraso: 120ms" class="hero-linea m-0 max-w-[46ch] text-[clamp(16px,1.4vw,18px)] leading-normal text-muted">
+        Pide tus medicamentos y productos de cuidado sin salir de casa. Armas el pedido aquí y lo confirmamos por WhatsApp.
+      </p>
+      <div style="--retraso: 180ms" class="hero-linea mt-1 flex flex-wrap gap-2.5">
+        <a href="/catalogo" class={`${boton} bg-bottle text-blanco`}>Ver catálogo</a>
+        <a href={enlaceWhatsApp(c.whatsapp, MENSAJE_GENERAL)} class={`${boton} border-2 border-bottle bg-blanco text-bottle`}>
+          Escribir por WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <PresentacionProfesional config={c} class="order-1 md:order-none md:col-start-2 md:row-span-2 md:row-start-1 md:self-center" />
+
+    <div class="order-3 flex min-w-0 flex-col gap-3 px-margen pt-6 pb-7 md:order-none md:self-start md:px-0 md:pt-0 md:pb-0">
+      {c.profesional.frase && <p class="m-0 border-l-[3px] border-bottle pl-3 text-[15px] leading-relaxed text-muted">«{c.profesional.frase}»</p>}
+      <a
+        href={enlaceWhatsApp(c.whatsapp, MENSAJE_GENERAL)}
+        class="inline-flex min-h-11 items-center gap-2 self-start text-[15.5px] font-semibold text-bottle"
+      >
+        <Icono nombre="chat" tamano={18} />
+        Escríbeme por WhatsApp
+      </a>
+      <ul aria-label="Datos de la droguería" class="m-0 flex list-none flex-col gap-2 p-0 text-[14.5px] leading-snug">
+        <li class="flex items-start gap-2.5">
+          <Icono nombre="escudo" class="mt-px text-bottle" />
+          Droguería inscrita ante {c.autoridadSalud}, código {c.codigoInscripcion}
+        </li>
+        <li class="flex items-start gap-2.5">
+          <Icono nombre="reloj" class="mt-px text-bottle" />
+          Atendemos {c.horario}
+        </li>
+        <li class="flex items-start gap-2.5">
+          <Icono nombre="ubicacion" class="mt-px text-bottle" />
+          Domicilio en {c.tiempoEntrega} a {c.zonasCobertura}
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>

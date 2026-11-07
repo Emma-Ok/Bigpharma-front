@@ -1,4 +1,5 @@
 ---
+import Escena3d from '@/compartido/movimiento/3d/Escena3d';
 import Icono from '@/compartido/ui/Icono.astro';
 import type { Configuracion } from '@/dominio/sitio';
 import { enlaceWhatsApp, MENSAJE_INYECTOLOGIA } from '@/dominio/whatsapp';
@@ -36,9 +37,9 @@ const pasos = [
       </a>
     </div>
     <div class="flex min-w-0 flex-[1_1_360px] flex-col gap-6">
-    <div class="relative h-56 overflow-hidden rounded-panel sm:h-64" aria-hidden="true" data-escena="servicios">
+    <div class="relative h-56 overflow-hidden rounded-panel sm:h-64" aria-hidden="true" data-escenario>
       <!-- Imagen estática (movimiento reducido, sin WebGL o antes de cargar la escena 3D). -->
-      <svg class="imagen-servicios absolute inset-0 size-full transition-opacity duration-lenta" viewBox="0 0 400 240" fill="none" stroke-width="2.5" stroke-linejoin="round">
+      <svg class="imagen-estatica absolute inset-0 size-full transition-opacity duration-lenta" viewBox="0 0 400 240" fill="none" stroke-width="2.5" stroke-linejoin="round">
         <g transform="rotate(-36 170 120)" class="stroke-ink">
           <rect x="150" y="30" width="44" height="150" rx="6" class="fill-blanco" />
           <rect x="154" y="92" width="36" height="84" rx="3" class="fill-bottle" />
@@ -55,6 +56,7 @@ const pasos = [
           <rect x="260" y="160" width="70" height="30" class="fill-bottle" />
         </g>
       </svg>
+      <Escena3d client:visible={{ rootMargin: '300px' }} escena="servicios" />
     </div>
     <ol aria-label="Cómo funciona" class="m-0 flex list-none flex-col gap-4.5 p-0">
       {
@@ -71,9 +73,3 @@ const pasos = [
     </div>
   </div>
 </section>
-
-<style>
-  [data-escena-lista] .imagen-servicios {
-    opacity: 0;
-  }
-</style>

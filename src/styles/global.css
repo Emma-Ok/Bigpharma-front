@@ -129,10 +129,9 @@
   }
 }
 
-/* Escenas 3D listas: el dibujo estático que reemplazan se desvanece. */
-:where(div):has(> .escena-empaque[data-escena-lista]) > [data-vt] {
+/* Escena 3D lista: la imagen estática de su escenario se desvanece. */
+[data-escenario]:has([data-escena-lista]) .imagen-estatica {
   opacity: 0;
-  transition: opacity var(--transition-duration-lenta);
 }
 
 /* Pistas de carrusel: el desplazamiento vertical de la página sigue funcionando sobre ellas. */
@@ -221,7 +220,7 @@ html:active-view-transition-type(cuadricula) {
     animation: subir-texto 420ms var(--ease-salida) var(--retraso, 0ms) both;
   }
   .ficha-profesional {
-    animation: subir 480ms var(--ease-salida) 240ms both;
+    animation: subir-texto 480ms var(--ease-salida) 240ms both;
   }
 
   /* Ficha rápida sin View Transitions: escala de 0,96 a 1 con fundido. */
@@ -272,14 +271,7 @@ html:active-view-transition-type(cuadricula) {
   }
 }
 
-@keyframes subir {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-}
-
-/* Opacidad inicial 0,01 y no 0: Chrome ignora para LCP los elementos invisibles, y el titular debe ser el LCP. */
+/* Opacidad inicial 0,01 y no 0: Chrome ignora para LCP los elementos invisibles (titular y foto). */
 @keyframes subir-texto {
   from {
     opacity: 0.01;

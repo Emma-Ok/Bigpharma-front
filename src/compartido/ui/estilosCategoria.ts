@@ -11,6 +11,3 @@ export const FONDO_CATEGORIA: Record<CategoriaId | 'todo', string> = { ...porCat
 export const PUNTO_CATEGORIA: Record<CategoriaId | 'todo', string> = { ...porCategoria('bg-bottle', 'bg-amber'), todo: 'bg-muted' };
 
 export const RELLENO_CATEGORIA = porCategoria('fill-bottle', 'fill-amber');
-
-/** Los mismos colores en hex, para las escenas 3D (WebGL no lee variables de CSS). */
-export const HEX_CATEGORIA = porCategoria({ color: '#133B34', fondo: '#D5E5DB' }, { color: '#A8621A', fondo: '#D5E5DB' });

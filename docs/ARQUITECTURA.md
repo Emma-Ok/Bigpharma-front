@@ -9,7 +9,7 @@ src/
 ├── pages/               Rutas: traen datos y componen
 ├── layouts/             Base, Legal, Encabezado, Pie
 ├── funcionalidades/
-│   ├── portada/         PresentacionProfesional, Servicios, PreguntasFrecuentes
+│   ├── portada/         Hero, PresentacionProfesional, Servicios, PreguntasFrecuentes
 │   ├── anuncios/        BarraAvisos, CarruselAnuncios, AnuncioLateral, carrusel.ts
 │   ├── catalogo/        Catalogo, CatalogoResumido, Buscador, CategoriasIconos
 │   ├── producto/        TarjetaProducto, FichaProducto, DialogoFicha, IlustracionProducto,
@@ -20,7 +20,7 @@ src/
 ├── compartido/
 │   ├── ui/              Icono, iconos.ts, RutaNavegacion, estilosCategoria.ts
 │   ├── catalogoCliente.ts   cargarCatalogo, usarCatalogo
-│   └── movimiento/      preferencias.ts, animaciones.ts, 3d/ (escenas y EscenaCapsulas)
+│   └── movimiento/      preferencias.ts, animaciones.ts, 3d/ (escenas e isla Escena3d)
 ├── dominio/             TypeScript puro: producto, categorias, busqueda, carrito, domicilio,
 │                        pedido, whatsapp, sitio, seo, formato
 ├── hoja/                Solo build: cargarDatos, leerTabla, csv, esquemas, validacion
@@ -75,7 +75,9 @@ Estas piezas se comunican por atributos, no por imports. Si cambias el marcado, 
 | `#anuncios-pedido` | `Base.astro` | `pedido/acciones.ts` |
 | `[data-contador-pedido]` | `Encabezado.astro`, `BarraPedidoMovil.tsx` | `animaciones.ts` |
 | `[data-abrir-buscador]` | `Encabezado.astro`, `CatalogoResumido.tsx` | `Buscador.tsx` |
-| `[data-escena]` | `EscenaCapsulas.astro`, `Servicios.astro` | `3d/cargador.ts` |
+| `[data-escenario]`, `.imagen-estatica` | `PresentacionProfesional.astro`, `Servicios.astro` | `global.css` (oculta la imagen cuando la escena está lista), `3d/hero.ts` |
+| `[data-tarjeta-hero]`, `[data-foto-hero]` | `PresentacionProfesional.astro` | `3d/hero.ts` (plano oclusor y límite de las piezas) |
+| `[data-escena]`, `[data-escena-lista]` | `3d/Escena3d.tsx`, `3d/motor.ts` | `global.css`, pruebas |
 | `[data-vt]`, `[data-vt-tarjeta]` | `producto/transiciones.ts`, `Catalogo.tsx`, `CatalogoResumido.tsx` | `global.css` |
 
 ## Pendiente para el rediseño
@@ -98,4 +100,4 @@ La refactorización solo movió código. Lo siguiente queda para cuando se rehag
 Después del rediseño:
 
 - Validar las reglas de dependencia con `no-restricted-imports` en ESLint.
-- Actualizar las rutas de `docs/ESPECIFICACION.md` (`estilosCategoria.ts`) y `docs/MOVIMIENTO-Y-3D.md` (`src/scripts/3d/`).
+- Actualizar la ruta de `docs/ESPECIFICACION.md` (`estilosCategoria.ts`).

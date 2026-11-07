@@ -15,7 +15,7 @@ import {
 export const FONDO_CELADON = 0xd5e5db;
 
 export interface OpcionesMotor {
-  /** Celular o equipo modesto: menos resolución y sin antialias. */
+  /** Celular o equipo modesto: sin antialias y con menos potencia. */
   ligero: boolean;
   fov?: number;
   distancia?: number;
@@ -47,7 +47,7 @@ export function crearMotor(contenedor: HTMLElement, o: OpcionesMotor): Motor {
     antialias: !o.ligero,
     powerPreference: o.ligero ? 'low-power' : 'high-performance',
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, o.ligero ? 1.25 : 1.5));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.setClearColor(0x000000, 0);
   const canvas = renderer.domElement;
   canvas.setAttribute('aria-hidden', 'true');

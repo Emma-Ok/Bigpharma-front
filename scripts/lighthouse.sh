@@ -1,6 +1,6 @@
 #!/bin/sh
 # Lighthouse en celular y escritorio contra el build de producción. Se corre en el contenedor de Playwright:
-#   docker compose --profile pruebas run --rm pruebas sh scripts/lighthouse.sh
+#   docker compose --profile pruebas run --rm pruebas sh scripts/lighthouse.sh [rutas]
 # Deja los informes en test-results/lighthouse/ y un resumen en la consola.
 set -e
 export CHROME_PATH="$(ls -d /ms-playwright/chromium-*/chrome-linux*/chrome | head -1)"
@@ -9,7 +9,8 @@ mkdir -p "$SALIDA"
 npm run build > /dev/null 2>&1
 npx astro preview --host 127.0.0.1 --port 4322 > /dev/null 2>&1 &
 sleep 4
-for ruta in / /catalogo /producto/acetaminofen-500-mg /pedido; do
+[ $# -gt 0 ] || set -- / /catalogo /producto/acetaminofen-500-mg /pedido
+for ruta in "$@"; do
   nombre=$(echo "$ruta" | sed 's#^/##; s#/#-#g'); nombre=${nombre:-inicio}
   for modo in celular escritorio; do
     preset=""; [ "$modo" = escritorio ] && preset="--preset=desktop"

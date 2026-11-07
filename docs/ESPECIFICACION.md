@@ -53,7 +53,7 @@ Slug del producto: `nombre` normalizado (sin tildes, minúsculas, guiones) + `id
 
 - **BarraAvisos:** mensajes de `Configuracion.aviso_1..3`, sin flechas ni puntos. Avanza solo cada 6 s y se detiene con el puntero o el foco encima y con la pestaña oculta. Lleva un botón de pausa discreto, solo un ícono con `aria-label`: en escritorio aparece con hover o foco y en pantallas táctiles siempre está visible. Con movimiento reducido, solo el primer mensaje, fijo y sin botón. En escritorio, WhatsApp a la derecha; en celular no se muestra.
 - **Encabezado:** marca, navegación (Catálogo, Inyectables a domicilio, Preguntas frecuentes), botón de lupa que abre el buscador y botón de WhatsApp. En celular, menú desplegable (`aria-expanded`).
-- **PresentacionProfesional:** foto retrato grande (320–400 px de alto, `object-position: center 22%`), ficha superpuesta con nombre (`h2`), profesión, registro profesional, frase en primera persona y «Escríbeme por WhatsApp». Debajo: inscripción de la droguería, horario y domicilio.
+- **Hero y PresentacionProfesional:** tarjeta del profesional (foto con `object-position: center 22%`, nombre en `h2`, profesión y registro) en un escenario `celadon` con la escena 3D alrededor. En celular el escenario es una banda de 300 px a todo el ancho, arriba, y la tarjeta muestra solo foto, nombre y registro; debajo van el título y los botones a ancho completo. En 390×844, el título y un botón se ven sin hacer scroll. Después van la frase en primera persona, «Escríbeme por WhatsApp» y los datos de la droguería: inscripción, horario y domicilio. La foto lleva `fetchpriority="high"`.
 - **CarruselAnuncios + AnuncioLateral:** título y texto en HTML (no dentro de la imagen), foto con `alt`, flechas y puntos accesibles y botón de pausa. Avanza solo cada 6 s, con las mismas pausas que la barra de avisos, y también se desliza con el dedo. Con movimiento reducido arranca en pausa.
 - **Buscador (diálogo):** se abre desde el campo del catálogo o la lupa. Campo con botón de buscar y ✕; a la izquierda categorías y «Lo más buscado»; a la derecha «Productos destacados» o «Resultados para «…» (n)» con flechas. Búsqueda sin tildes por nombre, categoría y síntomas (palabras clave por categoría). Esc cierra y devuelve el foco.
 - **CategoriasIconos:** fila de botones circulares con ícono y nombre (`aria-pressed`); en celular se desliza horizontalmente.
@@ -152,7 +152,7 @@ En `global.css`, fuera de `@theme`, van la regla de movimiento reducido y los es
 
 ### Movimiento y 3D
 
-Ver `docs/MOVIMIENTO-Y-3D.md`: escenas 3D con three.js en la portada, los servicios, las cabeceras del catálogo y de la página 404, la ficha sin foto y las celebraciones (también en celular, cargadas con la primera interacción, con imagen estática de respaldo) y transiciones que responden a las acciones del cliente (View Transitions entre páginas y al abrir la ficha, agregar al pedido, buscador, categorías, domicilio gratis).
+Ver `docs/MOVIMIENTO-Y-3D.md`: escenas 3D con three.js en el hero, en los servicios y en la celebración (también en celular, cada una cargada cuando se va a usar, con imagen estática de respaldo) y transiciones que responden a las acciones del cliente (View Transitions entre páginas y al abrir la ficha, agregar al pedido, buscador, categorías, domicilio gratis).
 
 ## 7. Cómo leer los mockups (`diseno/`)
 
@@ -175,4 +175,4 @@ Son prototipos del canvas de diseño (formato `.dc.html`): marcado HTML con esti
 - El mensaje de WhatsApp coincide con el formato de la sección 2 (prueba unitaria).
 - Cambiar un precio en la hoja y ejecutar el deploy hook lo refleja en el sitio.
 - Con `prefers-reduced-motion: reduce` no hay desplazamientos ni escalas y no se descarga three.js.
-- Las escenas 3D no afectan el LCP (el elemento LCP es el titular) y se pausan fuera de pantalla.
+- Las escenas 3D no afectan el LCP: el canvas nunca es el elemento LCP, que es la foto del profesional o el titular. Se pausan fuera de pantalla.
