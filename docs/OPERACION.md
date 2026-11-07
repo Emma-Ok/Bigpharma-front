@@ -27,9 +27,9 @@ El código está en GitHub (`Emma-Ok/Bigpharma-front`). El workflow `.github/wor
 El proyecto ya trae el adaptador `@astrojs/cloudflare` y `wrangler.jsonc`; todo el sitio es estático, así que el Worker solo sirve los archivos de `dist/client` (con `_headers`).
 
 1. En Cloudflare: My Profile → API Tokens → Create Token → plantilla **Edit Cloudflare Workers** → elige tu cuenta → Create. Copia el token (solo se muestra una vez). Copia también el **Account ID** (Workers & Pages, columna derecha).
-2. En GitHub: Settings → Secrets and variables → Actions.
-   - Pestaña **Secrets:** `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID`.
-   - Pestaña **Variables:**
+2. En GitHub, el despliegue usa el ambiente **`qa`** (Settings → Environments → qa). Ahí, o en Settings → Secrets and variables → Actions para todo el repositorio:
+   - **Secrets:** `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID`.
+   - **Variables:**
 
    | Variable | Valor |
    |---|---|

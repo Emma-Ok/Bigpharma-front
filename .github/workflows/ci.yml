@@ -58,11 +58,12 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    # Ambiente de GitHub con los secrets y variables del despliegue. Hoy es «qa»: despliegue de prueba, sin indexar.
     environment:
-      name: produccion
+      name: qa
       url: ${{ vars.SITIO_URL }}
     concurrency:
-      group: despliegue
+      group: despliegue-qa
       cancel-in-progress: false
     env:
       SITIO_URL: ${{ vars.SITIO_URL }}

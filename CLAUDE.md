@@ -11,7 +11,7 @@ Lee `docs/ESPECIFICACION.md` antes de cualquier tarea. Los mockups de referencia
 - Datos: Google Sheets publicado como CSV, leído **en build** (`src/hoja/`). Copia local de respaldo en `datos/productos.csv` para desarrollo sin red.
 - Carrito: estado en el navegador (`localStorage`, con try/catch) compartido entre páginas.
 - Movimiento: View Transitions de Astro (`<ClientRouter />`), CSS y Web Animations API. `three` para tres escenas decorativas, cada una cargada solo cuando se va a usar: hero y jeringa de servicios (islas con `client:visible`, tras la primera interacción) y celebración del domicilio gratis (se prepara en reposo tras la primera interacción y no corre si el equipo no llega a 40 fps). Sin GPU no se carga. Ninguna animación puede bloquear la interfaz ni retrasar la apertura de WhatsApp. Detalle en `docs/MOVIMIENTO-Y-3D.md`.
-- CI/CD: GitHub Actions (`.github/workflows/ci.yml`). En cada PR y push a `main` corren `check`, Vitest y Playwright; solo en `main`, y si todo pasa, se despliega a Cloudflare Workers con `wrangler deploy`. La hoja publica con «Run workflow» (API de GitHub). Sin `SITIO_PUBLICO=si` todas las páginas llevan `noindex`.
+- CI/CD: GitHub Actions (`.github/workflows/ci.yml`). En cada PR y push a `main` corren `check`, Vitest y Playwright; solo en `main`, y si todo pasa, se despliega a Cloudflare Workers con `wrangler deploy` en el ambiente `qa` de GitHub. La hoja publica con «Run workflow» (API de GitHub). Sin `SITIO_PUBLICO=si` todas las páginas llevan `noindex`.
 
 ## Entorno
 
