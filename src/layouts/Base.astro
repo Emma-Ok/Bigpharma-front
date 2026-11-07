@@ -47,6 +47,7 @@ const aJson = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
     <meta property="og:url" content={urlCanonica} />
     <meta name="theme-color" content="#133B34" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preload" href={lexendLatin} as="font" type="font/woff2" crossorigin />
     <link rel="sitemap" href="/sitemap-index.xml" />
     {esquemas.map((e) => <script type="application/ld+json" set:html={aJson(e)} />)}
