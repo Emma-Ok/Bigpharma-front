@@ -70,7 +70,7 @@ export const ENCUADRES: Record<NombreEncuadre, Encuadre> = {
     pxPorUnidad: 50,
     piezas: [
       pieza('derecha', -34, -165, 4.5, 2.1, 0, [0.35, 0.3, -0.75], 0.4),
-      pieza('derecha', -10, 150, 3.5, 1.7, 1, [0.25, 0.5, 0.3], 1.9),
+      pieza('derecha', 6, 20, 3.5, 1.7, 1, [0.25, 0.5, 0.3], 1.9),
       pieza('derecha', -330, -262, 3, 1.5, 2, [0.5, 0.2, 1.15], 3.1),
       pieza('tarjeta', 0, -60, 0, 0.9, 0, [0.4, 0.2, 0.5], 0.8, { radio: 250, angulo: Math.PI + 0.3 }),
       pieza('tarjeta', 0, 10, 0, 0.8, 1, [1.1, 0.3, -0.4], 2.2, { radio: 250, angulo: -0.35 }),

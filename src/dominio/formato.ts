@@ -33,6 +33,11 @@ export function esMarcador(texto: string | undefined): boolean {
   return !!texto && /^\[.*\]$/.test(texto.trim());
 }
 
+/** ¿Queda algún [texto por llenar], aunque sea en parte del campo («INVIMA [número]»)? */
+export function tieneMarcador(texto: string | undefined): boolean {
+  return !!texto && /\[[^\]]*\]/.test(texto);
+}
+
 export function esUrl(texto: string | undefined): boolean {
   return !!texto && /^https?:\/\/\S+$/.test(texto.trim());
 }

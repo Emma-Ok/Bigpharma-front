@@ -1,6 +1,6 @@
 /** Convierte las filas de la hoja en datos del dominio (funciones puras). */
 import type { z } from 'astro/zod';
-import { aSlug, esMarcador, esUrl } from '@/dominio/formato';
+import { aSlug, esMarcador, esUrl, tieneMarcador } from '@/dominio/formato';
 import type { Producto } from '@/dominio/producto';
 import type { Anuncio, Configuracion } from '@/dominio/sitio';
 import { configuracionEsquema, filaAnuncio, filaProducto } from './esquemas';
@@ -20,8 +20,37 @@ function rutaDeFoto(v: string | undefined): string | undefined {
   return esUrl(v) || v.startsWith('/') ? v : undefined;
 }
 
-function contarMarcadores(filas: Record<string, string>[]): number {
-  return filas.reduce((n, fila) => n + Object.values(fila).filter(esMarcador).length, 0);
+/** La frase va entera dentro de la tarjeta del hero: más larga, la tarjeta no cabe en la banda del celular. */
+export const FRASE_MAX = 90;
+
+/** Claves con un valor de respaldo [entre corchetes] en el sitio: si faltan en la hoja, también están por llenar. */
+const CLAVES_CON_RESPALDO = ['barrio', 'autoridad_salud', 'razon_social', 'nit'];
+
+/** Campos que no se pueden publicar: siguen con [texto por llenar]. Una línea por fila. */
+export function camposPorLlenar(
+  productos: Record<string, string>[],
+  configuracion: Record<string, string>[],
+  anuncios: Record<string, string>[],
+): string[] {
+  const conMarcador = (fila: Record<string, string>) =>
+    Object.entries(fila)
+      .filter(([, v]) => tieneMarcador(v))
+      .map(([k]) => k);
+  const claves = configuracion.filter((f) => f.clave?.trim());
+  const faltan = [
+    ...claves.filter((f) => tieneMarcador(f.valor)).map((f) => f.clave.trim()),
+    ...CLAVES_CON_RESPALDO.filter((k) => !claves.some((f) => f.clave.trim() === k && f.valor?.trim())),
+  ];
+  const porFila = (pestana: string, filas: Record<string, string>[]) =>
+    filas.flatMap((fila, i) => {
+      const campos = conMarcador(fila);
+      return campos.length ? [`${pestana}, fila ${i + 2}${fila.id ? ` (id ${fila.id})` : ''}: ${campos.join(', ')}`] : [];
+    });
+  return [
+    ...(faltan.length ? [`Configuracion: ${[...new Set(faltan)].join(', ')}`] : []),
+    ...porFila('Anuncios', anuncios.filter((f) => (f.activo ?? '').trim().toLowerCase() === 'si')),
+    ...porFila('Productos', productos),
+  ];
 }
 
 export function validarProductos(filas: Record<string, string>[]): Resultado<Producto[]> {
@@ -101,9 +130,6 @@ export function validarProductos(filas: Record<string, string>[]): Resultado<Pro
     p.slug = (conteo.get(s) ?? 0) > 1 ? `${s}-${aSlug(p.id)}` : s;
   }
 
-  const marcadores = contarMarcadores(filas);
-  if (marcadores) avisos.push(`Productos: ${marcadores} campos todavía tienen [texto por llenar]`);
-
   return { datos: productos, errores, avisos };
 }
 
@@ -125,8 +151,9 @@ export function validarConfiguracion(filas: Record<string, string>[]): Resultado
   if (!/^\d{10,15}$/.test(whatsapp)) {
     avisos.push(`Configuracion: «whatsapp» (${c.whatsapp}) no es un número válido para wa.me`);
   }
-  const marcadores = Object.values(pares).filter(esMarcador).length;
-  if (marcadores) avisos.push(`Configuracion: ${marcadores} valores todavía tienen [texto por llenar]`);
+  if (c.profesional_frase && c.profesional_frase.length > FRASE_MAX) {
+    avisos.push(`Configuracion: «profesional_frase» tiene ${c.profesional_frase.length} caracteres (máximo ${FRASE_MAX})`);
+  }
 
   return {
     datos: {

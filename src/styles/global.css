@@ -108,6 +108,7 @@
   body {
     font-size: 16px;
     line-height: 1.55;
+    padding-bottom: var(--alto-barra-pedido, 0);
   }
 
   a {

@@ -6,7 +6,7 @@ set -e
 export CHROME_PATH="$(ls -d /ms-playwright/chromium-*/chrome-linux*/chrome | head -1)"
 SALIDA=test-results/lighthouse
 mkdir -p "$SALIDA"
-npm run build > /dev/null 2>&1
+DATOS_BORRADOR=1 npm run build > /dev/null 2>&1
 npx astro preview --host 127.0.0.1 --port 4322 > /dev/null 2>&1 &
 sleep 4
 [ $# -gt 0 ] || set -- / /catalogo /producto/acetaminofen-500-mg /pedido

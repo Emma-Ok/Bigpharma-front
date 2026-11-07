@@ -32,7 +32,7 @@ Todo se ejecuta **dentro del contenedor** `web` de Docker Compose (proyecto `big
 Se corren dentro del contenedor (ver «Entorno»).
 
 - `npm run dev`: desarrollo
-- `npm run build`: build estático
+- `npm run build`: build estático. Falla si la hoja tiene campos `[entre corchetes]`; con `DATOS_BORRADOR=1` compila igual, solo para pruebas locales y nunca para publicar
 - `npm run check`: `astro check` + ESLint (con reglas de accesibilidad) + `scripts/revisar-tokens.mjs` (falla con colores arbitrarios)
 - `npm run test`: Vitest (lógica de `src/dominio/` y `src/hoja/`)
 - `npm run test:e2e`: Playwright + axe contra el build de producción; corre en el servicio `pruebas` (`docker compose --profile pruebas run --rm pruebas`)

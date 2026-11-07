@@ -16,7 +16,7 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: 'npm run build && npx astro preview --host 127.0.0.1 --port 4322',
+    command: 'DATOS_BORRADOR=1 npm run build && npx astro preview --host 127.0.0.1 --port 4322',
     url: 'http://127.0.0.1:4322',
     timeout: 180_000,
     reuseExistingServer: false,

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { csvAObjetos } from '../csv';
-import { validarAnuncios, validarConfiguracion, validarProductos } from '../validacion';
+import { camposPorLlenar, FRASE_MAX, validarAnuncios, validarConfiguracion, validarProductos } from '../validacion';
 
 const leer = (archivo: string) => csvAObjetos(readFileSync(`datos/${archivo}`, 'utf8'));
 
@@ -111,5 +111,48 @@ describe('validarConfiguracion y validarAnuncios', () => {
     const { datos, errores } = validarAnuncios(filas);
     expect(errores).toEqual([]);
     expect(datos.map((a) => a.id)).toEqual(['b2', 'b3', 'lat']);
+  });
+});
+
+describe('camposPorLlenar', () => {
+  const config = (valores: Record<string, string>) => Object.entries(valores).map(([clave, valor]) => ({ clave, valor }));
+  const completa = { barrio: 'Chapinero', autoridad_salud: 'Secretaría', razon_social: 'Razón', nit: '900' };
+
+  it('lista los campos con corchetes, también en parte del texto', () => {
+    const lista = camposPorLlenar(
+      [{ id: 'a1', nombre: 'Crema', registro_sanitario: 'INVIMA [número]' }],
+      config({ ...completa, whatsapp: '57[número]', horario: 'Lunes a viernes' }),
+      [{ id: 'b1', titulo: '[Marca]: 15 %', activo: 'si' }],
+    );
+    expect(lista).toEqual([
+      'Configuracion: whatsapp',
+      'Anuncios, fila 2 (id b1): titulo',
+      'Productos, fila 2 (id a1): registro_sanitario',
+    ]);
+  });
+
+  it('avisa si falta una clave que el sitio llena con un respaldo entre corchetes', () => {
+    expect(camposPorLlenar([], config({ barrio: 'Chapinero', razon_social: 'Razón', nit: '900' }), [])).toEqual([
+      'Configuracion: autoridad_salud',
+    ]);
+  });
+
+  it('ignora los anuncios inactivos y las notas de la configuración', () => {
+    const filas = [...config(completa), { clave: 'costo_domicilio', valor: '0', notas: '[valor] para pedidos menores' }];
+    expect(camposPorLlenar([], filas, [{ id: 'b1', titulo: '[Marca]', activo: 'no' }])).toEqual([]);
+  });
+});
+
+describe('frase del profesional', () => {
+  const claves = (frase: string) =>
+    Object.entries({
+      nombre_drogueria: 'D', whatsapp: '573001234567', domicilio_gratis_desde: '60000', tiempo_entrega: '1 h',
+      zonas_cobertura: 'Z', horario: 'H', profesional_nombre: 'N', profesional_profesion: 'P', profesional_registro: 'R',
+      drogueria_codigo_inscripcion: 'C', profesional_frase: frase,
+    }).map(([clave, valor]) => ({ clave, valor }));
+
+  it(`avisa si pasa de ${FRASE_MAX} caracteres`, () => {
+    expect(validarConfiguracion(claves('a'.repeat(FRASE_MAX))).avisos).toEqual([]);
+    expect(validarConfiguracion(claves('a'.repeat(FRASE_MAX + 1))).avisos[0]).toContain('profesional_frase');
   });
 });

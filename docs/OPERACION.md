@@ -34,7 +34,7 @@ El código está en GitHub (`Emma-Ok/Bigpharma-front`) y se despliega con **Work
    | `SHEETS_PRODUCTOS_CSV_URL` | enlace CSV de la pestaña Productos |
    | `SHEETS_ANUNCIOS_CSV_URL` | enlace CSV de la pestaña Anuncios |
    | `SHEETS_CONFIGURACION_CSV_URL` | enlace CSV de la pestaña Configuracion |
-   | `DATOS_ESTRICTOS` | `1` cuando la hoja ya no tenga textos `[entre corchetes]` |
+   | `DATOS_ESTRICTOS` | `1` para que también bloqueen el build los avisos de datos (por ejemplo, un WhatsApp inválido) |
 
 4. Crea el deploy hook: en el Worker, Settings → Builds → **Deploy Hooks** → nombre «hoja», rama `main` → Create. Guarda la URL (`https://api.cloudflare.com/client/v4/workers/builds/deploy_hooks/…`): quien la tenga puede publicar el sitio. Cloudflare limita a 10 builds por minuto por Worker.
 5. Agrega tu dominio en Settings → Domains & Routes.
@@ -98,7 +98,7 @@ La fila es la de la hoja (la fila 1 son los encabezados). Si Google no responde,
 - [ ] Registro Invima o notificación sanitaria en cada producto.
 - [ ] Promociones vigentes; las vencidas, sin `precio_antes` y con el anuncio en `activo = no`.
 - [ ] WhatsApp, horario, zonas y domicilio gratis al día en Configuracion.
-- [ ] Ningún texto `[entre corchetes]` (con `DATOS_ESTRICTOS=1` el build lo bloquea).
+- [ ] Ningún texto `[entre corchetes]`: el build de producción falla y lista los campos que faltan. `DATOS_BORRADOR=1` compila igual, solo para pruebas locales; nunca se define en Cloudflare.
 - [ ] La política de datos y los términos revisados por un abogado (hoy son texto base).
 
 ## 6. Desarrollo local
