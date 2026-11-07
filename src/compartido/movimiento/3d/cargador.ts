@@ -37,18 +37,21 @@ const EVENTOS_INTERACCION = ['pointermove', 'pointerdown', 'touchstart', 'scroll
 let interactuo = false;
 const esperandoInteraccion = new Set<() => void>();
 
+function alInteractuar() {
+  interactuo = true;
+  EVENTOS_INTERACCION.forEach((e) => window.removeEventListener(e, alInteractuar));
+  esperandoInteraccion.forEach(enReposo);
+  esperandoInteraccion.clear();
+}
+
+// Se escucha desde que carga el módulo (Base.astro): las islas hidratan después y perderían un primer gesto.
+if (typeof window !== 'undefined') {
+  EVENTOS_INTERACCION.forEach((e) => window.addEventListener(e, alInteractuar, { passive: true }));
+}
+
 function alPrimeraInteraccion(fn: () => void) {
-  if (interactuo) return enReposo(fn);
-  esperandoInteraccion.add(fn);
-  if (esperandoInteraccion.size > 1) return;
-  const disparar = () => {
-    interactuo = true;
-    EVENTOS_INTERACCION.forEach((e) => window.removeEventListener(e, disparar));
-    const pendientes = [...esperandoInteraccion];
-    esperandoInteraccion.clear();
-    pendientes.forEach(enReposo);
-  };
-  EVENTOS_INTERACCION.forEach((e) => window.addEventListener(e, disparar, { passive: true, once: true }));
+  if (interactuo) enReposo(fn);
+  else esperandoInteraccion.add(fn);
 }
 
 /** Corre `fn` cuando conviene cargar 3D en este dispositivo. */

@@ -50,6 +50,8 @@ for (const movimiento of ['no-preference', 'reduce'] as const) {
 
     test('la vista rápida no tiene violaciones', async ({ page }) => {
       await page.goto('/catalogo');
+      // Antes de hidratar, el enlace navega a la página del producto (es el comportamiento sin JavaScript).
+      await page.waitForFunction(() => !document.querySelector('astro-island[component-url*="Catalogo"][ssr]'));
       await page.getByRole('link', { name: 'Protector solar FPS 50' }).click();
       await expect(page.getByRole('dialog', { name: 'Protector solar FPS 50' })).toBeVisible();
       await sinViolaciones(page, 'vista rápida');
