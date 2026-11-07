@@ -116,17 +116,24 @@ export const ENCUADRES: Record<NombreEncuadre, Encuadre> = {
   // por encima y por debajo de la tarjeta, nunca sobre el nombre o el registro.
   celular: {
     pxPorUnidad: 32,
+    // La tarjeta deja libres unos 60 px arriba y abajo (50 por debajo de 380 px): ahí va casi todo. Las de abajo
+    // quedan a 70 px de la foto como máximo, para no cruzar el borde de la banda de 200 px al girar.
     piezas: [
       pieza('derecha', -8, -80, 3, 1.3, 0, [0.35, 0.3, -1.1], 0.4),
       pieza('izquierda', 2, -72, 2.5, 1.1, 1, [0.3, 0.4, 1.05], 1.9),
-      pieza('tarjeta', 116, 74, 0, 0.7, 2, [0.4, 0.2, 1.2], 0.8, { radio: 170, angulo: Math.PI + 0.2 }),
-      pieza('tarjeta', -63, 74, -3, 0.6, 2, [0.6, 0.4, 0.9], 2.7),
-      pieza('tarjeta', 150, -80, -3.5, 0.55, 0, [1.2, 0.2, 1.3], 3.6),
-      tableta('tarjeta', -55, -70, -3, 0.6, 2, [1.1, 0.3, 0.4], 1.2),
-      tableta('tarjeta', 200, 78, -2.5, 0.65, 0, [0.5, 0.9, 0.2], 4.2),
-      tableta('tarjeta', 60, -78, -3.5, 0.55, 1, [1.3, 0.2, -0.5], 5.5),
+      pieza('derecha', -4, 66, 2.5, 1, 2, [0.2, 0.3, 1.45], 3.3),
+      pieza('tarjeta', 116, 70, 0, 0.7, 2, [0.4, 0.2, 1.2], 0.8, { radio: 170, angulo: Math.PI + 0.2 }),
+      pieza('tarjeta', 150, -80, -1.5, 0.75, 0, [1.2, 0.2, 1.3], 3.6),
+      pieza('tarjeta', 86, -72, -1.2, 0.7, 1, [0.3, 0.5, 1.5], 2.1),
+      pieza('tarjeta', 41, 70, -1.2, 0.7, 0, [0.6, 0.4, 1.3], 2.7),
+      pieza('tarjeta', 140, 70, -1.5, 0.7, 1, [0.9, 0.3, -1.2], 4.9),
+      tableta('tarjeta', 0, 0, 0, 0.5, 2, [1.2, 0.3, 0.4], 1.7, { radio: 36, angulo: Math.PI + 0.5 }),
+      tableta('tarjeta', -19, -88, -1.5, 0.8, 2, [1.1, 0.3, 0.4], 1.2),
+      tableta('tarjeta', 40, -80, -2, 0.8, 1, [1.3, 0.2, -0.5], 5.5),
+      tableta('tarjeta', 205, -72, -1.2, 0.8, 2, [0.5, 0.2, 0.9], 0.9),
+      tableta('tarjeta', 205, 70, -1.2, 0.8, 1, [0.5, 0.9, 0.2], 4.2),
     ],
-    frasco: { x: 270, y: 66, z: -1, escala: 0.62 },
+    frasco: { x: -30, y: 64, z: -1, escala: 0.7 },
   },
 };
 
