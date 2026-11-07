@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { urlProducto, type Producto, type ProductoResumen } from '@/dominio/producto';
+import type { Tienda } from '@/dominio/sitio';
 import { cargarFicha } from './fichas';
 import FichaProducto from './FichaProducto';
 import Icono from '@/compartido/ui/Icono';
@@ -8,15 +9,14 @@ import { abrirConTransicion } from '@/compartido/movimiento/animaciones';
 interface Props {
   /** Producto elegido y el elemento que abrió el diálogo (para devolverle el foco). */
   abierto: { producto: ProductoResumen; origen: HTMLElement } | null;
-  whatsapp: string;
-  entrega: string;
+  tienda: Tienda;
   onCerrar: () => void;
   /** Se llama dentro de la View Transition: la tarjeta cede su nombre de transición a la ficha. */
   onMostrar?: (id: string) => void;
 }
 
 /** Vista rápida de la ficha sobre el catálogo: <dialog> modal, Esc cierra y el foco vuelve a la tarjeta. */
-export default function DialogoFicha({ abierto, whatsapp, entrega, onCerrar, onMostrar }: Props) {
+export default function DialogoFicha({ abierto, tienda, onCerrar, onMostrar }: Props) {
   const dialogo = useRef<HTMLDialogElement>(null);
   const cerrar = useRef<HTMLButtonElement>(null);
   const [ficha, setFicha] = useState<Producto | null>(null);
@@ -91,7 +91,7 @@ export default function DialogoFicha({ abierto, whatsapp, entrega, onCerrar, onM
           >
             <Icono nombre="cerrar" grosor={2.4} />
           </button>
-          <FichaProducto producto={ficha} whatsapp={whatsapp} entrega={entrega} nivel={2} idTitulo="ficha-rapida-titulo" />
+          <FichaProducto producto={ficha} tienda={tienda} nivel={2} idTitulo="ficha-rapida-titulo" />
           <p class="mt-6 mb-0">
             <a href={urlProducto(ficha)} class="inline-flex min-h-11 items-center gap-2 font-semibold text-bottle">
               Ver la página completa del producto

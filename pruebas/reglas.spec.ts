@@ -30,21 +30,95 @@ test('un medicamento de venta libre muestra la leyenda y su JSON-LD Product', as
 test('el catálogo aplica el filtro de la URL', async ({ page }) => {
   await page.goto('/catalogo?categoria=piel');
   await expect(page.getByText('Mostrando 1–2 de 2 productos')).toBeVisible();
-  if (test.info().project.name === 'celular') await page.getByRole('button', { name: /^Filtros/ }).click();
-  await expect(page.getByRole('radio', { name: /Piel y cuidado/ })).toBeChecked();
+  await expect(page.getByRole('button', { name: 'Piel y cuidado' })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: /^Filtros/ }).click();
   await page.getByRole('checkbox', { name: 'Solo productos con descuento' }).check();
   await expect(page).toHaveURL(/categoria=piel&descuento=1/);
+  await page.getByRole('combobox', { name: 'Ordenar por' }).selectOption('nombre');
+  await page.getByRole('button', { name: /^Ver \d+ productos?$/ }).click();
+  await expect(page.getByRole('button', { name: 'Filtros (2)' })).toBeFocused();
 });
 
-test('la barra del pedido en celular muestra el avance hacia el domicilio gratis', async ({ page }, info) => {
+test('la barra del pedido en celular solo aparece con productos, reserva su espacio y abre la hoja', async ({ page }, info) => {
   test.skip(info.project.name !== 'celular', 'Solo en celular');
+  await page.goto('/catalogo');
+  const barra = page.getByRole('button', { name: /Ver pedido/ });
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(barra).toHaveCount(0);
+
   await conCarrito(page, [{ id: 'd1', cantidad: 1 }]);
   await page.goto('/catalogo');
-  await expect(page.getByText('1 producto, $42.000')).toBeVisible();
-  await expect(page.getByText('Te faltan $18.000 para el domicilio gratis')).toBeVisible();
+  await expect(barra).toContainText('1 producto · $42.000');
   await expect(page.getByRole('progressbar', { name: 'Avance hacia el domicilio gratis' })).toHaveAttribute('aria-valuenow', '70');
+  // La página reserva la altura de la barra: el final del pie no queda tapado.
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  const pie = (await page.locator('footer').boundingBox())!;
+  const techo = (await page.locator('[data-contador-pedido]').locator('xpath=ancestor::div[contains(@class,"fixed")]').boundingBox())!;
+  expect(pie.y + pie.height).toBeLessThanOrEqual(techo.y + 1);
+
+  await barra.click();
+  const hoja = page.getByRole('dialog', { name: 'Tu pedido' });
+  await expect(hoja.getByText('Te faltan $18.000 para el domicilio gratis')).toBeVisible();
+  await expect(hoja.getByRole('region', { name: 'Vista previa del mensaje' })).toContainText('• 1 × Protector solar FPS 50: $42.000');
+  await expect(hoja.getByRole('link', { name: 'Continuar con mis datos' })).toHaveAttribute('href', '/pedido');
+  await page.keyboard.press('Escape');
+  await expect(hoja).toBeHidden();
+  await expect(barra).toBeFocused();
+
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.getByRole('button', { name: 'Agregar al pedido: Crema humectante' }).click();
-  await expect(page.getByText('Tu domicilio es gratis')).toBeVisible();
+  await barra.click();
+  await expect(hoja.getByText('Tu domicilio es gratis')).toBeVisible();
+});
+
+test('los productos con fórmula llevan «Enviar mi fórmula» en la tarjeta', async ({ page }) => {
+  await page.goto('/catalogo?categoria=formula');
+  const boton = page.getByRole('link', { name: 'Enviar mi fórmula: Amoxicilina 500 mg' });
+  await expect(boton).toHaveAttribute('href', /^https:\/\/wa\.me\//);
+  await expect(boton).toHaveCSS('color', 'rgb(255, 255, 255)');
+  await expect(boton).toHaveCSS('background-color', 'rgb(168, 98, 26)');
+});
+
+test('el panel del pedido lleva a /pedido sin enviar nada', async ({ page }, info) => {
+  test.skip(info.project.name !== 'escritorio', 'El panel lateral es de escritorio');
+  await conCarrito(page, [{ id: 'a1', cantidad: 2 }]);
+  await page.goto('/catalogo');
+  const panel = page.getByRole('complementary', { name: 'Tu pedido' });
+  await expect(panel.getByRole('region', { name: 'Vista previa del mensaje' })).toHaveText(
+    /Hola, quiero hacer este pedido:\s+• 2 × Acetaminofén 500 mg: \$7\.000\s+Subtotal: \$7\.000\s+Nombre: \[tu nombre\]\s+Dirección: \[tu barrio y dirección\]\s+Pago: \[tu forma de pago\]/,
+  );
+  await expect(panel.getByRole('link', { name: 'Enviar pedido por WhatsApp' })).toHaveCount(0);
+  await panel.getByRole('link', { name: 'Continuar con mis datos' }).click();
+  await expect(page).toHaveURL(/\/pedido$/);
+  await expect(page.getByRole('button', { name: 'Enviar pedido por WhatsApp' })).toBeVisible();
+});
+
+for (const ancho of [360, 390, 768, 1024, 1440]) {
+  test(`sin scroll horizontal a ${ancho} px`, async ({ page }, info) => {
+    test.skip(info.project.name !== 'escritorio', 'Se recorren los anchos una sola vez');
+    await page.setViewportSize({ width: ancho, height: 800 });
+    await conCarrito(page, [{ id: 'd1', cantidad: 1 }]);
+    for (const ruta of ['/', '/catalogo', '/producto/acetaminofen-500-mg', '/pedido']) {
+      await page.goto(ruta);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth), ruta).toBeLessThanOrEqual(ancho);
+    }
+  });
+}
+
+test('el catálogo tiene 2 columnas hasta 599 px y 3 desde 600 px', async ({ page }) => {
+  for (const [ancho, columnas] of [[599, 2], [600, 3], [1440, 3]] as const) {
+    await page.setViewportSize({ width: ancho, height: 800 });
+    await page.goto('/catalogo');
+    const pistas = await page.locator('#resultados ul').first().evaluate((u) => getComputedStyle(u).gridTemplateColumns.split(' ').length);
+    expect(pistas).toBe(columnas);
+  }
+});
+
+test('debajo de 1200 px la búsqueda sigue visible al bajar por el catálogo', async ({ page }, info) => {
+  test.skip(info.project.name !== 'celular', 'Celular');
+  await page.goto('/catalogo');
+  await page.evaluate(() => window.scrollTo(0, 1500));
+  await expect.poll(async () => (await page.locator('#q-catalogo').boundingBox())!.y).toBeLessThan(40);
 });
 
 test('un producto agotado ofrece preguntar disponibilidad', async ({ page }) => {
@@ -233,5 +307,5 @@ test('«Ver catálogo» del inicio lleva a la página del catálogo', async ({ p
   await page.goto('/');
   await page.locator('#inicio').getByRole('link', { name: 'Ver catálogo' }).click();
   await expect(page).toHaveURL(/\/catalogo$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'Catálogo de productos' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Catálogo' })).toBeVisible();
 });

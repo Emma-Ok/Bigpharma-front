@@ -1,9 +1,8 @@
 import { categoria } from '@/dominio/categorias';
 import { urlProducto, type ProductoResumen } from '@/dominio/producto';
 import { formatearPrecio } from '@/dominio/formato';
-import { enlaceWhatsApp, mensajeDisponibilidad, mensajeFormula } from '@/dominio/whatsapp';
 import { atributosTransicion, nombresDeTransicion } from './transiciones';
-import ControlCantidad from '@/funcionalidades/pedido/ControlCantidad';
+import AccionProducto from './AccionProducto';
 import IlustracionProducto from './IlustracionProducto';
 import { FONDO_CATEGORIA, PUNTO_CATEGORIA } from '@/compartido/ui/estilosCategoria';
 
@@ -109,25 +108,7 @@ export default function TarjetaProducto({
           ) : (
             <p class="m-0 text-[13px] text-muted">Precio según disponibilidad</p>
           )}
-          {rx ? (
-            <a
-              href={enlaceWhatsApp(whatsapp, mensajeFormula(p.nombre))}
-              aria-label={`Consultar por WhatsApp con fórmula: ${p.nombre}`}
-              class="flex min-h-11 w-full items-center justify-center rounded-boton bg-amber text-center text-sm font-semibold text-blanco no-underline"
-            >
-              Consultar por WhatsApp
-            </a>
-          ) : agotado ? (
-            <a
-              href={enlaceWhatsApp(whatsapp, mensajeDisponibilidad(p.nombre))}
-              aria-label={`Preguntar disponibilidad por WhatsApp: ${p.nombre}`}
-              class="flex min-h-11 w-full items-center justify-center rounded-boton border-2 border-muted bg-blanco text-center text-sm font-semibold text-ink no-underline"
-            >
-              Preguntar disponibilidad
-            </a>
-          ) : (
-            <ControlCantidad producto={p} tamano="tarjeta" />
-          )}
+          <AccionProducto producto={p} whatsapp={whatsapp} tamano="tarjeta" />
         </div>
       </div>
     </article>

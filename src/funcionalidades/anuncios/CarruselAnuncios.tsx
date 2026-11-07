@@ -1,3 +1,4 @@
+import Boton from '@/compartido/ui/Boton';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Anuncio } from '@/dominio/sitio';
 import { alDetenerse, autoReproducir, conGesto, irA, marcarActual, type Autoplay } from './carrusel';
@@ -81,12 +82,9 @@ export default function CarruselAnuncios({ anuncios }: { anuncios: Anuncio[] }) 
               <h3 class="m-0 text-[clamp(24px,2.4vw,32px)] leading-tight font-semibold">{a.titulo}</h3>
               {a.texto && <p class="m-0 text-[15.5px] leading-relaxed text-muted">{a.texto}</p>}
               {a.enlace && a.botonTexto && (
-                <a
-                  href={a.enlace}
-                  class="mt-1 inline-flex min-h-12 items-center self-start rounded-boton bg-bottle px-5 text-[15.5px] font-semibold text-blanco no-underline"
-                >
+                <Boton tamano="compacto" class="mt-1 self-start" href={a.enlace}>
                   {a.botonTexto}
-                </a>
+                </Boton>
               )}
             </div>
             <div class="flex h-45 min-w-0 flex-[1_1_240px] items-center justify-center overflow-hidden rounded-[14px] sm:h-52.5">

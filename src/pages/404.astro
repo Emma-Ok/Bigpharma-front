@@ -1,4 +1,5 @@
 ---
+import Boton from '@/compartido/ui/Boton';
 import Base from '@/layouts/Base.astro';
 ---
 
@@ -7,9 +8,7 @@ import Base from '@/layouts/Base.astro';
     <div class="mx-auto flex w-full max-w-sitio flex-col items-start gap-4 px-margen py-16">
       <h1 class="m-0 text-[clamp(28px,3vw,38px)] leading-tight font-semibold">No encontramos esta página</h1>
       <p class="m-0 max-w-[52ch] text-muted">Puede que el producto ya no esté en el catálogo o que el enlace tenga un error.</p>
-      <a href="/catalogo" class="inline-flex min-h-12 items-center rounded-boton bg-bottle px-5 font-semibold text-blanco no-underline">
-        Ver catálogo
-      </a>
+      <Boton href="/catalogo">Ver catálogo</Boton>
     </div>
   </div>
 </Base>

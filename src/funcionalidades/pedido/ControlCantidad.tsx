@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { cantidadDe } from '@/dominio/carrito';
+import Boton from '@/compartido/ui/Boton';
 import { agregarAlPedido, cambiarCantidad } from './acciones';
 import { usarCarrito } from './usarCarrito';
 
@@ -28,21 +29,19 @@ export default function ControlCantidad({ producto, tamano }: Props) {
 
   if (cantidad === 0) {
     return (
-      <button
-        ref={agregarRef}
-        type="button"
+      <Boton
+        referencia={agregarRef}
+        tamano={ficha ? 'grande' : 'compacto'}
+        class="w-full"
         data-agregar
         aria-label={ficha ? undefined : `Agregar al pedido: ${producto.nombre}`}
         onClick={(e) => {
           enfocar.current = 'mas';
           agregarAlPedido(producto, e.currentTarget);
         }}
-        class={`w-full cursor-pointer border-0 bg-bottle font-semibold text-blanco transition-colors duration-rapida ${
-          ficha ? 'min-h-13.5 rounded-[14px] text-[17px]' : 'min-h-11 rounded-boton text-[15px]'
-        }`}
       >
         {ficha ? 'Agregar al pedido' : 'Agregar'}
-      </button>
+      </Boton>
     );
   }
 

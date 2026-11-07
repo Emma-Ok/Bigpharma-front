@@ -1,5 +1,6 @@
 ---
 import Escena3d from '@/compartido/movimiento/3d/Escena3d';
+import Boton from '@/compartido/ui/Boton';
 import Icono from '@/compartido/ui/Icono.astro';
 import type { Configuracion } from '@/dominio/sitio';
 import { enlaceWhatsApp, MENSAJE_INYECTOLOGIA } from '@/dominio/whatsapp';
@@ -29,12 +30,7 @@ const pasos = [
         <Icono nombre="info" class="mt-0.5" />
         Necesitas la orden médica vigente y el medicamento.
       </p>
-      <a
-        href={enlaceWhatsApp(config.whatsapp, MENSAJE_INYECTOLOGIA)}
-        class="inline-flex min-h-13 min-w-55 items-center justify-center self-start rounded-boton bg-bottle px-6 font-semibold text-blanco no-underline"
-      >
-        Agendar visita
-      </a>
+      <Boton href={enlaceWhatsApp(config.whatsapp, MENSAJE_INYECTOLOGIA)} class="min-w-55 self-start">Agendar visita</Boton>
     </div>
     <div class="flex min-w-0 flex-[1_1_360px] flex-col gap-6">
     <div class="relative h-56 overflow-hidden rounded-panel sm:h-64" aria-hidden="true" data-escenario>

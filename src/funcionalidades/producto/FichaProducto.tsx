@@ -2,18 +2,16 @@ import { useState } from 'preact/hooks';
 import { categoria, TIPOS } from '@/dominio/categorias';
 import type { Producto } from '@/dominio/producto';
 import { formatearPrecio } from '@/dominio/formato';
-import { enlaceWhatsApp, mensajeDisponibilidad, mensajeFormula } from '@/dominio/whatsapp';
-import ControlCantidad from '@/funcionalidades/pedido/ControlCantidad';
+import type { Tienda } from '@/dominio/sitio';
 import Icono from '@/compartido/ui/Icono';
+import AccionProducto from './AccionProducto';
 import IlustracionProducto from './IlustracionProducto';
 import { FONDO_CATEGORIA, PUNTO_CATEGORIA } from '@/compartido/ui/estilosCategoria';
 import { atributosTransicion, nombresDeTransicion } from './transiciones';
 
 interface Props {
   producto: Producto;
-  whatsapp: string;
-  /** «Domicilio en 40 minutos a Chapinero.» */
-  entrega: string;
+  tienda: Tienda;
   /** h1 en /producto/[slug], h2 en la vista rápida. */
   nivel: 1 | 2;
   idTitulo?: string;
@@ -29,7 +27,7 @@ const DISPONIBILIDAD = {
  * Ficha del producto. Indicaciones, uso y advertencias se muestran tal como
  * vienen de la hoja (copiadas del empaque o del inserto aprobado por el Invima).
  */
-export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, idTitulo = 'ficha-titulo' }: Props) {
+export default function FichaProducto({ producto: p, tienda, nivel, idTitulo = 'ficha-titulo' }: Props) {
   const [foto, setFoto] = useState(0);
   const Titulo = `h${nivel}` as 'h1' | 'h2';
   const Subtitulo = `h${nivel + 1}` as 'h2' | 'h3';
@@ -149,26 +147,10 @@ export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, i
           )}
 
           <div class="mt-1.5 flex flex-col gap-2.5">
-            {rx ? (
-              <a
-                href={enlaceWhatsApp(whatsapp, mensajeFormula(p.nombre))}
-                class="flex min-h-13.5 w-full items-center justify-center rounded-[14px] bg-amber text-base font-semibold text-blanco no-underline"
-              >
-                Enviar fórmula por WhatsApp
-              </a>
-            ) : p.disponibilidad === 'agotado' ? (
-              <a
-                href={enlaceWhatsApp(whatsapp, mensajeDisponibilidad(p.nombre))}
-                class="flex min-h-13.5 w-full items-center justify-center rounded-[14px] border-2 border-muted bg-blanco text-base font-semibold text-ink no-underline"
-              >
-                Preguntar disponibilidad por WhatsApp
-              </a>
-            ) : (
-              <ControlCantidad producto={p} tamano="ficha" />
-            )}
+            <AccionProducto producto={p} whatsapp={tienda.whatsapp} tamano="ficha" />
             <p class="m-0 flex items-start gap-2 text-sm leading-normal text-muted">
               <Icono nombre="ubicacion" tamano={18} class="mt-0.5" />
-              {entrega}
+              {tienda.entrega}
             </p>
           </div>
         </div>

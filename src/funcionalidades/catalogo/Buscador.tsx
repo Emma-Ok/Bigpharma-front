@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { buscar, filtrar, terminosDeBusqueda } from '@/dominio/busqueda';
 import { CATEGORIAS } from '@/dominio/categorias';
 import type { ProductoResumen } from '@/dominio/producto';
+import type { Tienda } from '@/dominio/sitio';
 import { enlaceWhatsApp, mensajeBusqueda } from '@/dominio/whatsapp';
+import Boton from '@/compartido/ui/Boton';
 import Icono from '@/compartido/ui/Icono';
 import TarjetaProducto from '@/funcionalidades/producto/TarjetaProducto';
 import { PUNTO_CATEGORIA } from '@/compartido/ui/estilosCategoria';
@@ -30,7 +32,7 @@ function usarPorPagina(): { porPagina: number; columnas: string } {
  * Diálogo de búsqueda. Lo abre cualquier elemento con [data-abrir-buscador]
  * (lupa del encabezado, campo de la portada). Esc cierra y el foco vuelve al que lo abrió.
  */
-export default function Buscador({ whatsapp }: { whatsapp: string }) {
+export default function Buscador({ tienda: { whatsapp } }: { tienda: Tienda }) {
   const dialogo = useRef<HTMLDialogElement>(null);
   const campo = useRef<HTMLInputElement>(null);
   const origen = useRef<HTMLElement | null>(null);
@@ -169,12 +171,9 @@ export default function Buscador({ whatsapp }: { whatsapp: string }) {
           {hayConsulta && !fuente.length && (
             <div class="flex flex-col gap-2.5 rounded-[14px] border border-dashed border-muted p-4.5">
               <p class="m-0 text-[15.5px] text-muted">Revisa cómo lo escribiste o pregúntanos si lo conseguimos.</p>
-              <a
-                href={enlaceWhatsApp(whatsapp, mensajeBusqueda(q))}
-                class="inline-flex min-h-11.5 items-center self-start rounded-boton bg-bottle px-4.5 text-[15.5px] font-semibold text-blanco no-underline"
-              >
+              <Boton tamano="compacto" class="self-start" href={enlaceWhatsApp(whatsapp, mensajeBusqueda(q))}>
                 Preguntar por WhatsApp
-              </a>
+              </Boton>
             </div>
           )}
           <ul key={`${q}-${actual}`} class={`resultados m-0 grid list-none gap-3 p-0 ${columnas}`}>

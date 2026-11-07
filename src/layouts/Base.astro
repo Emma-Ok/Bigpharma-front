@@ -8,6 +8,7 @@ import Encabezado from './Encabezado.astro';
 import Pie from './Pie.astro';
 import Buscador from '@/funcionalidades/catalogo/Buscador';
 import BarraPedidoMovil from '@/funcionalidades/pedido/BarraPedidoMovil';
+import { tiendaDe } from '@/dominio/sitio';
 import { cargarDatos } from '@/hoja/cargarDatos';
 
 interface Props {
@@ -23,6 +24,7 @@ interface Props {
 
 const { titulo, descripcion, canonica, noindex = false, jsonLd, sinBarraPedido = false } = Astro.props;
 const { configuracion } = await cargarDatos();
+const tienda = tiendaDe(configuracion);
 const urlCanonica = new URL(canonica ?? Astro.url.pathname, Astro.site).href;
 const esquemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 // Evita que un texto de la hoja cierre la etiqueta <script>.
@@ -64,8 +66,8 @@ const aJson = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
       <slot />
     </main>
     <Pie config={configuracion} />
-    {!sinBarraPedido && <BarraPedidoMovil client:load umbral={configuracion.domicilioGratisDesde} />}
-    <Buscador client:idle whatsapp={configuracion.whatsapp} />
+    {!sinBarraPedido && <BarraPedidoMovil client:load tienda={tienda} />}
+    <Buscador client:idle tienda={tienda} />
     <div id="anuncios-pedido" aria-live="polite" class="visualmente-oculto"></div>
   </body>
 </html>

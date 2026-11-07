@@ -1,4 +1,5 @@
 ---
+import Boton from '@/compartido/ui/Boton';
 import Icono from '@/compartido/ui/Icono.astro';
 import { enlaceWhatsApp, MENSAJE_GENERAL } from '@/dominio/whatsapp';
 
@@ -64,12 +65,7 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
           >0</span
         >
       </a>
-      <a
-        href={whatsappUrl}
-        class="ml-2 inline-flex min-h-11 items-center rounded-boton bg-bottle px-4.5 text-[15px] font-semibold text-blanco no-underline"
-      >
-        Escribir por WhatsApp
-      </a>
+      <Boton href={whatsappUrl} tamano="compacto" class="ml-2">Escribir por WhatsApp</Boton>
     </nav>
 
     <div class="flex gap-2 lg:hidden">

@@ -3,6 +3,7 @@ import Base from '@/layouts/Base.astro';
 import PaginaPedido from '@/funcionalidades/pedido/PaginaPedido';
 import { cargarDatos } from '@/hoja/cargarDatos';
 import { resumir } from '@/dominio/producto';
+import { tiendaDe } from '@/dominio/sitio';
 
 const { productos, configuracion } = await cargarDatos();
 ---
@@ -15,11 +16,6 @@ const { productos, configuracion } = await cargarDatos();
 >
   <div class="mx-auto flex w-full max-w-sitio flex-col gap-5 px-margen pt-6 pb-14">
     <h1 class="m-0 text-[clamp(28px,3vw,38px)] leading-tight font-semibold">Tu pedido</h1>
-    <PaginaPedido
-      client:load
-      productos={productos.map(resumir)}
-      whatsapp={configuracion.whatsapp}
-      umbral={configuracion.domicilioGratisDesde}
-    />
+    <PaginaPedido client:load productos={productos.map(resumir)} tienda={tiendaDe(configuracion)} />
   </div>
 </Base>

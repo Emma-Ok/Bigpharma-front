@@ -5,7 +5,7 @@ import type { DatosCliente } from './pedido';
 /** Mensaje del pedido, sección 2 de la especificación. */
 export function mensajePedido(
   lineas: Pick<LineaResuelta, 'cantidad' | 'subtotal' | 'producto'>[],
-  cliente: DatosCliente,
+  cliente: Omit<DatosCliente, 'pago'> & { pago: string },
 ): string {
   const total = lineas.reduce((n, l) => n + l.subtotal, 0);
   return [

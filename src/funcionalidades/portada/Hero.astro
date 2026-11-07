@@ -1,4 +1,5 @@
 ---
+import Boton from '@/compartido/ui/Boton';
 import Icono from '@/compartido/ui/Icono.astro';
 import { profesionConArticulo, type Configuracion } from '@/dominio/sitio';
 import { enlaceWhatsApp, MENSAJE_GENERAL } from '@/dominio/whatsapp';
@@ -9,7 +10,6 @@ interface Props {
 }
 
 const { config: c } = Astro.props;
-const boton = 'inline-flex min-h-12.5 w-full items-center justify-center rounded-boton px-5.5 font-semibold no-underline sm:w-auto';
 ---
 
 <section id="inicio" aria-labelledby="hero-titulo" data-escenario class="hero relative isolate overflow-hidden">
@@ -23,10 +23,10 @@ const boton = 'inline-flex min-h-12.5 w-full items-center justify-center rounded
         Droguería a domicilio en {c.barrio}. Medicamentos con y sin fórmula, inyectología a domicilio y asesoría sobre tu tratamiento. Armas el pedido aquí y yo lo reviso antes de confirmarte por WhatsApp.
       </p>
       <div style="--retraso: 180ms" class="hero-linea mt-4 flex flex-wrap gap-2.5 md:mt-6">
-        <a href="/catalogo" class={`${boton} bg-bottle text-blanco`}>Ver catálogo</a>
-        <a href={enlaceWhatsApp(c.whatsapp, MENSAJE_GENERAL)} class={`${boton} border-2 border-bottle bg-blanco text-bottle`}>
+        <Boton href="/catalogo" class="w-full sm:w-auto">Ver catálogo</Boton>
+        <Boton variante="secundario" href={enlaceWhatsApp(c.whatsapp, MENSAJE_GENERAL)} class="w-full sm:w-auto">
           Escribir por WhatsApp
-        </a>
+        </Boton>
       </div>
       <ul aria-label="Datos de la droguería" class="mt-7 mb-0 flex list-none flex-col gap-2 p-0 text-[14.5px] leading-snug md:mt-10">
         <li class="flex items-start gap-2.5">

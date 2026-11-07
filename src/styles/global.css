@@ -231,6 +231,10 @@ html:active-view-transition-type(cuadricula) {
     animation: subir-texto 480ms var(--ease-salida) 240ms both;
   }
 
+  .hoja-inferior[open] {
+    animation: subir-texto var(--transition-duration-media) var(--ease-salida);
+  }
+
   /* Ficha rápida sin View Transitions: escala de 0,96 a 1 con fundido. */
   @supports not (view-transition-name: none) {
     .dialogo-ficha[open] {

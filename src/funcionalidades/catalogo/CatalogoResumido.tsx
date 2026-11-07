@@ -1,89 +1,74 @@
-import { useCallback, useState } from 'preact/hooks';
-import { categoria as datosCategoria, type CategoriaId } from '@/dominio/categorias';
+import { useState } from 'preact/hooks';
 import { filtrar } from '@/dominio/busqueda';
+import { categoria as datosCategoria, type CategoriaId } from '@/dominio/categorias';
 import type { ProductoResumen } from '@/dominio/producto';
-import CategoriasIconos from './CategoriasIconos';
-import DialogoFicha from '@/funcionalidades/producto/DialogoFicha';
-import { precargarFicha } from '@/funcionalidades/producto/fichas';
-import Icono from '@/compartido/ui/Icono';
-import PanelPedido from '@/funcionalidades/pedido/PanelPedido';
-import TarjetaProducto from '@/funcionalidades/producto/TarjetaProducto';
+import type { Tienda } from '@/dominio/sitio';
 import { cambiarConTransicion } from '@/compartido/movimiento/animaciones';
+import Boton from '@/compartido/ui/Boton';
+import Icono from '@/compartido/ui/Icono';
+import DialogoFicha from '@/funcionalidades/producto/DialogoFicha';
+import TarjetaProducto from '@/funcionalidades/producto/TarjetaProducto';
+import { usarVistaRapida } from '@/funcionalidades/producto/usarVistaRapida';
+import CategoriasIconos from './CategoriasIconos';
+import ConPanelPedido, { GRILLA } from './ConPanelPedido';
 
 interface Props {
   productos: ProductoResumen[];
-  whatsapp: string;
-  entrega: string;
-  umbral: number;
+  tienda: Tienda;
 }
 
-/** Visibilidad por posición para mostrar exactamente 2 filas con 2, 3, 4 o 5 columnas. */
-function claseFila(i: number): string {
-  if (i >= 8) return 'hidden lg:flex';
-  if (i >= 6) return 'hidden md:flex';
-  if (i >= 4) return 'hidden sm:flex';
-  return 'flex';
-}
-
-/** Catálogo resumido de la portada: buscador, categorías, 2 filas de productos y panel del pedido. */
-export default function CatalogoResumido({ productos, whatsapp, entrega, umbral }: Props) {
+/** Catálogo resumido de la portada: 2 filas de productos (4 en 2 columnas, 6 en 3). */
+export default function CatalogoResumido({ productos, tienda }: Props) {
   const [cat, setCat] = useState<CategoriaId>();
-  const [vista, setVista] = useState<{ producto: ProductoResumen; origen: HTMLElement } | null>(null);
-  const [mostrando, setMostrando] = useState<string | null>(null);
+  const rapida = usarVistaRapida();
   const enCategoria = filtrar(productos, { categoria: cat });
   const nombreCat = cat ? datosCategoria(cat).nombre : '';
-  const cerrarVista = useCallback(() => {
-    setVista(null);
-    setMostrando(null);
-  }, []);
 
   return (
-    <>
-      <button
-        type="button"
-        data-abrir-buscador
-        aria-haspopup="dialog"
-        class="mb-4.5 flex h-14.5 w-full cursor-text items-center gap-3 rounded-[14px] border-2 border-muted bg-blanco px-4.5 text-left text-[16.5px] text-muted"
-      >
-        <Icono nombre="lupa" tamano={22} grosor={2.2} class="text-bottle" />
-        Busca por nombre o síntoma
-      </button>
-
-      <CategoriasIconos seleccion={cat} onElegir={(c) => cambiarConTransicion(() => setCat(c))} />
-
-      <div class="mt-2.5 flex flex-wrap items-start gap-8">
-        <div class="flex min-w-0 flex-[999_1_560px] flex-col gap-4.5">
-          <p aria-live="polite" class="m-0 text-[15px] text-muted">
-            {cat ? `${enCategoria.length} productos en ${nombreCat}` : 'Lo más pedido y en promoción'}
-          </p>
-          <ul class="m-0 grid list-none grid-cols-2 gap-3.5 p-0 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {enCategoria.slice(0, 10).map((p, i) => (
-              <li key={p.id} class={`min-w-0 ${claseFila(i)}`} data-vt-tarjeta style={`--vt-tarjeta: tarjeta-${p.id}`}>
-                <TarjetaProducto
-                  producto={p}
-                  whatsapp={whatsapp}
-                  onVer={(producto, origen) => setVista({ producto, origen })}
-                  sinTransicion={mostrando === p.id}
-                  elegida={vista?.producto.id === p.id}
-                  onPrecargar={(producto) => precargarFicha(producto.slug)}
-                />
-              </li>
-            ))}
-          </ul>
-          <a
-            href={cat ? `/catalogo?categoria=${cat}` : '/catalogo'}
-            class="inline-flex min-h-12.5 items-center gap-2.5 self-center rounded-boton border-2 border-bottle bg-blanco px-6 font-semibold text-bottle no-underline"
-          >
-            {cat ? `Ver más en ${nombreCat} (${enCategoria.length})` : `Ver más productos (${productos.length})`}
-            <Icono nombre="flecha" tamano={18} grosor={2.2} />
+    <div class="flex flex-col gap-4">
+      {/* Debajo de 1200 px la fila se disuelve (contents): así la búsqueda es sticky en todo el catálogo. */}
+      <div class="contents lg:flex lg:items-center lg:justify-between lg:gap-8">
+        <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+          <h2 id="cat-titulo" class="m-0 text-[clamp(26px,2.6vw,34px)] leading-tight font-semibold text-bottle">
+            Catálogo
+          </h2>
+          <a href="/catalogo" class="inline-flex min-h-11 items-center text-[15.5px] font-semibold text-bottle">
+            Ver todos los productos
           </a>
         </div>
-        <div class="hidden min-w-0 flex-[1_1_280px] self-stretch lg:block">
-          <PanelPedido umbral={umbral} productos={productos} />
+        <div class="sticky top-0 z-20 -mx-margen bg-paper px-margen py-2 lg:static lg:m-0 lg:w-120 lg:p-0">
+          <button
+            type="button"
+            data-abrir-buscador
+            aria-haspopup="dialog"
+            class="flex h-13 w-full cursor-text items-center gap-3 rounded-[14px] border-2 border-muted bg-blanco px-4 text-left text-base text-muted"
+          >
+            <Icono nombre="lupa" tamano={22} grosor={2.2} class="text-bottle" />
+            Busca por nombre o síntoma
+          </button>
         </div>
       </div>
 
-      <DialogoFicha abierto={vista} whatsapp={whatsapp} entrega={entrega} onCerrar={cerrarVista} onMostrar={setMostrando} />
-    </>
+      <CategoriasIconos seleccion={cat} onElegir={(c) => cambiarConTransicion(() => setCat(c))} />
+
+      <ConPanelPedido umbral={tienda.umbral} productos={productos}>
+        <p aria-live="polite" class="m-0 text-[15px] text-muted">
+          {cat ? `${enCategoria.length} productos en ${nombreCat}` : 'Lo más pedido y en promoción'}
+        </p>
+        <ul class={GRILLA}>
+          {enCategoria.slice(0, 6).map((p, i) => (
+            <li key={p.id} class={`min-w-0 ${i >= 4 ? 'hidden sm:flex' : 'flex'}`} data-vt-tarjeta style={`--vt-tarjeta: tarjeta-${p.id}`}>
+              <TarjetaProducto producto={p} whatsapp={tienda.whatsapp} {...rapida.tarjeta(p)} />
+            </li>
+          ))}
+        </ul>
+        <Boton variante="secundario" class="self-center" href={cat ? `/catalogo?categoria=${cat}` : '/catalogo'}>
+          {cat ? `Ver más en ${nombreCat} (${enCategoria.length})` : `Ver más productos (${productos.length})`}
+          <Icono nombre="flecha" tamano={18} grosor={2.2} />
+        </Boton>
+      </ConPanelPedido>
+
+      <DialogoFicha {...rapida.dialogo} tienda={tienda} />
+    </div>
   );
 }

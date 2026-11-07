@@ -44,3 +44,20 @@ export function profesionConArticulo(profesion: string): string {
   if (!texto || texto.startsWith('[')) return PROFESION_POR_DEFECTO;
   return `${texto.split(/\s+/)[0].endsWith('a') ? 'una' : 'un'} ${texto}`;
 }
+
+/** Lo que las islas necesitan saber de la tienda, en una sola prop. */
+export interface Tienda {
+  whatsapp: string;
+  /** «Domicilio en 40 minutos a Chapinero.» */
+  entrega: string;
+  /** Domicilio gratis desde este valor. */
+  umbral: number;
+}
+
+export function tiendaDe(c: Configuracion): Tienda {
+  return {
+    whatsapp: c.whatsapp,
+    entrega: `Domicilio en ${c.tiempoEntrega} a ${c.zonasCobertura}.`,
+    umbral: c.domicilioGratisDesde,
+  };
+}

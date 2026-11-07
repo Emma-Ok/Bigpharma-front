@@ -31,6 +31,23 @@ for (const movimiento of ['no-preference', 'reduce'] as const) {
       await sinViolaciones(page, 'buscador');
     });
 
+    test('los filtros abiertos no tienen violaciones', async ({ page }) => {
+      await page.goto('/catalogo');
+      await page.getByRole('button', { name: /^Filtros/ }).click();
+      await expect(page.getByRole('dialog', { name: 'Filtros' })).toBeVisible();
+      await sinViolaciones(page, 'filtros');
+    });
+
+    test('la hoja del pedido no tiene violaciones', async ({ page }, info) => {
+      test.skip(info.project.name !== 'celular', 'La hoja es de celular');
+      await page.goto('/robots.txt');
+      await conCarrito(page, [{ id: 'a1', cantidad: 2 }]);
+      await page.goto('/catalogo');
+      await page.getByRole('button', { name: /Ver pedido/ }).click();
+      await expect(page.getByRole('dialog', { name: 'Tu pedido' })).toBeVisible();
+      await sinViolaciones(page, 'hoja del pedido');
+    });
+
     test('la vista rápida no tiene violaciones', async ({ page }) => {
       await page.goto('/catalogo');
       await page.getByRole('link', { name: 'Protector solar FPS 50' }).click();

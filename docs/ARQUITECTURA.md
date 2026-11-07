@@ -11,18 +11,20 @@ src/
 ├── funcionalidades/
 │   ├── portada/         Hero, PresentacionProfesional, Servicios, PreguntasFrecuentes
 │   ├── anuncios/        BarraAvisos, CarruselAnuncios, AnuncioLateral, carrusel.ts
-│   ├── catalogo/        Catalogo, CatalogoResumido, Buscador, CategoriasIconos
-│   ├── producto/        TarjetaProducto, FichaProducto, DialogoFicha, IlustracionProducto,
-│   │                    fichas.ts (carga y precarga), transiciones.ts (View Transitions)
-│   └── pedido/          PaginaPedido, PanelPedido, BarraPedidoMovil, ControlCantidad,
-│                        ProgresoDomicilio, VaciarPedido, acciones.ts, usarCarrito.ts,
-│                        almacenCarrito.ts (localStorage)
+│   ├── catalogo/        Catalogo, CatalogoResumido, ConPanelPedido, Buscador, CategoriasIconos,
+│   │                    PanelFiltros, Paginacion, SinResultados, usarFiltrosCatalogo.ts
+│   ├── producto/        TarjetaProducto, FichaProducto, AccionProducto, DialogoFicha,
+│   │                    IlustracionProducto, usarVistaRapida.ts, fichas.ts (carga y precarga),
+│   │                    transiciones.ts (View Transitions)
+│   └── pedido/          PaginaPedido, ResumenPedido, FormularioPedido, PanelPedido, VistaPedido,
+│                        BarraPedidoMovil, ControlCantidad, ProgresoDomicilio, VaciarPedido,
+│                        acciones.ts, usarCarrito.ts, almacenCarrito.ts (localStorage)
 ├── compartido/
-│   ├── ui/              Icono, iconos.ts, RutaNavegacion, estilosCategoria.ts
+│   ├── ui/              Boton, HojaInferior, Icono, iconos.ts, RutaNavegacion, estilosCategoria.ts
 │   ├── catalogoCliente.ts   cargarCatalogo, usarCatalogo
 │   └── movimiento/      preferencias.ts, animaciones.ts, 3d/ (escenas e isla Escena3d)
-├── dominio/             TypeScript puro: producto, categorias, busqueda, carrito, domicilio,
-│                        pedido, whatsapp, sitio, seo, formato
+├── dominio/             TypeScript puro: producto, categorias, busqueda, filtrosCatalogo, carrito,
+│                        domicilio, pedido, whatsapp, sitio, seo, formato
 ├── hoja/                Solo build: cargarDatos, leerTabla, csv, esquemas, validacion
 ├── styles/
 └── assets/
@@ -66,6 +68,10 @@ Todavía no hay una regla de ESLint que lo valide: se cumple a mano.
 - Las pruebas van en `__tests__/` junto al código que prueban.
 - La consulta de movimiento reducido en TypeScript es `prefiereMenosMovimiento()`, de `compartido/movimiento/preferencias.ts`.
 
+## Prop `tienda`
+
+Las islas reciben `{ whatsapp, entrega, umbral }` en una sola prop, armada con `tiendaDe(configuracion)` de `dominio/sitio.ts`. El texto de entrega solo se arma ahí.
+
 ## Contratos por el DOM
 
 Estas piezas se comunican por atributos, no por imports. Si cambias el marcado, conserva estos nombres:
@@ -74,30 +80,13 @@ Estas piezas se comunican por atributos, no por imports. Si cambias el marcado, 
 |---|---|---|
 | `#anuncios-pedido` | `Base.astro` | `pedido/acciones.ts` |
 | `[data-contador-pedido]` | `Encabezado.astro`, `BarraPedidoMovil.tsx` | `animaciones.ts` |
+| `--alto-barra-pedido` | `BarraPedidoMovil.tsx` | `global.css` (reserva el espacio al final de la página) |
 | `[data-abrir-buscador]` | `Encabezado.astro`, `CatalogoResumido.tsx` | `Buscador.tsx` |
 | `[data-escenario]`, `.imagen-estatica` | `Hero.astro`, `PresentacionProfesional.astro`, `Servicios.astro` | `global.css` (oculta la imagen cuando la escena está lista), `3d/hero.ts` |
 | `[data-tarjeta-hero]`, `[data-foto-hero]` | `PresentacionProfesional.astro` | `3d/hero.ts` (plano oclusor y ancla de las piezas) |
 | `[data-escena]`, `[data-escena-lista]` | `3d/Escena3d.tsx`, `3d/motor.ts` | `global.css`, pruebas |
 | `[data-vt]`, `[data-vt-tarjeta]` | `producto/transiciones.ts`, `Catalogo.tsx`, `CatalogoResumido.tsx` | `global.css` |
 
-## Pendiente para el rediseño
-
-La refactorización solo movió código. Lo siguiente queda para cuando se rehagan `Catalogo`, `PaginaPedido`, `TarjetaProducto` y el panel del pedido:
-
-| Pieza | Ubicación | Qué resuelve |
-|---|---|---|
-| `usarFiltrosCatalogo.ts` | `funcionalidades/catalogo/` | Estado de filtros y URL, hoy en `Catalogo.tsx` |
-| `filtrosCatalogo.ts` | `dominio/` | `leerUrl` y `escribirUrl` como funciones puras con pruebas |
-| `PanelFiltros.tsx`, `Paginacion.tsx`, `SinResultados.tsx` | `funcionalidades/catalogo/` | Partes de `Catalogo.tsx` |
-| `AccionProducto.tsx` | `funcionalidades/producto/` | Fórmula, agotado o agregar, repetido en tarjeta y ficha |
-| `usarVistaRapida.ts` | `funcionalidades/producto/` | Vista rápida, repetida en `Catalogo` y `CatalogoResumido` |
-| `ResumenPedido.tsx`, `FormularioPedido.tsx` | `funcionalidades/pedido/` | Partes de `PaginaPedido.tsx` |
-| `validarDatosEntrega` | `dominio/pedido.ts` | Validación, hoy dentro de `PaginaPedido.tsx` |
-| Prop `tienda` | Páginas e islas | `{ whatsapp, entrega, umbral }` en una sola prop, con el texto de entrega armado en un solo lugar (hoy en 3 páginas) |
-
 ## Pendiente al final
 
-Después del rediseño:
-
 - Validar las reglas de dependencia con `no-restricted-imports` en ESLint.
-- Actualizar la ruta de `docs/ESPECIFICACION.md` (`estilosCategoria.ts`).

@@ -9,6 +9,7 @@ import CatalogoResumido from '@/funcionalidades/catalogo/CatalogoResumido';
 import { cargarDatos } from '@/hoja/cargarDatos';
 import { resumir } from '@/dominio/producto';
 import { farmaciaJsonLd } from '@/dominio/seo';
+import { tiendaDe } from '@/dominio/sitio';
 import { formatearPrecio } from '@/dominio/formato';
 
 const { productos, configuracion: c, anuncios } = await cargarDatos();
@@ -41,17 +42,7 @@ const lateral = anuncios.find((a) => a.ubicacion === 'lateral');
 
   <section id="catalogo" aria-labelledby="cat-titulo">
     <div class="mx-auto max-w-sitio px-margen py-[clamp(28px,4vw,44px)]">
-      <div class="mb-3.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1.5">
-        <h2 id="cat-titulo" class="m-0 text-[clamp(26px,2.6vw,34px)] leading-tight font-semibold">Catálogo</h2>
-        <a href="/catalogo" class="inline-flex min-h-11 items-center text-[15.5px] font-semibold text-bottle">Ver todos los productos</a>
-      </div>
-      <CatalogoResumido
-        client:load
-        productos={productos.map(resumir)}
-        whatsapp={c.whatsapp}
-        entrega={`Domicilio en ${c.tiempoEntrega} a ${c.zonasCobertura}.`}
-        umbral={c.domicilioGratisDesde}
-      />
+      <CatalogoResumido client:load productos={productos.map(resumir)} tienda={tiendaDe(c)} />
     </div>
   </section>
 

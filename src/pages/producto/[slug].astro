@@ -8,6 +8,7 @@ import { categoria } from '@/dominio/categorias';
 import { urlProducto, type Producto } from '@/dominio/producto';
 import { formatearPrecio } from '@/dominio/formato';
 import { migasJsonLd, productoJsonLd, type Miga } from '@/dominio/seo';
+import { tiendaDe } from '@/dominio/sitio';
 
 export const getStaticPaths = (async () => {
   const { productos } = await cargarDatos();
@@ -35,12 +36,6 @@ const esquemas = [migasJsonLd(migas, Astro.site!), productoJsonLd(producto, Astr
 <Base titulo={`${producto.nombre} | ${configuracion.nombreDrogueria}`} descripcion={descripcion} jsonLd={esquemas}>
   <div class="mx-auto flex w-full max-w-260 flex-col gap-4 px-margen pt-4 pb-14">
     <RutaNavegacion migas={migas} />
-    <FichaProducto
-      client:load
-      producto={producto}
-      whatsapp={configuracion.whatsapp}
-      entrega={`Domicilio en ${configuracion.tiempoEntrega} a ${configuracion.zonasCobertura}.`}
-      nivel={1}
-    />
+    <FichaProducto client:load producto={producto} tienda={tiendaDe(configuracion)} nivel={1} />
   </div>
 </Base>

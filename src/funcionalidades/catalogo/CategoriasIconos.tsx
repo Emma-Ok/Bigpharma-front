@@ -24,7 +24,7 @@ export default function CategoriasIconos({ seleccion, onElegir }: Props) {
     <div
       role="group"
       aria-label="Filtrar por categoría"
-      class="-mx-margen flex gap-2.5 overflow-x-auto px-margen pt-1.5 pb-3.5"
+      class="-mx-margen flex snap-x snap-mandatory scroll-px-margen gap-2.5 overflow-x-auto px-margen pt-1.5 pb-2"
     >
       {OPCIONES.map((c) => {
         const activa = seleccion === c.id;
@@ -34,7 +34,7 @@ export default function CategoriasIconos({ seleccion, onElegir }: Props) {
             type="button"
             aria-pressed={activa}
             onClick={() => onElegir(c.id)}
-            class="flex min-w-22 flex-[1_0_88px] cursor-pointer flex-col items-center gap-2 border-0 bg-transparent px-0.5 py-1 text-ink"
+            class="flex min-w-22 flex-[1_0_88px] cursor-pointer snap-start flex-col items-center gap-2 border-0 bg-transparent px-0.5 py-1 text-ink"
           >
             <span
               aria-hidden="true"

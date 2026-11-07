@@ -5,13 +5,13 @@ import Catalogo from '@/funcionalidades/catalogo/Catalogo';
 import { cargarDatos } from '@/hoja/cargarDatos';
 import { resumir } from '@/dominio/producto';
 import { migasJsonLd, type Miga } from '@/dominio/seo';
+import { tiendaDe } from '@/dominio/sitio';
 
 const { productos, configuracion } = await cargarDatos();
 const migas: Miga[] = [
   { nombre: 'Inicio', ruta: '/' },
   { nombre: 'Catálogo', ruta: '/catalogo' },
 ];
-const entrega = `Domicilio en ${configuracion.tiempoEntrega} a ${configuracion.zonasCobertura}.`;
 ---
 
 <Base
@@ -19,16 +19,8 @@ const entrega = `Domicilio en ${configuracion.tiempoEntrega} a ${configuracion.z
   descripcion="Medicamentos de venta libre, cuidado personal, bebés y primeros auxilios a domicilio. Busca por nombre o síntoma y arma tu pedido por WhatsApp."
   jsonLd={migasJsonLd(migas, Astro.site!)}
 >
-  <div class="mx-auto flex w-full max-w-sitio flex-col gap-2 px-margen pt-4">
+  <div class="mx-auto flex w-full max-w-sitio flex-col gap-3 px-margen pt-4 pb-14">
     <RutaNavegacion migas={migas} />
-    <h1 class="m-0 text-[clamp(28px,3vw,38px)] leading-tight font-semibold">Catálogo de productos</h1>
-  </div>
-  <div class="mx-auto flex w-full max-w-sitio flex-col gap-3 px-margen pt-6 pb-14">
-    <Catalogo
-      client:load
-      productos={productos.map(resumir)}
-      whatsapp={configuracion.whatsapp}
-      entrega={entrega}
-    />
+    <Catalogo client:load productos={productos.map(resumir)} tienda={tiendaDe(configuracion)} />
   </div>
 </Base>

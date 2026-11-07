@@ -24,7 +24,7 @@ Dirección: …
 Pago: Nequi
 ```
 
-Medicamentos con fórmula: botón «Enviar fórmula por WhatsApp» con mensaje «Hola, quiero consultar por <producto>. Te envío la foto de mi fórmula.».
+Medicamentos con fórmula: botón «Enviar fórmula por WhatsApp» en la ficha y «Enviar mi fórmula» en la tarjeta, con mensaje «Hola, quiero consultar por <producto>. Te envío la foto de mi fórmula.».
 
 ## 3. Fuentes de datos (Google Sheets)
 
@@ -43,7 +43,7 @@ Slug del producto: `nombre` normalizado (sin tildes, minúsculas, guiones) + `id
 | Ruta | Contenido |
 |---|---|
 | `/` | Barra de avisos, encabezado, hero con presentación del profesional, anuncios, catálogo resumido (2 filas), inyectología, preguntas frecuentes, pie |
-| `/catalogo` | Ruta de navegación, `h1`, buscador, filtros (categoría con conteo, tipo, solo con descuento), orden, cuadrícula paginada |
+| `/catalogo` | Ruta de navegación, `h1` y búsqueda, categorías, botón «Filtros» (tipo, solo con descuento y orden), cuadrícula paginada y panel del pedido |
 | `/catalogo?categoria=piel` | Mismo catálogo con filtro inicial desde la URL |
 | `/producto/[slug]` | Página estática con el contenido de la ficha (SEO). Desde el catálogo también se abre como diálogo de vista rápida |
 | `/pedido` | Resumen editable, formulario, vista previa del mensaje y envío a WhatsApp (`noindex`) |
@@ -56,10 +56,13 @@ Slug del producto: `nombre` normalizado (sin tildes, minúsculas, guiones) + `id
 - **Hero y PresentacionProfesional:** título con la profesión de la hoja y su artículo («Tus medicamentos, revisados por una química farmacéutica»; si falta el dato, «un químico farmacéutico»), subtítulo, botones y las tres líneas de datos de la droguería: inscripción, horario y domicilio. A la derecha, sobre `paper` y sin caja, la tarjeta del profesional (360 px de ancho): foto con `object-position: center 22%`, nombre en `h2`, profesión, registro y frase en primera persona (máximo 90 caracteres: si se pasa, el build avisa). La escena 3D la rodea, a toda la altura del hero y hasta el borde derecho de la ventana. En celular la escena es una banda de 300 px a todo el ancho, arriba, y la tarjeta (288 px) no muestra la profesión; debajo van el título y los botones a ancho completo. En 390×844, el título y un botón se ven sin hacer scroll. La foto lleva `fetchpriority="high"`.
 - **CarruselAnuncios + AnuncioLateral:** título y texto en HTML (no dentro de la imagen), foto con `alt`, flechas y puntos accesibles y botón de pausa. Avanza solo cada 6 s, con las mismas pausas que la barra de avisos, y también se desliza con el dedo. Con movimiento reducido arranca en pausa.
 - **Buscador (diálogo):** se abre desde el campo del catálogo o la lupa. Campo con botón de buscar y ✕; a la izquierda categorías y «Lo más buscado»; a la derecha «Productos destacados» o «Resultados para «…» (n)» con flechas. Búsqueda sin tildes por nombre, categoría y síntomas (palabras clave por categoría). Esc cierra y devuelve el foco.
-- **CategoriasIconos:** fila de botones circulares con ícono y nombre (`aria-pressed`); en celular se desliza horizontalmente.
-- **TarjetaProducto:** imagen, insignia («Con fórmula médica», «Ahorra 15 %», «Agotado»), categoría, nombre (enlace a la ficha), presentación, precio y «Antes», y botón «Agregar» que pasa a − / +. Para fórmula: «Consultar por WhatsApp». Agotado: «Preguntar disponibilidad».
+- **CategoriasIconos:** fila de botones circulares con ícono y nombre (`aria-pressed`); debajo de 1200 px se desliza horizontalmente con snap.
+- **TarjetaProducto:** imagen, insignia («Con fórmula médica», «Ahorra 15 %», «Agotado»), categoría, nombre (enlace a la ficha), presentación, precio y «Antes», alineados al fondo, y `AccionProducto`: «Agregar» que pasa a − cantidad +. Para fórmula: «Enviar mi fórmula» en ámbar. Agotado: «Preguntar disponibilidad».
 - **FichaProducto:** galería (hasta 4 fotos), condición de venta, disponibilidad, precio, precio por unidad, acciones, secciones desplegables (Para qué sirve, Cómo se usa, Advertencias), tabla «Información del producto» y leyenda obligatoria.
-- **PanelPedido / BarraPedidoMovil:** líneas, subtotal y progreso hacia el domicilio gratis («Te faltan $X para el domicilio gratis», `role="progressbar"`).
+- **Distribución del catálogo:** desde 1200 px, título y búsqueda en una fila, categorías, cuadrícula de 3 columnas y panel «Tu pedido» sticky a la derecha. Por debajo, la búsqueda es sticky, la cuadrícula tiene 2 columnas hasta 599 px y 3 desde 600 px, y el panel pasa a la barra inferior.
+- **PanelPedido / BarraPedidoMovil / HojaInferior:** el panel y la hoja muestran el subtotal, la vista previa del mensaje en una burbuja `celadon`, con [tu nombre], [tu barrio y dirección] y [tu forma de pago] por llenar, el progreso hacia el domicilio gratis («Te faltan $X para el domicilio gratis», `role="progressbar"`) y «Continuar con mis datos», que lleva a `/pedido`: ese botón todavía no envía nada. «Enviar pedido por WhatsApp» solo está en `/pedido`, junto con la autorización de la Ley 1581. La barra inferior («3 productos · $49.000», «Ver pedido») solo aparece con productos, abre la hoja y reserva su altura al final de la página.
+- **Filtros:** el botón «Filtros» abre una hoja inferior en celular y un diálogo desde 1200 px, con tipo, descuento y orden. Las categorías están en los íconos.
+- **Boton:** `compartido/ui/Boton.tsx`, con variantes `primario`, `secundario` y `formula`, y tamaños `compacto`, `normal` y `grande`.
 - **Servicios (inyectología):** texto, requisito de orden médica, pasos 1-2-3 y «Agendar visita» (WhatsApp con mensaje prellenado).
 - **PreguntasFrecuentes:** `details/summary`.
 - **Pie:** horario, cobertura, WhatsApp, medios de pago, enlaces legales, razón social, NIT y código de inscripción.
@@ -82,7 +85,7 @@ Los tokens van en `@theme` dentro de `src/styles/global.css` (Tailwind CSS v4 co
 | `--color-error` | `#A3312A` | `text-error`, `border-error` | **Solo** errores de formulario: borde del campo, texto e ícono |
 | `--color-blanco` | `#FFFFFF` | `bg-blanco`, `text-blanco` | Tarjetas, paneles y campos; texto sobre `bottle` y `amber` |
 
-Las categorías no tienen tokens propios (`src/components/estilosCategoria.ts`): el fondo del ícono es `celadon`, el punto y los rellenos son `bottle`, y en la categoría de fórmula pasan a `amber`. Son decorativos y nunca llevan texto. La categoría seleccionada lleva círculo `bottle` relleno con el ícono en `blanco`.
+Las categorías no tienen tokens propios (`src/compartido/ui/estilosCategoria.ts`): el fondo del ícono es `celadon`, el punto y los rellenos son `bottle`, y en la categoría de fórmula pasan a `amber`. Son decorativos y nunca llevan texto. La categoría seleccionada lleva círculo `bottle` relleno con el ícono en `blanco`.
 
 ### Combinaciones de texto y fondo permitidas
 
@@ -130,7 +133,7 @@ Puntos de corte (los de los mockups, reemplazan los de Tailwind con el mismo nom
 | `--breakpoint-md` | `56.25rem` (900 px) | `md:` | 4 columnas |
 | `--breakpoint-lg` | `75rem` (1200 px) | `lg:` | Escritorio: navegación completa, panel del pedido, 5 columnas |
 
-Columnas del catálogo: 2 (celular), 3, 4 y 5 (≥ 1200 px): `grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5`.
+Columnas del catálogo: 2 hasta 599 px y 3 desde 600 px: `grid-cols-2 sm:grid-cols-3`.
 
 Variante propia `hover-fino:`: hover solo con `pointer: fine` (docs/MOVIMIENTO-Y-3D.md).
 
