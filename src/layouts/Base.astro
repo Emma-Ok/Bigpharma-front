@@ -9,7 +9,7 @@ import Pie from './Pie.astro';
 import Buscador from '@/funcionalidades/catalogo/Buscador';
 import BarraPedidoMovil from '@/funcionalidades/pedido/BarraPedidoMovil';
 import { tiendaDe } from '@/dominio/sitio';
-import { cargarDatos } from '@/hoja/cargarDatos';
+import { cargarDatos, sitioPublico } from '@/hoja/cargarDatos';
 
 interface Props {
   titulo: string;
@@ -25,7 +25,10 @@ interface Props {
 const { titulo, descripcion, canonica, noindex = false, jsonLd, sinBarraPedido = false } = Astro.props;
 const { configuracion } = await cargarDatos();
 const tienda = tiendaDe(configuracion);
-const urlCanonica = new URL(canonica ?? Astro.url.pathname, Astro.site).href;
+// Con build.format 'file' la ruta del build trae «.html» («/index.html», «/catalogo.html»); la canónica
+// es la ruta limpia que sirve Cloudflare («/», «/catalogo»), la misma del sitemap.
+const rutaLimpia = (canonica ?? Astro.url.pathname).replace(/\.html$/, '').replace(/\/index$/, '/') || '/';
+const urlCanonica = new URL(rutaLimpia, Astro.site).href;
 const esquemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 // Evita que un texto de la hoja cierre la etiqueta <script>.
 const aJson = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
@@ -39,7 +42,13 @@ const aJson = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={urlCanonica} />
-    {noindex && <meta name="robots" content="noindex, follow" />}
+    {
+      !sitioPublico() ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        noindex && <meta name="robots" content="noindex, follow" />
+      )
+    }
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_CO" />
     <meta property="og:title" content={titulo} />

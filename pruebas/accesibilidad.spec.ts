@@ -67,6 +67,23 @@ test('cada página tiene title, description, canónica y un solo h1', async ({ p
     await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /.{40,}/);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /^https?:\/\//);
   }
+  // La canónica es la ruta limpia, la misma del sitemap: sin «.html» ni «index».
+  for (const [ruta, canonica] of [
+    ['/', /^https?:\/\/[^/]+\/$/],
+    ['/catalogo', /\/catalogo$/],
+    ['/producto/acetaminofen-500-mg', /\/producto\/acetaminofen-500-mg$/],
+  ] as const) {
+    await page.goto(ruta);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', canonica);
+  }
   await page.goto('/pedido');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+});
+
+test('sin SITIO_PUBLICO=si ninguna página se indexa y robots.txt no anuncia el sitemap', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+  const robots = await (await page.request.get('/robots.txt')).text();
+  expect(robots).not.toContain('Sitemap:');
+  expect(robots).not.toMatch(/Disallow: \//);
 });

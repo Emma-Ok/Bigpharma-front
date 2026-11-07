@@ -178,6 +178,6 @@ Son prototipos del canvas de diseño (formato `.dc.html`): marcado HTML con esti
 - 0 violaciones de axe en `/`, `/catalogo`, `/producto/*` y `/pedido`.
 - Todo el flujo funciona solo con teclado.
 - El mensaje de WhatsApp coincide con el formato de la sección 2 (prueba unitaria).
-- Cambiar un precio en la hoja y ejecutar el deploy hook lo refleja en el sitio.
+- Cambiar un precio en la hoja y publicar desde la hoja (o «Run workflow» en GitHub Actions) lo refleja en el sitio.
 - Con `prefers-reduced-motion: reduce` no hay desplazamientos ni escalas y no se descarga three.js.
 - Las escenas 3D no afectan el LCP: el canvas nunca es el elemento LCP, que es la foto del profesional o el titular. Se pausan fuera de pantalla.

@@ -5,7 +5,7 @@ import { csvAObjetos } from './csv';
 
 export type Tabla = 'productos' | 'configuracion' | 'anuncios';
 
-/** Variable de entorno: Cloudflare Pages la pone en process.env; en desarrollo viene de .env (import.meta.env). */
+/** Variable de entorno: en GitHub Actions llega en process.env; en desarrollo viene de .env (import.meta.env). */
 export function variable(nombre: string): string | undefined {
   const env = { ...process.env, ...(import.meta.env ?? {}) } as Record<string, string | undefined>;
   return env[nombre]?.trim() || undefined;

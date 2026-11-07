@@ -11,7 +11,7 @@ Lee `docs/ESPECIFICACION.md` antes de cualquier tarea. Los mockups de referencia
 - Datos: Google Sheets publicado como CSV, leído **en build** (`src/hoja/`). Copia local de respaldo en `datos/productos.csv` para desarrollo sin red.
 - Carrito: estado en el navegador (`localStorage`, con try/catch) compartido entre páginas.
 - Movimiento: View Transitions de Astro (`<ClientRouter />`), CSS y Web Animations API. `three` para tres escenas decorativas, cada una cargada solo cuando se va a usar: hero y jeringa de servicios (islas con `client:visible`, tras la primera interacción) y celebración del domicilio gratis (se prepara en reposo tras la primera interacción y no corre si el equipo no llega a 40 fps). Sin GPU no se carga. Ninguna animación puede bloquear la interfaz ni retrasar la apertura de WhatsApp. Detalle en `docs/MOVIMIENTO-Y-3D.md`.
-- Despliegue: Cloudflare Pages. Un deploy hook reconstruye el sitio cuando cambia la hoja.
+- CI/CD: GitHub Actions (`.github/workflows/ci.yml`). En cada PR y push a `main` corren `check`, Vitest y Playwright; solo en `main`, y si todo pasa, se despliega a Cloudflare Workers con `wrangler deploy`. La hoja publica con «Run workflow» (API de GitHub). Sin `SITIO_PUBLICO=si` todas las páginas llevan `noindex`.
 
 ## Entorno
 
@@ -32,7 +32,7 @@ Todo se ejecuta **dentro del contenedor** `web` de Docker Compose (proyecto `big
 Se corren dentro del contenedor (ver «Entorno»).
 
 - `npm run dev`: desarrollo
-- `npm run build`: build estático. Avisa de los campos `[entre corchetes]` y de los avisos de datos; con `VALIDAR_HOJA=estricto` falla y los lista. **Cuando la hoja esté llena, hay que activar `VALIDAR_HOJA=estricto` en Workers Builds.**
+- `npm run build`: build estático. Avisa de los campos `[entre corchetes]` y de los avisos de datos; con `VALIDAR_HOJA=estricto` falla y los lista. **Cuando la hoja esté llena, hay que activar `VALIDAR_HOJA=estricto` en las variables de GitHub Actions.**
 - `npm run check`: `astro check` + ESLint (con reglas de accesibilidad) + `scripts/revisar-tokens.mjs` (falla con colores arbitrarios)
 - `npm run test`: Vitest (lógica de `src/dominio/` y `src/hoja/`)
 - `npm run test:e2e`: Playwright + axe contra el build de producción; corre en el servicio `pruebas` (`docker compose --profile pruebas run --rm pruebas`)

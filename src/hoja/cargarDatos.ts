@@ -17,6 +17,12 @@ export interface DatosSitio {
 let cache: Promise<DatosSitio> | undefined;
 
 /**
+ * Solo con SITIO_PUBLICO=si los buscadores pueden indexar el sitio. Sin ella (desarrollo, pruebas y
+ * despliegues de prueba) todas las páginas llevan noindex y robots.txt no anuncia el sitemap.
+ */
+export const sitioPublico = () => variable('SITIO_PUBLICO') === 'si';
+
+/**
  * Carga y valida todo una sola vez por build. Lanza un error con la lista de problemas.
  * Con VALIDAR_HOJA=estricto, los campos [por llenar] y los avisos también detienen el build; sin ella, solo avisan.
  */
