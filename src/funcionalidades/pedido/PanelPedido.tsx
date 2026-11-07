@@ -6,7 +6,8 @@ import { cambiarCantidad } from './acciones';
 import { textoDomicilio } from '@/dominio/domicilio';
 import ProgresoDomicilio from './ProgresoDomicilio';
 import VaciarPedido from './VaciarPedido';
-import { usarCarrito, usarCatalogo } from './usarCarrito';
+import { usarCatalogo } from '@/compartido/catalogoCliente';
+import { usarCarrito } from './usarCarrito';
 
 interface Props {
   umbral: number;

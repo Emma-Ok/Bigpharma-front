@@ -5,6 +5,8 @@
  *   inicial queda libre y las piezas llegan volando cuando la persona empieza a usar la página;
  * - cada escena, solo cuando su contenedor está cerca de la pantalla.
  */
+import { prefiereMenosMovimiento } from '@/compartido/movimiento/preferencias';
+
 type Navegador = Navigator & { connection?: { saveData?: boolean }; deviceMemory?: number };
 
 let webgl: boolean | undefined;
@@ -12,7 +14,7 @@ let webgl: boolean | undefined;
 export function puedeCargar3d(): boolean {
   if (typeof window === 'undefined') return false;
   const n = navigator as Navegador;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  if (prefiereMenosMovimiento()) return false;
   if (n.connection?.saveData === true) return false;
   if (typeof n.deviceMemory === 'number' && n.deviceMemory < 2) return false;
   if (webgl === undefined) {

@@ -1,5 +1,5 @@
 ---
-import Icono from './Icono.astro';
+import Icono from '@/compartido/ui/Icono.astro';
 import { enlaceWhatsApp, MENSAJE_GENERAL, numeroVisible } from '@/dominio/whatsapp';
 
 interface Props {
@@ -82,6 +82,7 @@ const varios = avisos.length > 1;
 </style>
 
 <script>
+  import { prefiereMenosMovimiento } from '@/compartido/movimiento/preferencias';
   import { alDetenerse, autoReproducir, conGesto, irA, marcarActual } from './carrusel';
 
   // Avisos: avanzan solos cada 6 s y se pausan con el puntero, el foco, su botón o la pestaña oculta.
@@ -90,7 +91,7 @@ const varios = avisos.length > 1;
     const barra = document.querySelector<HTMLElement>('[data-avisos]');
     const pista = barra?.querySelector<HTMLElement>('[data-aviso-pista]');
     if (!barra || !pista || pista.children.length < 2) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (prefiereMenosMovimiento()) return;
     const avisos = [...pista.children] as HTMLElement[];
     const anuncio = barra.querySelector<HTMLElement>('[data-aviso-anuncio]');
     let actual = 0;

@@ -1,5 +1,5 @@
 import type { CategoriaId } from '@/dominio/categorias';
-import { RELLENO_CATEGORIA } from './estilosCategoria';
+import { RELLENO_CATEGORIA } from '@/compartido/ui/estilosCategoria';
 import { formaDe } from '@/dominio/producto';
 
 interface Props {

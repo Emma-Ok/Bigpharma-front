@@ -3,11 +3,12 @@ import { categoria as datosCategoria, type CategoriaId } from '@/dominio/categor
 import { filtrar } from '@/dominio/busqueda';
 import type { ProductoResumen } from '@/dominio/producto';
 import CategoriasIconos from './CategoriasIconos';
-import DialogoFicha, { precargarFicha } from './DialogoFicha';
-import Icono from './Icono';
-import PanelPedido from './PanelPedido';
-import TarjetaProducto from './TarjetaProducto';
-import { cambiarConTransicion } from './movimiento';
+import DialogoFicha from '@/funcionalidades/producto/DialogoFicha';
+import { precargarFicha } from '@/funcionalidades/producto/fichas';
+import Icono from '@/compartido/ui/Icono';
+import PanelPedido from '@/funcionalidades/pedido/PanelPedido';
+import TarjetaProducto from '@/funcionalidades/producto/TarjetaProducto';
+import { cambiarConTransicion } from '@/compartido/movimiento/animaciones';
 
 interface Props {
   productos: ProductoResumen[];

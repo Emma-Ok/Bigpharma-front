@@ -1,8 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { urlProducto, type Producto, type ProductoResumen } from '@/dominio/producto';
+import { cargarFicha } from './fichas';
 import FichaProducto from './FichaProducto';
-import Icono from './Icono';
-import { abrirConTransicion } from './movimiento';
+import Icono from '@/compartido/ui/Icono';
+import { abrirConTransicion } from '@/compartido/movimiento/animaciones';
 
 interface Props {
   /** Producto elegido y el elemento que abrió el diálogo (para devolverle el foco). */
@@ -12,26 +13,6 @@ interface Props {
   onCerrar: () => void;
   /** Se llama dentro de la View Transition: la tarjeta cede su nombre de transición a la ficha. */
   onMostrar?: (id: string) => void;
-}
-
-const fichas = new Map<string, Promise<Producto>>();
-
-/** Pide la ficha antes del clic (al pasar el puntero o enfocar), para abrirla sin espera. */
-export function precargarFicha(slug: string) {
-  cargarFicha(slug).catch(() => fichas.delete(slug));
-}
-
-function cargarFicha(slug: string): Promise<Producto> {
-  if (!fichas.has(slug)) {
-    fichas.set(
-      slug,
-      fetch(`/producto/${slug}.json`).then((r) => {
-        if (!r.ok) throw new Error(String(r.status));
-        return r.json() as Promise<Producto>;
-      }),
-    );
-  }
-  return fichas.get(slug)!;
 }
 
 /** Vista rápida de la ficha sobre el catálogo: <dialog> modal, Esc cierra y el foco vuelve a la tarjeta. */

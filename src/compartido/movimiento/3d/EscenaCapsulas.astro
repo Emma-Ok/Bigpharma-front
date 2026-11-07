@@ -1,8 +1,8 @@
 ---
 // Fondo decorativo con cápsulas: imagen estática (SVG en línea, generado con scripts/generar-capsulas.mjs)
-// y, cuando conviene, la escena 3D (src/scripts/3d/capsulas.ts, la monta el cargador del layout).
+// y, cuando conviene, la escena 3D (./capsulas.ts, la monta el cargador del layout).
 // Es SVG en línea y no <img>: así nunca compite como elemento LCP con el titular.
-import capsulas from '../assets/capsulas.svg?raw';
+import capsulas from '@/assets/capsulas.svg?raw';
 
 interface Props {
   /** hero: portada; banda: cabeceras (catálogo, 404), sin imagen estática. */

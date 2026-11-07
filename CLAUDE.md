@@ -55,6 +55,6 @@ Se corren dentro del contenedor (ver «Entorno»).
 
 ## Convenciones
 
-- Componentes en `src/components/` con nombre en español y PascalCase (`TarjetaProducto.tsx`, `FichaProducto.tsx`).
+- Componentes en `src/funcionalidades/<funcionalidad>/`, o en `src/compartido/ui/` si no tienen negocio, con nombre en español y PascalCase (`TarjetaProducto.tsx`, `FichaProducto.tsx`). La estructura y las reglas de dependencia están en `docs/ARQUITECTURA.md`.
 - Un único módulo de dominio en `src/dominio/` para productos, carrito y mensaje de WhatsApp, con pruebas unitarias. Es TypeScript puro: sin Preact, DOM ni Node.
 - No agregar dependencias sin justificarlo en el plan de la fase.

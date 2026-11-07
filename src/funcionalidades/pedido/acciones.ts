@@ -1,6 +1,6 @@
 import { agregar, cantidadDe, fijarCantidad, vaciar } from '@/dominio/carrito';
 import { carritoNavegador } from '@/funcionalidades/pedido/almacenCarrito';
-import { animarAgregado } from './movimiento';
+import { animarAgregado } from '@/compartido/movimiento/animaciones';
 
 /** Mensaje para lectores de pantalla en la región aria-live del layout. */
 export function anunciar(texto: string) {

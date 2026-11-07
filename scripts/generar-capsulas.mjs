@@ -3,7 +3,7 @@
 //   docker compose run --rm web node scripts/generar-capsulas.mjs
 import { writeFile } from 'node:fs/promises';
 import { Color, Euler, PerspectiveCamera, Vector3 } from 'three';
-import { CAMARA, LARGO, PARES, RADIO, RADIO_TABLETA, TABLETAS, crearPiezas } from '../src/scripts/3d/piezas.ts';
+import { CAMARA, LARGO, PARES, RADIO, RADIO_TABLETA, TABLETAS, crearPiezas } from '../src/compartido/movimiento/3d/piezas.ts';
 
 const ANCHO = 1440;
 const ALTO = 750;

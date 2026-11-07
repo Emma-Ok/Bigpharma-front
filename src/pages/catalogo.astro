@@ -1,8 +1,8 @@
 ---
-import Base from '../layouts/Base.astro';
-import RutaNavegacion from '../components/RutaNavegacion.astro';
-import EscenaCapsulas from '../components/EscenaCapsulas.astro';
-import Catalogo from '../components/Catalogo';
+import Base from '@/layouts/Base.astro';
+import RutaNavegacion from '@/compartido/ui/RutaNavegacion.astro';
+import EscenaCapsulas from '@/compartido/movimiento/3d/EscenaCapsulas.astro';
+import Catalogo from '@/funcionalidades/catalogo/Catalogo';
 import { cargarDatos } from '@/hoja/cargarDatos';
 import { resumir } from '@/dominio/producto';
 import { migasJsonLd, type Miga } from '@/dominio/seo';

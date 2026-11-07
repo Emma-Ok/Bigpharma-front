@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { progresoDomicilio } from '@/dominio/domicilio';
-import { celebrarDesde } from './movimiento';
+import { celebrarDesde } from '@/compartido/movimiento/animaciones';
 
 interface Props {
   total: number;

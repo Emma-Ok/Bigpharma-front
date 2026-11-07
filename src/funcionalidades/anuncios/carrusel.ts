@@ -4,6 +4,7 @@
  * botón). Con movimiento reducido el cambio es instantáneo y el carrusel arranca en pausa.
  * La usan la barra de avisos (script de Astro) y el carrusel de anuncios (Preact).
  */
+import { prefiereMenosMovimiento } from '@/compartido/movimiento/preferencias';
 
 function diapositivas(pista: HTMLElement): HTMLElement[] {
   return [...pista.children] as HTMLElement[];
@@ -13,8 +14,7 @@ export function irA(pista: HTMLElement, indice: number) {
   const lista = diapositivas(pista);
   if (!lista.length) return;
   const i = ((indice % lista.length) + lista.length) % lista.length;
-  const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  pista.scrollTo({ left: lista[i].offsetLeft - lista[0].offsetLeft, behavior: reducido ? 'auto' : 'smooth' });
+  pista.scrollTo({ left: lista[i].offsetLeft - lista[0].offsetLeft, behavior: prefiereMenosMovimiento() ? 'auto' : 'smooth' });
 }
 
 /** Índice de la diapositiva más cercana a la posición actual de la pista. */
@@ -117,7 +117,7 @@ export function autoReproducir(
   boton: HTMLButtonElement | null,
   alCambiar: (pausado: boolean) => void,
 ): Autoplay {
-  let pausadoPorPersona = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let pausadoPorPersona = prefiereMenosMovimiento();
   let encima = false;
   let foco = false;
   let temporizador = 0;

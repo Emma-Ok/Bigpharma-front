@@ -6,11 +6,12 @@ import { formatearPrecio } from '@/dominio/formato';
 import { enlaceWhatsApp, mensajePedido } from '@/dominio/whatsapp';
 import { FORMAS_DE_PAGO, type FormaDePago } from '@/dominio/pedido';
 import { cambiarCantidad } from './acciones';
-import { celebrarDesde } from './movimiento';
-import Icono from './Icono';
+import { celebrarDesde } from '@/compartido/movimiento/animaciones';
+import Icono from '@/compartido/ui/Icono';
 import ProgresoDomicilio from './ProgresoDomicilio';
 import VaciarPedido from './VaciarPedido';
-import { usarCarrito, usarCatalogo } from './usarCarrito';
+import { usarCatalogo } from '@/compartido/catalogoCliente';
+import { usarCarrito } from './usarCarrito';
 
 interface Props {
   productos: ProductoResumen[];

@@ -1,9 +1,6 @@
 /** Movimiento que responde a acciones del cliente (docs/MOVIMIENTO-Y-3D.md). */
-import { puedeCargar3d } from '../scripts/3d/cargador';
-
-export function prefiereMenosMovimiento(): boolean {
-  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
+import { puedeCargar3d } from './3d/cargador';
+import { prefiereMenosMovimiento } from './preferencias';
 
 /** Espera a que Preact pinte el estado nuevo (sus renders son asíncronos). */
 function siguienteRender(): Promise<void> {
@@ -100,6 +97,6 @@ export function celebrarDesde(elemento: Element): boolean {
   if (!puedeCargar3d()) return false;
   const r = elemento.getBoundingClientRect();
   const origen = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-  import('../scripts/3d/celebracion').then((m) => m.celebrar(origen)).catch(() => undefined);
+  import('@/compartido/movimiento/3d/celebracion').then((m) => m.celebrar(origen)).catch(() => undefined);
   return true;
 }

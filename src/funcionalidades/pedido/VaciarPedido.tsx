@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'preact/hooks';
 import { vaciarPedido } from './acciones';
-import Icono from './Icono';
+import Icono from '@/compartido/ui/Icono';
 
 interface Props {
   /** Dónde poner el foco después de vaciar (el botón desaparece con la lista). */

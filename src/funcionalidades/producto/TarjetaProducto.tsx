@@ -2,9 +2,10 @@ import { categoria } from '@/dominio/categorias';
 import { urlProducto, type ProductoResumen } from '@/dominio/producto';
 import { formatearPrecio } from '@/dominio/formato';
 import { enlaceWhatsApp, mensajeDisponibilidad, mensajeFormula } from '@/dominio/whatsapp';
-import ControlCantidad from './ControlCantidad';
+import { atributosTransicion, nombresDeTransicion } from './transiciones';
+import ControlCantidad from '@/funcionalidades/pedido/ControlCantidad';
 import IlustracionProducto from './IlustracionProducto';
-import { FONDO_CATEGORIA, PUNTO_CATEGORIA } from './estilosCategoria';
+import { FONDO_CATEGORIA, PUNTO_CATEGORIA } from '@/compartido/ui/estilosCategoria';
 
 interface Props {
   producto: ProductoResumen;
@@ -19,18 +20,6 @@ interface Props {
   elegida?: boolean;
   /** Se llama al pasar el puntero o enfocar el producto, para precargar su ficha. */
   onPrecargar?: (producto: ProductoResumen) => void;
-}
-
-export function nombresDeTransicion(id: string) {
-  return { foto: `producto-${id}-foto`, nombre: `producto-${id}-nombre` };
-}
-
-/**
- * Atributos de View Transition. El nombre lo aplica el CSS según el tipo de transición
- * (global.css): en el cambio de página, imagen y nombre; en la ficha rápida, solo la imagen elegida.
- */
-export function atributosTransicion(nombre: string, elegida = false) {
-  return { 'data-vt': '', 'data-vt-elegida': elegida ? '' : undefined, style: `--vt: ${nombre}` };
 }
 
 export default function TarjetaProducto({

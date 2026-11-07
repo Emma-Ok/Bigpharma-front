@@ -1,7 +1,7 @@
 import { CATEGORIAS, type CategoriaId } from '@/dominio/categorias';
-import Icono from './Icono';
-import type { NombreIcono } from './iconos';
-import { FONDO_CATEGORIA } from './estilosCategoria';
+import Icono from '@/compartido/ui/Icono';
+import type { NombreIcono } from '@/compartido/ui/iconos';
+import { FONDO_CATEGORIA } from '@/compartido/ui/estilosCategoria';
 
 interface Props {
   seleccion?: CategoriaId;

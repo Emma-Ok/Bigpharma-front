@@ -2,7 +2,8 @@ import { contarUnidades, resolverLineas, subtotal } from '@/dominio/carrito';
 import { formatearPrecio } from '@/dominio/formato';
 import { textoDomicilio } from '@/dominio/domicilio';
 import ProgresoDomicilio from './ProgresoDomicilio';
-import { usarCarrito, usarCatalogo } from './usarCarrito';
+import { usarCatalogo } from '@/compartido/catalogoCliente';
+import { usarCarrito } from './usarCarrito';
 
 /** Barra inferior del pedido en celular (debajo de 1200 px). */
 export default function BarraPedidoMovil({ umbral }: { umbral: number }) {

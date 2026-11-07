@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Anuncio } from '@/dominio/sitio';
 import { alDetenerse, autoReproducir, conGesto, irA, marcarActual, type Autoplay } from './carrusel';
-import Icono from './Icono';
-import type { NombreIcono } from './iconos';
-import { FONDO_CATEGORIA } from './estilosCategoria';
+import Icono from '@/compartido/ui/Icono';
+import type { NombreIcono } from '@/compartido/ui/iconos';
+import { FONDO_CATEGORIA } from '@/compartido/ui/estilosCategoria';
 
 /**
  * Carrusel principal: avanza solo cada 6 s (se pausa con el puntero, el foco o su botón) y desliza con

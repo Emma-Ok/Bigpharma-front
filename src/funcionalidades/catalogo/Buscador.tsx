@@ -3,10 +3,10 @@ import { buscar, filtrar, terminosDeBusqueda } from '@/dominio/busqueda';
 import { CATEGORIAS } from '@/dominio/categorias';
 import type { ProductoResumen } from '@/dominio/producto';
 import { enlaceWhatsApp, mensajeBusqueda } from '@/dominio/whatsapp';
-import Icono from './Icono';
-import TarjetaProducto from './TarjetaProducto';
-import { PUNTO_CATEGORIA } from './estilosCategoria';
-import { cargarCatalogo } from './usarCarrito';
+import Icono from '@/compartido/ui/Icono';
+import TarjetaProducto from '@/funcionalidades/producto/TarjetaProducto';
+import { PUNTO_CATEGORIA } from '@/compartido/ui/estilosCategoria';
+import { cargarCatalogo } from '@/compartido/catalogoCliente';
 
 const LO_MAS_BUSCADO = ['dolor de cabeza', 'suero', 'protector solar', 'gripa'];
 

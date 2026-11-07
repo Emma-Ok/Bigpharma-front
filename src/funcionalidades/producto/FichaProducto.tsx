@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { cuandoConvenga3d } from '../scripts/3d/cargador';
+import { cuandoConvenga3d } from '@/compartido/movimiento/3d/cargador';
 import { categoria, TIPOS } from '@/dominio/categorias';
 import type { Producto } from '@/dominio/producto';
 import { formatearPrecio } from '@/dominio/formato';
 import { enlaceWhatsApp, mensajeDisponibilidad, mensajeFormula } from '@/dominio/whatsapp';
-import ControlCantidad from './ControlCantidad';
-import Icono from './Icono';
+import ControlCantidad from '@/funcionalidades/pedido/ControlCantidad';
+import Icono from '@/compartido/ui/Icono';
 import { formaDe } from '@/dominio/producto';
 import IlustracionProducto from './IlustracionProducto';
-import { FONDO_CATEGORIA, HEX_CATEGORIA, PUNTO_CATEGORIA } from './estilosCategoria';
-import { atributosTransicion, nombresDeTransicion } from './TarjetaProducto';
+import { FONDO_CATEGORIA, HEX_CATEGORIA, PUNTO_CATEGORIA } from '@/compartido/ui/estilosCategoria';
+import { atributosTransicion, nombresDeTransicion } from './transiciones';
 
 interface Props {
   producto: Producto;
@@ -43,7 +43,7 @@ export default function FichaProducto({ producto: p, whatsapp, entrega, nivel, i
     let destruir: (() => void) | undefined;
     cuandoConvenga3d(async () => {
       if (!vigente) return;
-      const { iniciarEmpaque } = await import('../scripts/3d/empaque');
+      const { iniciarEmpaque } = await import('@/compartido/movimiento/3d/empaque');
       if (vigente && el.isConnected) {
         destruir = iniciarEmpaque(el, {
           forma: formaDe(p.presentacion, p.categoria),

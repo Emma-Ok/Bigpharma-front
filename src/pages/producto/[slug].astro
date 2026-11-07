@@ -1,8 +1,8 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import Base from '../../layouts/Base.astro';
-import RutaNavegacion from '../../components/RutaNavegacion.astro';
-import FichaProducto from '../../components/FichaProducto';
+import Base from '@/layouts/Base.astro';
+import RutaNavegacion from '@/compartido/ui/RutaNavegacion.astro';
+import FichaProducto from '@/funcionalidades/producto/FichaProducto';
 import { cargarDatos } from '@/hoja/cargarDatos';
 import { categoria } from '@/dominio/categorias';
 import { urlProducto, type Producto } from '@/dominio/producto';

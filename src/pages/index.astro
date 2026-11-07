@@ -1,12 +1,12 @@
 ---
-import Base from '../layouts/Base.astro';
-import PresentacionProfesional from '../components/PresentacionProfesional.astro';
-import AnuncioLateral from '../components/AnuncioLateral.astro';
-import Servicios from '../components/Servicios.astro';
-import PreguntasFrecuentes from '../components/PreguntasFrecuentes.astro';
-import CarruselAnuncios from '../components/CarruselAnuncios';
-import CatalogoResumido from '../components/CatalogoResumido';
-import EscenaCapsulas from '../components/EscenaCapsulas.astro';
+import Base from '@/layouts/Base.astro';
+import PresentacionProfesional from '@/funcionalidades/portada/PresentacionProfesional.astro';
+import AnuncioLateral from '@/funcionalidades/anuncios/AnuncioLateral.astro';
+import Servicios from '@/funcionalidades/portada/Servicios.astro';
+import PreguntasFrecuentes from '@/funcionalidades/portada/PreguntasFrecuentes.astro';
+import CarruselAnuncios from '@/funcionalidades/anuncios/CarruselAnuncios';
+import CatalogoResumido from '@/funcionalidades/catalogo/CatalogoResumido';
+import EscenaCapsulas from '@/compartido/movimiento/3d/EscenaCapsulas.astro';
 import { cargarDatos } from '@/hoja/cargarDatos';
 import { resumir } from '@/dominio/producto';
 import { farmaciaJsonLd } from '@/dominio/seo';

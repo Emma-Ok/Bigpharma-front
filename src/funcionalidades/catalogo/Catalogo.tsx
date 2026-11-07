@@ -3,11 +3,12 @@ import { buscar, contarPorCategoria, filtrar, ORDENES, paginar, type Orden } fro
 import { CATEGORIAS, IDS_CATEGORIA, TIPOS, type CategoriaId, type Tipo } from '@/dominio/categorias';
 import type { ProductoResumen } from '@/dominio/producto';
 import { enlaceWhatsApp, mensajeBusqueda, MENSAJE_GENERAL } from '@/dominio/whatsapp';
-import DialogoFicha, { precargarFicha } from './DialogoFicha';
-import Icono from './Icono';
-import TarjetaProducto from './TarjetaProducto';
-import { PUNTO_CATEGORIA } from './estilosCategoria';
-import { cambiarConTransicion } from './movimiento';
+import DialogoFicha from '@/funcionalidades/producto/DialogoFicha';
+import { precargarFicha } from '@/funcionalidades/producto/fichas';
+import Icono from '@/compartido/ui/Icono';
+import TarjetaProducto from '@/funcionalidades/producto/TarjetaProducto';
+import { PUNTO_CATEGORIA } from '@/compartido/ui/estilosCategoria';
+import { cambiarConTransicion } from '@/compartido/movimiento/animaciones';
 
 export const POR_PAGINA = 20;
 
