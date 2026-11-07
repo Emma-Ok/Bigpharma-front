@@ -1,4 +1,5 @@
-import { agregar, cantidadDe, carritoNavegador, fijarCantidad, vaciar } from '../lib/carrito';
+import { agregar, cantidadDe, fijarCantidad, vaciar } from '@/dominio/carrito';
+import { carritoNavegador } from '@/funcionalidades/pedido/almacenCarrito';
 import { animarAgregado } from './movimiento';
 
 /** Mensaje para lectores de pantalla en la región aria-live del layout. */

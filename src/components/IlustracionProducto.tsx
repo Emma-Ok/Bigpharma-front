@@ -1,14 +1,6 @@
-import type { CategoriaId } from '../lib/catalogo';
+import type { CategoriaId } from '@/dominio/categorias';
 import { RELLENO_CATEGORIA } from './estilosCategoria';
-
-type Forma = 'caja' | 'frasco' | 'tubo' | 'paquete';
-
-export function formaDe(presentacion: string, categoria: CategoriaId): Forma {
-  if (categoria === 'formula' || /^caja/i.test(presentacion)) return 'caja';
-  if (/^(frasco|botella)/i.test(presentacion)) return 'frasco';
-  if (/^tubo/i.test(presentacion)) return 'tubo';
-  return 'paquete';
-}
+import { formaDe } from '@/dominio/producto';
 
 interface Props {
   categoria: CategoriaId;

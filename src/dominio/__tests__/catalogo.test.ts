@@ -1,8 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { csvAObjetos } from '../csv';
-import { validarProductos } from '../datos';
-import { buscar, contarPorCategoria, filtrar, paginar, resumir, sePuedeAgregar } from '../catalogo';
+import { csvAObjetos } from '@/hoja/csv';
+import { validarProductos } from '@/hoja/validacion';
+import { buscar, contarPorCategoria, filtrar, paginar } from '../busqueda';
+import { resumir, sePuedeAgregar } from '../producto';
 
 const productos = validarProductos(csvAObjetos(readFileSync('datos/productos.csv', 'utf8'))).datos.map(resumir);
 const ids = (lista: { id: string }[]) => lista.map((p) => p.id);

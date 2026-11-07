@@ -1,7 +1,7 @@
 ---
 import Legal from '../layouts/Legal.astro';
-import { cargarDatos } from '../lib/datos';
-import { formatearPrecio } from '../lib/formato';
+import { cargarDatos } from '@/hoja/cargarDatos';
+import { formatearPrecio } from '@/dominio/formato';
 
 const { configuracion: c } = await cargarDatos();
 ---

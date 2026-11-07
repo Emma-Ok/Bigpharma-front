@@ -1,6 +1,6 @@
 ---
 import Icono from './Icono.astro';
-import { enlaceWhatsApp, MENSAJE_GENERAL } from '../lib/whatsapp';
+import { enlaceWhatsApp, MENSAJE_GENERAL } from '@/dominio/whatsapp';
 
 interface Props {
   nombre: string;
@@ -133,7 +133,8 @@ const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);
 <script>
   // Contador del pedido (escritorio): enlace a /pedido con el número de unidades. Es un script y no una
   // isla para que el runtime de islas no quede en medio de la navegación (evita un salto de diseño al cargar).
-  import { carritoNavegador, contarUnidades } from '../lib/carrito';
+  import { carritoNavegador } from '@/funcionalidades/pedido/almacenCarrito';
+  import { contarUnidades } from '@/dominio/carrito';
 
   document.addEventListener('astro:page-load', () => {
     const enlace = document.querySelector<HTMLAnchorElement>('[data-contador-enlace]');

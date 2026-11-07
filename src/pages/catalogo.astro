@@ -3,9 +3,9 @@ import Base from '../layouts/Base.astro';
 import RutaNavegacion from '../components/RutaNavegacion.astro';
 import EscenaCapsulas from '../components/EscenaCapsulas.astro';
 import Catalogo from '../components/Catalogo';
-import { cargarDatos } from '../lib/datos';
-import { resumir } from '../lib/catalogo';
-import { migasJsonLd, type Miga } from '../lib/seo';
+import { cargarDatos } from '@/hoja/cargarDatos';
+import { resumir } from '@/dominio/producto';
+import { migasJsonLd, type Miga } from '@/dominio/seo';
 
 const { productos, configuracion } = await cargarDatos();
 const migas: Miga[] = [

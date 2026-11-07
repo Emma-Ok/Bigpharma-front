@@ -1,6 +1,7 @@
-import { categoria, urlProducto, type ProductoResumen } from '../lib/catalogo';
-import { formatearPrecio } from '../lib/formato';
-import { enlaceWhatsApp, mensajeDisponibilidad, mensajeFormula } from '../lib/whatsapp';
+import { categoria } from '@/dominio/categorias';
+import { urlProducto, type ProductoResumen } from '@/dominio/producto';
+import { formatearPrecio } from '@/dominio/formato';
+import { enlaceWhatsApp, mensajeDisponibilidad, mensajeFormula } from '@/dominio/whatsapp';
 import ControlCantidad from './ControlCantidad';
 import IlustracionProducto from './IlustracionProducto';
 import { FONDO_CATEGORIA, PUNTO_CATEGORIA } from './estilosCategoria';

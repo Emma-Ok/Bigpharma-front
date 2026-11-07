@@ -1,19 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import {
-  buscar,
-  CATEGORIAS,
-  contarPorCategoria,
-  filtrar,
-  IDS_CATEGORIA,
-  ORDENES,
-  paginar,
-  TIPOS,
-  type CategoriaId,
-  type Orden,
-  type ProductoResumen,
-  type Tipo,
-} from '../lib/catalogo';
-import { enlaceWhatsApp, mensajeBusqueda, MENSAJE_GENERAL } from '../lib/whatsapp';
+import { buscar, contarPorCategoria, filtrar, ORDENES, paginar, type Orden } from '@/dominio/busqueda';
+import { CATEGORIAS, IDS_CATEGORIA, TIPOS, type CategoriaId, type Tipo } from '@/dominio/categorias';
+import type { ProductoResumen } from '@/dominio/producto';
+import { enlaceWhatsApp, mensajeBusqueda, MENSAJE_GENERAL } from '@/dominio/whatsapp';
 import DialogoFicha, { precargarFicha } from './DialogoFicha';
 import Icono from './Icono';
 import TarjetaProducto from './TarjetaProducto';

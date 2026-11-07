@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { buscar, CATEGORIAS, filtrar, terminosDeBusqueda, type ProductoResumen } from '../lib/catalogo';
-import { enlaceWhatsApp, mensajeBusqueda } from '../lib/whatsapp';
+import { buscar, filtrar, terminosDeBusqueda } from '@/dominio/busqueda';
+import { CATEGORIAS } from '@/dominio/categorias';
+import type { ProductoResumen } from '@/dominio/producto';
+import { enlaceWhatsApp, mensajeBusqueda } from '@/dominio/whatsapp';
 import Icono from './Icono';
 import TarjetaProducto from './TarjetaProducto';
 import { PUNTO_CATEGORIA } from './estilosCategoria';

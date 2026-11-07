@@ -1,6 +1,6 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
-import { cargarDatos } from '../../lib/datos';
-import type { Producto } from '../../lib/catalogo';
+import { cargarDatos } from '@/hoja/cargarDatos';
+import type { Producto } from '@/dominio/producto';
 
 export const getStaticPaths = (async () => {
   const { productos } = await cargarDatos();

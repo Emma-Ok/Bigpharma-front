@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'preact/hooks';
-import { cantidadDe } from '../lib/carrito';
+import { cantidadDe } from '@/dominio/carrito';
 import { agregarAlPedido, cambiarCantidad } from './acciones';
 import { usarCarrito } from './usarCarrito';
 

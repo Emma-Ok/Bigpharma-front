@@ -3,10 +3,11 @@ import type { GetStaticPaths } from 'astro';
 import Base from '../../layouts/Base.astro';
 import RutaNavegacion from '../../components/RutaNavegacion.astro';
 import FichaProducto from '../../components/FichaProducto';
-import { cargarDatos } from '../../lib/datos';
-import { categoria, urlProducto, type Producto } from '../../lib/catalogo';
-import { formatearPrecio } from '../../lib/formato';
-import { migasJsonLd, productoJsonLd, type Miga } from '../../lib/seo';
+import { cargarDatos } from '@/hoja/cargarDatos';
+import { categoria } from '@/dominio/categorias';
+import { urlProducto, type Producto } from '@/dominio/producto';
+import { formatearPrecio } from '@/dominio/formato';
+import { migasJsonLd, productoJsonLd, type Miga } from '@/dominio/seo';
 
 export const getStaticPaths = (async () => {
   const { productos } = await cargarDatos();

@@ -1,5 +1,7 @@
 import { useCallback, useState } from 'preact/hooks';
-import { categoria as datosCategoria, filtrar, type CategoriaId, type ProductoResumen } from '../lib/catalogo';
+import { categoria as datosCategoria, type CategoriaId } from '@/dominio/categorias';
+import { filtrar } from '@/dominio/busqueda';
+import type { ProductoResumen } from '@/dominio/producto';
 import CategoriasIconos from './CategoriasIconos';
 import DialogoFicha, { precargarFicha } from './DialogoFicha';
 import Icono from './Icono';

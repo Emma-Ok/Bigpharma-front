@@ -1,4 +1,4 @@
-import { IDS_CATEGORIA, type CategoriaId } from '../lib/catalogo';
+import { IDS_CATEGORIA, type CategoriaId } from '@/dominio/categorias';
 
 /** Valor común para todas las categorías; la de fórmula lleva amber. */
 function porCategoria<T>(general: T, formula: T) {

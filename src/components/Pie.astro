@@ -1,6 +1,7 @@
 ---
-import type { Configuracion } from '../lib/datos';
-import { enlaceWhatsApp, FORMAS_DE_PAGO, MENSAJE_GENERAL, numeroVisible } from '../lib/whatsapp';
+import type { Configuracion } from '@/dominio/sitio';
+import { enlaceWhatsApp, MENSAJE_GENERAL, numeroVisible } from '@/dominio/whatsapp';
+import { FORMAS_DE_PAGO } from '@/dominio/pedido';
 
 interface Props {
   config: Configuracion;

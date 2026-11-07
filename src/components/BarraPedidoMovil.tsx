@@ -1,6 +1,7 @@
-import { contarUnidades, resolverLineas, subtotal } from '../lib/carrito';
-import { formatearPrecio } from '../lib/formato';
-import ProgresoDomicilio, { textoDomicilio } from './ProgresoDomicilio';
+import { contarUnidades, resolverLineas, subtotal } from '@/dominio/carrito';
+import { formatearPrecio } from '@/dominio/formato';
+import { textoDomicilio } from '@/dominio/domicilio';
+import ProgresoDomicilio from './ProgresoDomicilio';
 import { usarCarrito, usarCatalogo } from './usarCarrito';
 
 /** Barra inferior del pedido en celular (debajo de 1200 px). */

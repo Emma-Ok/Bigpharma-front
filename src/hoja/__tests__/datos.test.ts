@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { csvAObjetos } from '../csv';
-import { validarAnuncios, validarConfiguracion, validarProductos } from '../datos';
+import { validarAnuncios, validarConfiguracion, validarProductos } from '../validacion';
 
 const leer = (archivo: string) => csvAObjetos(readFileSync(`datos/${archivo}`, 'utf8'));
 

@@ -8,7 +8,7 @@ Lee `docs/ESPECIFICACION.md` antes de cualquier tarea. Los mockups de referencia
 
 - Astro (salida estática) + TypeScript. Islas interactivas con Preact solo donde hace falta (buscador, carrito, carrusel, filtros, ficha).
 - Estilos: Tailwind CSS v4 con el plugin oficial de Vite (`@tailwindcss/vite`), sin `tailwind.config.js`. Los tokens van en `@theme` dentro de `src/styles/global.css`. Sin librerías de componentes de UI.
-- Datos: Google Sheets publicado como CSV, leído **en build** (`src/lib/datos.ts`). Copia local de respaldo en `datos/productos.csv` para desarrollo sin red.
+- Datos: Google Sheets publicado como CSV, leído **en build** (`src/hoja/`). Copia local de respaldo en `datos/productos.csv` para desarrollo sin red.
 - Carrito: estado en el navegador (`localStorage`, con try/catch) compartido entre páginas.
 - Movimiento: View Transitions de Astro (`<ClientRouter />`), CSS y Web Animations API. `three` para las escenas 3D decorativas (portada, servicios, cabeceras, ficha sin foto y celebraciones), cargado con la primera interacción. Detalle en `docs/MOVIMIENTO-Y-3D.md`.
 - Despliegue: Cloudflare Pages. Un deploy hook reconstruye el sitio cuando cambia la hoja.
@@ -34,7 +34,7 @@ Se corren dentro del contenedor (ver «Entorno»).
 - `npm run dev`: desarrollo
 - `npm run build`: build estático
 - `npm run check`: `astro check` + ESLint (con reglas de accesibilidad) + `scripts/revisar-tokens.mjs` (falla con colores arbitrarios)
-- `npm run test`: Vitest (lógica de `src/lib/`)
+- `npm run test`: Vitest (lógica de `src/dominio/` y `src/hoja/`)
 - `npm run test:e2e`: Playwright + axe contra el build de producción; corre en el servicio `pruebas` (`docker compose --profile pruebas run --rm pruebas`)
 
 ## Diseño
@@ -56,5 +56,5 @@ Se corren dentro del contenedor (ver «Entorno»).
 ## Convenciones
 
 - Componentes en `src/components/` con nombre en español y PascalCase (`TarjetaProducto.tsx`, `FichaProducto.tsx`).
-- Un único módulo de dominio en `src/lib/` para productos, carrito y mensaje de WhatsApp, con pruebas unitarias.
+- Un único módulo de dominio en `src/dominio/` para productos, carrito y mensaje de WhatsApp, con pruebas unitarias. Es TypeScript puro: sin Preact, DOM ni Node.
 - No agregar dependencias sin justificarlo en el plan de la fase.

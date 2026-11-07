@@ -7,11 +7,11 @@ import PreguntasFrecuentes from '../components/PreguntasFrecuentes.astro';
 import CarruselAnuncios from '../components/CarruselAnuncios';
 import CatalogoResumido from '../components/CatalogoResumido';
 import EscenaCapsulas from '../components/EscenaCapsulas.astro';
-import { cargarDatos } from '../lib/datos';
-import { resumir } from '../lib/catalogo';
-import { farmaciaJsonLd } from '../lib/seo';
-import { enlaceWhatsApp, MENSAJE_GENERAL } from '../lib/whatsapp';
-import { formatearPrecio } from '../lib/formato';
+import { cargarDatos } from '@/hoja/cargarDatos';
+import { resumir } from '@/dominio/producto';
+import { farmaciaJsonLd } from '@/dominio/seo';
+import { enlaceWhatsApp, MENSAJE_GENERAL } from '@/dominio/whatsapp';
+import { formatearPrecio } from '@/dominio/formato';
 
 const { productos, configuracion: c, anuncios } = await cargarDatos();
 const carrusel = anuncios.filter((a) => a.ubicacion === 'carrusel');

@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
-import { cargarDatos } from '../lib/datos';
-import { resumir } from '../lib/catalogo';
+import { cargarDatos } from '@/hoja/cargarDatos';
+import { resumir } from '@/dominio/producto';
 
 /** Catálogo resumido para el buscador y el carrito en el navegador. */
 export const GET: APIRoute = async () => {

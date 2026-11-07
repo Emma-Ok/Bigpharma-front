@@ -1,8 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import PaginaPedido from '../components/PaginaPedido';
-import { cargarDatos } from '../lib/datos';
-import { resumir } from '../lib/catalogo';
+import { cargarDatos } from '@/hoja/cargarDatos';
+import { resumir } from '@/dominio/producto';
 
 const { productos, configuracion } = await cargarDatos();
 ---

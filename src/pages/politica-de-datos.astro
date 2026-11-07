@@ -1,7 +1,7 @@
 ---
 import Legal from '../layouts/Legal.astro';
-import { cargarDatos } from '../lib/datos';
-import { enlaceWhatsApp, numeroVisible } from '../lib/whatsapp';
+import { cargarDatos } from '@/hoja/cargarDatos';
+import { enlaceWhatsApp, numeroVisible } from '@/dominio/whatsapp';
 
 const { configuracion: c } = await cargarDatos();
 ---

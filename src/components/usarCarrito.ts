@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
-import { carritoNavegador, type Carrito } from '../lib/carrito';
-import type { ProductoResumen } from '../lib/catalogo';
+import { carritoNavegador } from '@/funcionalidades/pedido/almacenCarrito';
+import type { Carrito } from '@/dominio/carrito';
+import type { ProductoResumen } from '@/dominio/producto';
 
 /** Carrito compartido entre islas. En el servidor (y antes de hidratar) está vacío. */
 export function usarCarrito(): Carrito {

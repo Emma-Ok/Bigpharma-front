@@ -1,4 +1,4 @@
-import { CATEGORIAS, type CategoriaId } from '../lib/catalogo';
+import { CATEGORIAS, type CategoriaId } from '@/dominio/categorias';
 import Icono from './Icono';
 import type { NombreIcono } from './iconos';
 import { FONDO_CATEGORIA } from './estilosCategoria';

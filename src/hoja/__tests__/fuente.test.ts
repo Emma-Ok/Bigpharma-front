@@ -1,7 +1,7 @@
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { leerTabla } from '../datos';
+import { leerTabla } from '../leerTabla';
 
 let servidor: Server;
 let base = '';

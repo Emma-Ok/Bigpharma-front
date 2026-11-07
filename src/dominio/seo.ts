@@ -1,5 +1,5 @@
-import type { Configuracion } from './datos';
-import { urlProducto, type Producto } from './catalogo';
+import { urlProducto, type Producto } from './producto';
+import type { Configuracion } from './sitio';
 
 const absoluta = (ruta: string, sitio: URL | string) => new URL(ruta, sitio).href;
 

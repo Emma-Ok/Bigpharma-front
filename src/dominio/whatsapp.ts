@@ -1,15 +1,6 @@
 import { formatearPrecio } from './formato';
 import type { LineaResuelta } from './carrito';
-
-export const FORMAS_DE_PAGO = ['Nequi', 'Llave Bre-B', 'Tarjeta, con link de pago', 'Efectivo al recibir'] as const;
-export type FormaDePago = (typeof FORMAS_DE_PAGO)[number];
-
-export interface DatosCliente {
-  nombre: string;
-  /** Barrio y dirección en un solo campo. */
-  direccion: string;
-  pago: FormaDePago;
-}
+import type { DatosCliente } from './pedido';
 
 /** Mensaje del pedido, sección 2 de la especificación. */
 export function mensajePedido(

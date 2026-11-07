@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { enlaceWhatsApp, mensajeFormula, mensajePedido, numeroVisible } from '../whatsapp';
 import { resolverLineas } from '../carrito';
-import type { ProductoResumen } from '../catalogo';
+import type { ProductoResumen } from '../producto';
 
 const catalogo: ProductoResumen[] = [
   {

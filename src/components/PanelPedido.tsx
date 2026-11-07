@@ -1,9 +1,10 @@
 import { useRef } from 'preact/hooks';
-import { contarUnidades, resolverLineas, subtotal } from '../lib/carrito';
-import type { ProductoResumen } from '../lib/catalogo';
-import { formatearPrecio } from '../lib/formato';
+import { contarUnidades, resolverLineas, subtotal } from '@/dominio/carrito';
+import type { ProductoResumen } from '@/dominio/producto';
+import { formatearPrecio } from '@/dominio/formato';
 import { cambiarCantidad } from './acciones';
-import ProgresoDomicilio, { textoDomicilio } from './ProgresoDomicilio';
+import { textoDomicilio } from '@/dominio/domicilio';
+import ProgresoDomicilio from './ProgresoDomicilio';
 import VaciarPedido from './VaciarPedido';
 import { usarCarrito, usarCatalogo } from './usarCarrito';
 

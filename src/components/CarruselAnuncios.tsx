@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import type { Anuncio } from '../lib/datos';
+import type { Anuncio } from '@/dominio/sitio';
 import { alDetenerse, autoReproducir, conGesto, irA, marcarActual, type Autoplay } from './carrusel';
 import Icono from './Icono';
 import type { NombreIcono } from './iconos';

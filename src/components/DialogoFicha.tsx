@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
-import { urlProducto, type Producto, type ProductoResumen } from '../lib/catalogo';
+import { urlProducto, type Producto, type ProductoResumen } from '@/dominio/producto';
 import FichaProducto from './FichaProducto';
 import Icono from './Icono';
 import { abrirConTransicion } from './movimiento';

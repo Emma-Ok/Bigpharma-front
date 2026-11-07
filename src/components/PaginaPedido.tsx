@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { contarUnidades, progresoDomicilio, resolverLineas, subtotal } from '../lib/carrito';
-import type { ProductoResumen } from '../lib/catalogo';
-import { formatearPrecio } from '../lib/formato';
-import { enlaceWhatsApp, FORMAS_DE_PAGO, mensajePedido, type FormaDePago } from '../lib/whatsapp';
+import { contarUnidades, resolverLineas, subtotal } from '@/dominio/carrito';
+import { progresoDomicilio } from '@/dominio/domicilio';
+import type { ProductoResumen } from '@/dominio/producto';
+import { formatearPrecio } from '@/dominio/formato';
+import { enlaceWhatsApp, mensajePedido } from '@/dominio/whatsapp';
+import { FORMAS_DE_PAGO, type FormaDePago } from '@/dominio/pedido';
 import { cambiarCantidad } from './acciones';
 import { celebrarDesde } from './movimiento';
 import Icono from './Icono';

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { cuandoConvenga3d } from '../scripts/3d/cargador';
-import { categoria, TIPOS, type Producto } from '../lib/catalogo';
-import { formatearPrecio } from '../lib/formato';
-import { enlaceWhatsApp, mensajeDisponibilidad, mensajeFormula } from '../lib/whatsapp';
+import { categoria, TIPOS } from '@/dominio/categorias';
+import type { Producto } from '@/dominio/producto';
+import { formatearPrecio } from '@/dominio/formato';
+import { enlaceWhatsApp, mensajeDisponibilidad, mensajeFormula } from '@/dominio/whatsapp';
 import ControlCantidad from './ControlCantidad';
 import Icono from './Icono';
-import IlustracionProducto, { formaDe } from './IlustracionProducto';
+import { formaDe } from '@/dominio/producto';
+import IlustracionProducto from './IlustracionProducto';
 import { FONDO_CATEGORIA, HEX_CATEGORIA, PUNTO_CATEGORIA } from './estilosCategoria';
 import { atributosTransicion, nombresDeTransicion } from './TarjetaProducto';
 
