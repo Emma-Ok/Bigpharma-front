@@ -19,7 +19,7 @@ Todo se ejecuta **dentro del contenedor** `web` de Docker Compose (proyecto `big
 
 - Levantar (servidor en http://localhost:4321 con recarga automática): `docker compose up -d`
 - Ver el registro del servidor: `docker compose logs -f web`
-- Detener: `docker compose down` (conserva `node_modules`; `docker compose down -v` borra también los volúmenes)
+- Detener: `docker compose down` (`node_modules` está en la carpeta del proyecto, ignorado por git, para que el editor vea los tipos; `docker compose down -v` borra la caché de npm)
 - Instalar dependencias después de cambiar `package.json`: `docker compose run --rm web npm install`
 - Agregar una dependencia: `docker compose run --rm web npm install <paquete>`
 - Correr un script con el contenedor arriba: `docker compose exec web npm run build` (igual con `check` y `test`)
@@ -39,7 +39,7 @@ Se corren dentro del contenedor (ver «Entorno»).
 
 ## Diseño
 
-- Para cualquier decisión visual (composición, tipografía, color, movimiento, nuevos componentes) carga y sigue la skill `frontend-design` en `.claude/skills/frontend-design`. Los tokens de `docs/ESPECIFICACION.md` sección 6 y los mockups de `diseno/` mandan sobre cualquier gusto por defecto.
+- Para cualquier decisión visual (composición, tipografía, color, movimiento, nuevos componentes) carga y sigue la skill `frontend-design` en `.claude/skills/frontend-design` (es local: `.claude/` no se sube a GitHub). Los tokens de `docs/ESPECIFICACION.md` sección 6 y los mockups de `diseno/` mandan sobre cualquier gusto por defecto.
 - Estilos con las utilidades de los tokens (`bg-bottle`, `text-ink`, `rounded-tarjeta`, `duration-media`, `ease-salida`). Nunca valores arbitrarios de color (`bg-[#133B34]`) ni la paleta por defecto de Tailwind: `@theme` la desactiva con `--color-*: initial`. Las transparencias usan el modificador de opacidad sobre un token (`bg-ink/45`). Si falta un token, se agrega en `global.css` y en la sección 6 de la especificación.
 - Se quedan en CSS (en `global.css`, fuera de `@theme`): la regla de `prefers-reduced-motion` y los estilos de View Transitions (`::view-transition-*`).
 - Movimiento: escenas 3D en el hero, en servicios y en la celebración, también en celular; lo demás responde a acciones del cliente, salvo la rotación de los carruseles. Respeta `prefers-reduced-motion` en cada animación: sin three.js y con los carruseles en pausa.

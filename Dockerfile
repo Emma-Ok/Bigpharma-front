@@ -1,5 +1,6 @@
-# Imagen de desarrollo: solo trae Node. El código entra como volumen y
-# node_modules vive en un volumen con nombre (ver docker-compose.yml).
+# Imagen de desarrollo: solo trae Node. El código entra como volumen, con
+# node_modules dentro de la carpeta del proyecto para que el editor vea los tipos.
+# Se instala siempre desde el contenedor (ver docker-compose.yml).
 FROM node:24.22.2-bookworm-slim
 
 ENV ASTRO_TELEMETRY_DISABLED=1 \
@@ -13,9 +14,9 @@ RUN apt-get update \
 
 WORKDIR /app
 
-# Los puntos de montaje de los volúmenes con nombre se crean aquí para que
-# Docker los inicialice con dueño node (uid 1000, el mismo usuario de WSL).
-RUN mkdir -p /app/node_modules /home/node/.npm \
+# El punto de montaje de la caché de npm se crea aquí para que Docker lo
+# inicialice con dueño node (uid 1000, el mismo usuario de WSL).
+RUN mkdir -p /home/node/.npm \
  && chown -R node:node /app /home/node/.npm
 
 USER node

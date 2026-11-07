@@ -9,7 +9,6 @@ services:
       - "4321:4321"
     volumes:
       - .:/app
-      - node_modules:/app/node_modules
       - npm-cache:/home/node/.npm
 
   # Fase de pruebas: Playwright + axe contra el servidor de "web".
@@ -27,9 +26,7 @@ services:
       BASE_URL: http://web:4321
     volumes:
       - .:/app
-      - node_modules:/app/node_modules
     command: ["npm", "run", "test:e2e"]
 
 volumes:
-  node_modules:
   npm-cache:
