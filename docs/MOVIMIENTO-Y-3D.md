@@ -12,7 +12,7 @@ Hay tres, en `src/compartido/movimiento/3d/`. Todas son decorativas: `aria-hidde
 |---|---|---|
 | Hero (`hero.ts`) | Alrededor de la tarjeta del profesional, sobre `paper`, a toda la altura del hero y hasta el borde derecho de la ventana | Cápsulas y un frasco de vidrio ámbar flotan despacio. Las más grandes van en primer plano, cortadas por el borde; otras dan la vuelta a la tarjeta, por delante y por detrás de la foto; las más pequeñas quedan al fondo. Parallax de 6° como máximo con el puntero en escritorio y con el scroll en celular |
 | Inyectología (`servicios.ts`) | Sección de servicios de la portada | Jeringa y frasco flotan y se inclinan hacia el puntero; cada pocos segundos el émbolo baja y salen gotas |
-| Celebración (`celebracion.ts`) | Al llegar al domicilio gratis y al enviar el pedido | Las piezas salen del botón o la barra y caen con gravedad. Dura menos de 2 s |
+| Celebración (`celebracion.ts`) | Al llegar al domicilio gratis | Las piezas salen de la barra de progreso y caen con gravedad. Dura menos de 2 s. Al enviar el pedido no hay celebración: WhatsApp se abre de inmediato |
 
 **Cantidad de objetos del hero:** 13 cápsulas y el frasco en escritorio (3 grandes, 3 en órbita y 7 al fondo), 5 cápsulas y el frasco en celular (2 grandes, 1 en órbita y 2 al fondo).
 
@@ -32,11 +32,11 @@ Hay tres, en `src/compartido/movimiento/3d/`. Todas son decorativas: `aria-hidde
 - `prefers-reduced-motion: reduce`
 - `navigator.connection?.saveData === true`
 - `navigator.deviceMemory < 2`, cuando el dato exista
-- WebGL no disponible
+- WebGL no disponible o por software (SwiftShader, llvmpipe): sin GPU, compilar los shaders bloquea la página varios segundos
 
 El respaldo es SVG en línea y no una imagen `.webp` para que nunca compita como elemento LCP.
 
-**Carga:** `import()` dinámico en reposo, después del evento `load` y de la primera interacción (mover el puntero, tocar, desplazar o usar el teclado). Hasta entonces se ve la imagen estática. Se probó cargar en reposo justo después de `load`, sin esperar la interacción: Lighthouse móvil dio 77 de Rendimiento con 1070 ms de TBT, contra 100 y 10 ms con la interacción. La celebración se importa al dispararse. Nunca bloquea el primer render.
+**Carga:** `import()` dinámico en reposo, después del evento `load` y de la primera interacción (mover el puntero, tocar, desplazar o usar el teclado). Hasta entonces se ve la imagen estática. Se probó cargar en reposo justo después de `load`, sin esperar la interacción: Lighthouse móvil dio 77 de Rendimiento con 1070 ms de TBT, contra 100 y 10 ms con la interacción. La celebración se prepara en reposo tras la primera interacción, cuando hay productos en el pedido y aún falta para el domicilio gratis: compila sus shaders y mide 12 cuadros. Si la mediana pasa de 25 ms (40 fps), se libera y no corre. Al dispararse no carga ni compila nada. Ninguna animación bloquea la interfaz.
 
 ## 2. Transiciones de interfaz
 

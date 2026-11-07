@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { capturarVentanas, tabularHasta, ventanasAbiertas } from './utilidades';
+import { capturarVentanas, demoraWhatsApp, tabularHasta, ventanasAbiertas } from './utilidades';
 
 test.use({ viewport: { width: 1440, height: 900 } });
 
@@ -74,10 +74,11 @@ test('el pedido completo se puede hacer solo con teclado', async ({ page }, info
   await tabularHasta(page, { contiene: 'Enviar pedido por WhatsApp' });
   await page.keyboard.press('Enter');
 
-  // WhatsApp se abre después de la celebración (650 ms). Sin GPU, compilar sus shaders bloquea el hilo varios segundos.
-  const enviado = Date.now();
-  await expect.poll(() => ventanasAbiertas(page), { timeout: 30_000 }).toHaveLength(1);
-  console.log(`WhatsApp se abrió a los ${Date.now() - enviado} ms`);
+  // WhatsApp se abre en el mismo evento del envío.
+  await expect.poll(() => ventanasAbiertas(page)).toHaveLength(1);
+  const demora = await demoraWhatsApp(page);
+  console.log(`WhatsApp se abrió a los ${demora.toFixed(1)} ms`);
+  expect(demora).toBeLessThan(50);
   const [url] = await ventanasAbiertas(page);
   expect(url).toMatch(/^https:\/\/wa\.me\/\d*\?text=/);
   expect(decodeURIComponent(url.split('?text=')[1])).toBe(

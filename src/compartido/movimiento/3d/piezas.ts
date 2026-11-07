@@ -63,7 +63,8 @@ const pieza = (
  * Primero las grandes, en primer plano y cortadas por el borde; luego las que orbitan y al final las
  * pequeñas del fondo. Si el equipo va lento, la escena se queda con la primera mitad.
  * Al arrancar, ninguna pieza de las ancladas a la tarjeta está por delante de ella: esa capa de la imagen
- * estática va debajo de la tarjeta.
+ * estática va debajo de la tarjeta. Las del fondo dejan margen con el borde inferior del hero, que a 1024 px
+ * está 355 px debajo del centro de la foto, para la deriva y el parallax.
  */
 export const ENCUADRES: Record<NombreEncuadre, Encuadre> = {
   escritorio: {
@@ -77,13 +78,13 @@ export const ENCUADRES: Record<NombreEncuadre, Encuadre> = {
       pieza('tarjeta', 0, -120, 0, 0.7, 2, [0.2, 0.9, 1.2], 4.1, { radio: 250, angulo: Math.PI + 1 }),
       pieza('tarjeta', -228, 60, -3, 0.7, 2, [0.6, 0.4, 0.9], 1.1),
       pieza('tarjeta', -220, 190, -4, 0.6, 0, [1.2, 0.2, -0.6], 2.7),
-      pieza('tarjeta', -205, 335, -2.5, 0.75, 1, [0.3, 0.8, 0.5], 3.6),
+      pieza('tarjeta', -205, 288, -2.5, 0.75, 1, [0.3, 0.8, 0.5], 3.6),
       pieza('tarjeta', 250, 70, -4.5, 0.6, 0, [0.8, 0.5, 1.3], 0.2),
       pieza('tarjeta', 300, 190, -3, 0.65, 2, [0.4, 1.1, -0.9], 5.2),
       pieza('tarjeta', 70, -165, -5, 0.55, 1, [1, 0.3, 0.2], 4.6),
-      pieza('tarjeta', -80, 385, -3.5, 0.6, 2, [0.5, 0.6, 1.4], 5.9),
+      pieza('tarjeta', -80, 298, -3.5, 0.6, 2, [0.5, 0.6, 1.4], 5.9),
     ],
-    frasco: { x: 215, y: 285, z: -1, escala: 1.15 },
+    frasco: { x: 215, y: 255, z: -1, escala: 1.15 },
   },
   // Tarjeta horizontal: el ancla es la foto, en su extremo izquierdo. Lo que va en primer plano o en órbita pasa
   // por encima y por debajo de la tarjeta, nunca sobre el nombre o el registro.

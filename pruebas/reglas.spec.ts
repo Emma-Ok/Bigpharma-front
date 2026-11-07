@@ -88,6 +88,10 @@ test('el panel del pedido lleva a /pedido sin enviar nada', async ({ page }, inf
     /Hola, quiero hacer este pedido:\s+• 2 × Acetaminofén 500 mg: \$7\.000\s+Subtotal: \$7\.000\s+Nombre: \[tu nombre\]\s+Dirección: \[tu barrio y dirección\]\s+Pago: \[tu forma de pago\]/,
   );
   await expect(panel.getByRole('link', { name: 'Enviar pedido por WhatsApp' })).toHaveCount(0);
+  // El contorno de la vista previa solo aparece con teclado.
+  const vista = panel.getByRole('region', { name: 'Vista previa del mensaje' });
+  await vista.click();
+  await expect(vista).toHaveCSS('outline-style', 'none');
   await panel.getByRole('link', { name: 'Continuar con mis datos' }).click();
   await expect(page).toHaveURL(/\/pedido$/);
   await expect(page.getByRole('button', { name: 'Enviar pedido por WhatsApp' })).toBeVisible();

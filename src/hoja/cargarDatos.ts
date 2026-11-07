@@ -18,8 +18,7 @@ let cache: Promise<DatosSitio> | undefined;
 
 /**
  * Carga y valida todo una sola vez por build. Lanza un error con la lista de problemas.
- * Un build de producción no pasa con campos [por llenar]; en desarrollo solo avisa. DATOS_BORRADOR=1 deja
- * compilar con ellos para las pruebas y Lighthouse: nunca se usa para publicar.
+ * Con VALIDAR_HOJA=estricto, los campos [por llenar] y los avisos también detienen el build; sin ella, solo avisan.
  */
 export function cargarDatos(): Promise<DatosSitio> {
   cache ??= (async () => {
@@ -33,23 +32,15 @@ export function cargarDatos(): Promise<DatosSitio> {
     const anuncios = validarAnuncios(a.filas);
     const errores = [...productos.errores, ...configuracion.errores, ...anuncios.errores];
     const avisos = [...productos.avisos, ...configuracion.avisos, ...anuncios.avisos];
-    const estricto = variable('DATOS_ESTRICTOS') === '1';
+    const estricto = variable('VALIDAR_HOJA') === 'estricto';
 
     const porLlenar = camposPorLlenar(p.filas, c.filas, a.filas);
-    const publicando = import.meta.env.PROD && variable('DATOS_BORRADOR') !== '1';
 
-    if (avisos.length) {
-      console.warn(`[datos] Avisos:\n  - ${avisos.join('\n  - ')}`);
-    }
-    if (porLlenar.length && !publicando) {
-      console.warn(`[datos] Campos [por llenar], no se puede publicar así:\n  - ${porLlenar.join('\n  - ')}`);
-    }
-    if (estricto && avisos.length) errores.push(...avisos.map((m) => `(modo estricto) ${m}`));
+    if (avisos.length) console.warn(`[datos] Avisos:\n  - ${avisos.join('\n  - ')}`);
+    if (porLlenar.length) console.warn(`[datos] Campos con [texto por llenar]:\n  - ${porLlenar.join('\n  - ')}`);
+    if (estricto) errores.push(...avisos, ...porLlenar.map((m) => `Por llenar: ${m}`));
     if (errores.length || !configuracion.datos) {
       throw new Error(`Los datos de la hoja tienen errores:\n  - ${errores.join('\n  - ')}`);
-    }
-    if (porLlenar.length && publicando) {
-      throw new Error(`Faltan datos en la hoja antes de publicar. Campos con [texto por llenar]:\n  - ${porLlenar.join('\n  - ')}`);
     }
     return {
       productos: productos.datos,

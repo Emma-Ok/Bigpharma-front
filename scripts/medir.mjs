@@ -1,6 +1,6 @@
 // Mide LCP (y qué elemento es) y el JS que descarga la portada, en celular (4G lento + CPU ×4) y escritorio.
 // Se corre en el contenedor de Playwright contra el build de producción:
-//   docker compose --profile pruebas run --rm pruebas sh -c "DATOS_BORRADOR=1 npm run build && (npx astro preview --port 4322 &) && sleep 3 && node scripts/medir.mjs"
+//   docker compose --profile pruebas run --rm pruebas sh -c "npm run build && (npx astro preview --port 4322 &) && sleep 3 && node scripts/medir.mjs"
 import { gzipSync } from 'node:zlib';
 import { chromium } from '@playwright/test';
 

@@ -1,5 +1,6 @@
 /** Movimiento que responde a acciones del cliente (docs/MOVIMIENTO-Y-3D.md). */
-import { puedeCargar3d } from './3d/cargador';
+import { cuandoConvenga3d } from './3d/cargador';
+import type { Celebrar } from './3d/celebracion';
 import { prefiereMenosMovimiento } from './preferencias';
 
 /** Espera a que Preact pinte el estado nuevo (sus renders son asíncronos). */
@@ -89,14 +90,24 @@ export function animarAgregado(origen: HTMLElement) {
   };
 }
 
-/**
- * Celebración 3D (cápsulas que saltan) desde un elemento. Devuelve true si se lanzó; con movimiento
- * reducido, ahorro de datos o sin WebGL no hace nada.
- */
-export function celebrarDesde(elemento: Element): boolean {
-  if (!puedeCargar3d()) return false;
+let celebrar: Celebrar | null = null;
+let preparando = false;
+
+/** Deja lista la celebración en reposo, después de la primera interacción. */
+export function prepararCelebracion() {
+  if (preparando) return;
+  preparando = true;
+  cuandoConvenga3d(() => {
+    import('@/compartido/movimiento/3d/celebracion')
+      .then((m) => m.preparar())
+      .then((lista) => (celebrar = lista))
+      .catch(() => undefined);
+  });
+}
+
+/** Celebración desde un elemento. Solo corre si ya está preparada: nunca compila ni carga nada en este momento. */
+export function celebrarDesde(elemento: Element) {
+  if (!celebrar) return;
   const r = elemento.getBoundingClientRect();
-  const origen = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-  import('@/compartido/movimiento/3d/celebracion').then((m) => m.celebrar(origen)).catch(() => undefined);
-  return true;
+  celebrar({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
 }

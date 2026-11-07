@@ -24,7 +24,7 @@ function rutaDeFoto(v: string | undefined): string | undefined {
 export const FRASE_MAX = 90;
 
 /** Los avisos van en una sola línea en la barra del celular. */
-export const AVISO_MAX = 48;
+export const AVISO_MAX = 42;
 
 /** Claves con un valor de respaldo [entre corchetes] en el sitio: si faltan en la hoja, también están por llenar. */
 const CLAVES_CON_RESPALDO = ['barrio', 'autoridad_salud', 'razon_social', 'nit'];

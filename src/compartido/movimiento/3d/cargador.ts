@@ -1,6 +1,7 @@
 /**
  * Decide si se cargan las escenas 3D y cuándo (docs/MOVIMIENTO-Y-3D.md):
- * - nunca con movimiento reducido, ahorro de datos, poca memoria o sin WebGL (queda la imagen estática);
+ * - nunca con movimiento reducido, ahorro de datos, poca memoria, sin WebGL o con WebGL por software
+ *   (queda la imagen estática): sin GPU, compilar los shaders bloquea la página varios segundos;
  * - después de load, con la primera interacción (mover el puntero, tocar, desplazar, teclado) y en
  *   reposo. Cargarla apenas termina load da 77 en Lighthouse móvil (TBT de 1070 ms), por debajo del 90
  *   que pide el proyecto; mientras tanto se ve la imagen estática.
@@ -9,7 +10,22 @@ import { prefiereMenosMovimiento } from '@/compartido/movimiento/preferencias';
 
 type Navegador = Navigator & { connection?: { saveData?: boolean }; deviceMemory?: number };
 
+const SOFTWARE = /swiftshader|llvmpipe|softpipe|software|basic render/i;
+
 let webgl: boolean | undefined;
+
+/** ¿Hay WebGL con GPU? Sin la extensión de depuración (Firefox la limita) se asume que sí. */
+function hayGpu(): boolean {
+  try {
+    const c = document.createElement('canvas');
+    const gl = c.getContext('webgl2') ?? c.getContext('webgl');
+    if (!gl) return false;
+    const info = gl.getExtension('WEBGL_debug_renderer_info');
+    return !info || !SOFTWARE.test(String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)));
+  } catch {
+    return false;
+  }
+}
 
 export function puedeCargar3d(): boolean {
   if (typeof window === 'undefined') return false;
@@ -17,14 +33,7 @@ export function puedeCargar3d(): boolean {
   if (prefiereMenosMovimiento()) return false;
   if (n.connection?.saveData === true) return false;
   if (typeof n.deviceMemory === 'number' && n.deviceMemory < 2) return false;
-  if (webgl === undefined) {
-    try {
-      const c = document.createElement('canvas');
-      webgl = !!(c.getContext('webgl2') || c.getContext('webgl'));
-    } catch {
-      webgl = false;
-    }
-  }
+  webgl ??= hayGpu();
   return webgl;
 }
 

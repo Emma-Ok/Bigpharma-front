@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { conCarrito, conGpu } from './utilidades';
 
 /** docs/MOVIMIENTO-Y-3D.md, sección 5. */
 
@@ -30,8 +31,23 @@ test.describe('con movimiento reducido', () => {
   });
 });
 
+test.describe('sin GPU', () => {
+  test.use({ contextOptions: { reducedMotion: 'no-preference' } });
+
+  test('no se descarga three.js y se queda la imagen estática', async ({ page }) => {
+    const scripts = await scriptsDescargados(page);
+    await page.goto('/', { waitUntil: 'load' });
+    await page.mouse.move(200, 200);
+    await page.mouse.wheel(0, 40);
+    await page.waitForTimeout(2000);
+    await expect(page.locator('canvas')).toHaveCount(0);
+    expect(scripts.filter((u) => CHUNKS_3D.test(u))).toEqual([]);
+  });
+});
+
 test.describe('con movimiento activo', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
+  test.beforeEach(({ page }) => conGpu(page));
 
   test('en escritorio el canvas del hero está oculto a la accesibilidad y no recibe foco ni clics', async ({ page }, info) => {
     test.skip(info.project.name !== 'escritorio', 'Escritorio');
@@ -96,4 +112,16 @@ test('en 390×844 el título y un botón se ven sin hacer scroll', async ({ page
   expect(escenario.height).toBe(220);
   expect(titulo.y).toBeGreaterThan(escenario.y + escenario.height - 1);
   expect(boton.y + boton.height).toBeLessThanOrEqual(844);
+});
+
+test('a 360×740 con productos, «Ver catálogo» queda completo sobre la barra del pedido', async ({ page }, info) => {
+  test.skip(info.project.name !== 'celular', 'Celular');
+  await page.setViewportSize({ width: 360, height: 740 });
+  await conCarrito(page, [{ id: 'a1', cantidad: 2 }]);
+  await page.goto('/');
+  const barra = page.getByRole('button', { name: /Ver pedido/ });
+  await expect(barra).toBeVisible();
+  const boton = (await page.locator('#inicio a[href="/catalogo"]').boundingBox())!;
+  expect(boton.y + boton.height).toBeLessThanOrEqual((await barra.boundingBox())!.y);
+  expect((await page.locator('[data-escena="hero"]').boundingBox())!.height).toBe(200);
 });

@@ -45,7 +45,7 @@ export default function VistaPedido({ umbral, productos, onVaciado }: Props) {
               // Tiene scroll si el pedido es largo: enfocable para recorrerlo con teclado.
               // eslint-disable-next-line jsx-a11y-x/no-noninteractive-tabindex
               tabIndex={0}
-              class="max-h-60 overflow-y-auto rounded-boton rounded-tl-none bg-celadon p-3.5 text-[14.5px] leading-normal whitespace-pre-wrap text-ink"
+              class="max-h-60 overflow-y-auto rounded-boton rounded-tl-none bg-celadon p-3.5 text-[14.5px] leading-normal whitespace-pre-wrap text-ink outline-none focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ink"
             >
               {mensajePedido(lineas, POR_LLENAR)}
             </div>

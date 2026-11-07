@@ -1,6 +1,6 @@
 ---
 // Tarjeta del profesional con la escena 3D alrededor. El canvas y las capas de la imagen estática se ubican
-// contra la sección del hero ([data-escenario]): en celular, la banda de 220 px; en escritorio, toda la altura
+// contra la sección del hero ([data-escenario]): en celular, la banda de 220 px (200 px por debajo de 380 px); en escritorio, toda la altura
 // hasta el borde derecho de la ventana.
 // La imagen estática (movimiento reducido, sin WebGL o antes de cargar la escena) es SVG en línea, así nunca es
 // el LCP, y sale de la misma tabla que la escena (scripts/generar-capsulas.mjs): sus capas se anclan igual que
@@ -24,7 +24,7 @@ const { profesional: p } = config;
 const capa = 'imagen-estatica pointer-events-none absolute size-0';
 ---
 
-<div class:list={['flex h-55 items-center justify-center md:h-auto', clase]}>
+<div class:list={['flex h-55 items-center justify-center max-[23.75rem]:h-50 md:h-auto', clase]}>
   <div class="relative w-[min(328px,calc(100%-24px))] md:w-90">
     <div class={`${capa} top-1/2 left-12 md:hidden`} aria-hidden="true" set:html={celularTarjeta} />
     <div class={`${capa} top-28 left-1/2 hidden md:block`} aria-hidden="true" set:html={escritorioTarjeta} />
@@ -76,7 +76,7 @@ const capa = 'imagen-estatica pointer-events-none absolute size-0';
   </div>
 </div>
 
-<div class={`${capa} top-[110px] right-0 z-15 md:hidden`} aria-hidden="true" set:html={celularDerecha} />
-<div class={`${capa} top-[110px] left-0 z-15 md:hidden`} aria-hidden="true" set:html={celularIzquierda} />
+<div class={`${capa} top-[110px] right-0 z-15 max-[23.75rem]:top-[100px] md:hidden`} aria-hidden="true" set:html={celularDerecha} />
+<div class={`${capa} top-[110px] left-0 z-15 max-[23.75rem]:top-[100px] md:hidden`} aria-hidden="true" set:html={celularIzquierda} />
 <div class={`${capa} top-1/2 right-0 z-15 hidden md:block`} aria-hidden="true" set:html={escritorioDerecha} />
-<Escena3d client:visible escena="hero" class="absolute inset-x-0 top-0 z-20 h-55 md:inset-y-0 md:right-0 md:left-[44%] md:h-auto" />
+<Escena3d client:visible escena="hero" class="absolute inset-x-0 top-0 z-20 h-55 max-[23.75rem]:h-50 md:inset-y-0 md:right-0 md:left-[44%] md:h-auto" />

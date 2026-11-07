@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { progresoDomicilio } from '@/dominio/domicilio';
-import { celebrarDesde } from '@/compartido/movimiento/animaciones';
+import { celebrarDesde, prepararCelebracion } from '@/compartido/movimiento/animaciones';
 
 interface Props {
   total: number;
@@ -18,6 +18,8 @@ export default function ProgresoDomicilio({ total, umbral, variante }: Props) {
     const el = barraRef.current;
     if (antes.current === false && gratis && el && el.offsetParent !== null && total > 0) celebrarDesde(el);
     if (total > 0 || antes.current !== null) antes.current = gratis;
+    // Hay camino hacia el domicilio gratis: la celebración se deja lista antes de que haga falta.
+    if (total > 0 && !gratis) prepararCelebracion();
   }, [gratis, total]);
   const barra = (
     <div

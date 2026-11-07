@@ -2,7 +2,6 @@ import { useRef, useState } from 'preact/hooks';
 import type { LineaResuelta } from '@/dominio/carrito';
 import { FORMAS_DE_PAGO, validarDatosEntrega, type CampoEntrega, type FormaDePago } from '@/dominio/pedido';
 import { enlaceWhatsApp, mensajePedido } from '@/dominio/whatsapp';
-import { celebrarDesde } from '@/compartido/movimiento/animaciones';
 import Boton from '@/compartido/ui/Boton';
 import Icono from '@/compartido/ui/Icono';
 
@@ -44,15 +43,12 @@ export default function FormularioPedido({ lineas, whatsapp }: Props) {
       return;
     }
     const url = enlaceWhatsApp(whatsapp, mensajePedido(lineas, { nombre, direccion, pago }));
+    // Dentro del mismo evento: nada va antes de abrir WhatsApp. Sin la opción «noopener», porque con ella
+    // window.open devuelve null siempre y no se distingue de una ventana bloqueada.
+    const ventana = window.open(url, '_blank');
+    if (ventana) ventana.opener = null;
+    else window.location.href = url;
     setEnviado(url);
-    const abrir = () => {
-      const ventana = window.open(url, '_blank', 'noopener');
-      if (!ventana) window.location.href = url;
-    };
-    // Celebración breve desde el botón y luego WhatsApp (sin animación, se abre de una vez).
-    const boton = (e.currentTarget as HTMLFormElement).querySelector('button[type="submit"]');
-    if (boton && celebrarDesde(boton)) setTimeout(abrir, 650);
-    else abrir();
   };
 
   const campo = (id: CampoEntrega) => ({

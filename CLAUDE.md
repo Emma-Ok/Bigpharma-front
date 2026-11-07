@@ -10,7 +10,7 @@ Lee `docs/ESPECIFICACION.md` antes de cualquier tarea. Los mockups de referencia
 - Estilos: Tailwind CSS v4 con el plugin oficial de Vite (`@tailwindcss/vite`), sin `tailwind.config.js`. Los tokens van en `@theme` dentro de `src/styles/global.css`. Sin librerías de componentes de UI.
 - Datos: Google Sheets publicado como CSV, leído **en build** (`src/hoja/`). Copia local de respaldo en `datos/productos.csv` para desarrollo sin red.
 - Carrito: estado en el navegador (`localStorage`, con try/catch) compartido entre páginas.
-- Movimiento: View Transitions de Astro (`<ClientRouter />`), CSS y Web Animations API. `three` para tres escenas decorativas, cada una cargada solo cuando se va a usar: hero y jeringa de servicios (islas con `client:visible`, tras la primera interacción) y celebración (import dinámico al dispararse). Detalle en `docs/MOVIMIENTO-Y-3D.md`.
+- Movimiento: View Transitions de Astro (`<ClientRouter />`), CSS y Web Animations API. `three` para tres escenas decorativas, cada una cargada solo cuando se va a usar: hero y jeringa de servicios (islas con `client:visible`, tras la primera interacción) y celebración del domicilio gratis (se prepara en reposo tras la primera interacción y no corre si el equipo no llega a 40 fps). Sin GPU no se carga. Ninguna animación puede bloquear la interfaz ni retrasar la apertura de WhatsApp. Detalle en `docs/MOVIMIENTO-Y-3D.md`.
 - Despliegue: Cloudflare Pages. Un deploy hook reconstruye el sitio cuando cambia la hoja.
 
 ## Entorno
@@ -32,7 +32,7 @@ Todo se ejecuta **dentro del contenedor** `web` de Docker Compose (proyecto `big
 Se corren dentro del contenedor (ver «Entorno»).
 
 - `npm run dev`: desarrollo
-- `npm run build`: build estático. Falla si la hoja tiene campos `[entre corchetes]`; con `DATOS_BORRADOR=1` compila igual, solo para pruebas locales y nunca para publicar
+- `npm run build`: build estático. Avisa de los campos `[entre corchetes]` y de los avisos de datos; con `VALIDAR_HOJA=estricto` falla y los lista. **Cuando la hoja esté llena, hay que activar `VALIDAR_HOJA=estricto` en Workers Builds.**
 - `npm run check`: `astro check` + ESLint (con reglas de accesibilidad) + `scripts/revisar-tokens.mjs` (falla con colores arbitrarios)
 - `npm run test`: Vitest (lógica de `src/dominio/` y `src/hoja/`)
 - `npm run test:e2e`: Playwright + axe contra el build de producción; corre en el servicio `pruebas` (`docker compose --profile pruebas run --rm pruebas`)

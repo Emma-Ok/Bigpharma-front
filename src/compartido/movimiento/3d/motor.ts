@@ -28,6 +28,7 @@ export interface OpcionesMotor {
 export interface Motor {
   escena: Scene;
   camara: PerspectiveCamera;
+  renderer: WebGLRenderer;
   canvas: HTMLCanvasElement;
   ancho: () => number;
   alto: () => number;
@@ -35,6 +36,8 @@ export interface Motor {
   animar: (fn: (ms: number, dt: number) => void) => Promise<void>;
   /** Se llama una vez si el promedio baja de 40 fps durante 2 s. */
   alIrLento: (fn: () => void) => void;
+  /** Deja de dibujar sin liberar nada: la escena se puede volver a animar. */
+  detener: () => void;
   destruir: () => void;
   agregar: (...objetos: Object3D[]) => void;
 }
@@ -154,6 +157,7 @@ export function crearMotor(contenedor: HTMLElement, o: OpcionesMotor): Motor {
   return {
     escena,
     camara,
+    renderer,
     canvas,
     ancho: () => ancho,
     alto: () => alto,
@@ -169,6 +173,12 @@ export function crearMotor(contenedor: HTMLElement, o: OpcionesMotor): Motor {
     },
     alIrLento(fn) {
       lento = fn;
+    },
+    detener() {
+      cancelAnimationFrame(marco);
+      marco = 0;
+      paso = null;
+      inicio = -1;
     },
     destruir() {
       cancelAnimationFrame(marco);
