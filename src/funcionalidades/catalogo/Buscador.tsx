@@ -72,7 +72,7 @@ export default function Buscador({ tienda: { whatsapp } }: { tienda: Tienda }) {
   const titulo = hayConsulta
     ? fuente.length
       ? `Resultados para «${q.trim()}» (${fuente.length})`
-      : `No encontramos «${q.trim()}»`
+      : `No hay resultados para «${q.trim()}»`
     : 'Productos destacados';
   const cerrar = () => dialogo.current?.close();
 
@@ -170,7 +170,7 @@ export default function Buscador({ tienda: { whatsapp } }: { tienda: Tienda }) {
           </div>
           {hayConsulta && !fuente.length && (
             <div class="flex flex-col gap-2.5 rounded-[14px] border border-dashed border-muted p-4.5">
-              <p class="m-0 text-[15.5px] text-muted">Revisa cómo lo escribiste o pregúntanos si lo conseguimos.</p>
+              <p class="m-0 text-[15.5px] text-muted">Revisa cómo lo escribiste o pregúntame si lo consigo.</p>
               <Boton tamano="compacto" class="self-start" href={enlaceWhatsApp(whatsapp, mensajeBusqueda(q))}>
                 Preguntar por WhatsApp
               </Boton>

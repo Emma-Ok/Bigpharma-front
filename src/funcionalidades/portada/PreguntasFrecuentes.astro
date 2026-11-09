@@ -9,7 +9,7 @@ interface Props {
 const { config } = Astro.props;
 const menores = config.costoDomicilio
   ? `En pedidos menores, el domicilio cuesta ${formatearPrecio(config.costoDomicilio)}.`
-  : 'En pedidos menores, te confirmamos el valor del domicilio por WhatsApp.';
+  : 'En pedidos menores, te confirmo el valor del domicilio por WhatsApp.';
 const preguntas = [
   {
     pregunta: '¿Cuándo es gratis el domicilio?',
@@ -18,12 +18,12 @@ const preguntas = [
   {
     pregunta: '¿Cómo pago?',
     respuesta:
-      'Nequi, llave Bre-B, link de pago con tarjeta o efectivo al recibir. Te confirmamos el total por WhatsApp antes de cobrar.',
+      'Nequi, llave Bre-B, link de pago con tarjeta o efectivo al recibir. Te confirmo el total por WhatsApp antes de cobrar.',
   },
   {
     pregunta: '¿Cómo compro un medicamento con fórmula?',
     respuesta:
-      'Toca Consultar por WhatsApp en el medicamento, envíanos la foto de tu fórmula y te confirmamos disponibilidad y precio.',
+      'Toca «Enviar mi fórmula» en el medicamento, envíame la foto de tu fórmula y te confirmo disponibilidad y precio.',
   },
 ];
 ---

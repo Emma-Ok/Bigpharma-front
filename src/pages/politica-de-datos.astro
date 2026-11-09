@@ -8,16 +8,16 @@ const { configuracion: c } = await cargarDatos();
 
 <Legal
   titulo={`Política de tratamiento de datos | ${c.nombreDrogueria}`}
-  descripcion="Cómo tratamos tus datos personales cuando haces un pedido a domicilio, según la Ley 1581 de 2012."
+  descripcion="Cómo trato tus datos personales cuando haces un pedido a domicilio, según la Ley 1581 de 2012."
   actualizado="[fecha]"
 >
   <h1>Política de tratamiento de datos personales</h1>
   <p>
-    {c.razonSocial}, NIT {c.nit}, propietaria de {c.nombreDrogueria} (en adelante, «la droguería»), es responsable del tratamiento de
-    los datos personales que nos entregas al hacer un pedido. Esta política cumple la Ley 1581 de 2012 y el Decreto 1074 de 2015.
+    Soy {c.razonSocial}, NIT {c.nit}, propietario de {c.nombreDrogueria} (en adelante, «la droguería»), y soy el responsable del
+    tratamiento de los datos personales que me entregas al hacer un pedido. Esta política cumple la Ley 1581 de 2012 y el Decreto 1074 de 2015.
   </p>
 
-  <h2>Qué datos pedimos</h2>
+  <h2>Qué datos pido</h2>
   <ul>
     <li>Nombre.</li>
     <li>Barrio y dirección de entrega.</li>
@@ -30,11 +30,11 @@ const { configuracion: c } = await cargarDatos();
 
   <h2>Datos de salud</h2>
   <p>
-    Si nos envías la foto de una fórmula u orden médica por WhatsApp, esa información es un dato sensible. Entregarla es opcional y
-    solo la usamos para verificar y despachar tu pedido o agendar el servicio de inyectología.
+    Si me envías la foto de una fórmula u orden médica por WhatsApp, esa información es un dato sensible. Entregarla es opcional y
+    solo la uso para verificar y despachar tu pedido o agendar el servicio de inyectología.
   </p>
 
-  <h2>Para qué los usamos</h2>
+  <h2>Para qué los uso</h2>
   <ul>
     <li>Confirmar disponibilidad, precio y total de tu pedido.</li>
     <li>Entregar el pedido en tu dirección.</li>
@@ -46,22 +46,22 @@ const { configuracion: c } = await cargarDatos();
   <p>Como titular de los datos puedes:</p>
   <ul>
     <li>Conocer, actualizar y rectificar tus datos.</li>
-    <li>Pedir prueba de la autorización que nos diste.</li>
-    <li>Saber cómo hemos usado tus datos.</li>
+    <li>Pedir prueba de la autorización que me diste.</li>
+    <li>Saber cómo he usado tus datos.</li>
     <li>Presentar quejas ante la Superintendencia de Industria y Comercio.</li>
-    <li>Revocar la autorización o pedir que borremos tus datos.</li>
+    <li>Revocar la autorización o pedir que borre tus datos.</li>
     <li>Consultar tus datos de forma gratuita.</li>
   </ul>
 
   <h2>Cómo ejercerlos</h2>
   <p>
-    Escríbenos por WhatsApp al <a href={enlaceWhatsApp(c.whatsapp)}>{numeroVisible(c.whatsapp)}</a>. Respondemos las consultas en un
-    máximo de 10 días hábiles y los reclamos en un máximo de 15 días hábiles, contados desde que los recibimos.
+    Escríbeme por WhatsApp al <a href={enlaceWhatsApp(c.whatsapp)}>{numeroVisible(c.whatsapp)}</a>. Respondo las consultas en un
+    máximo de 10 días hábiles y los reclamos en un máximo de 15 días hábiles, contados desde que los recibo.
   </p>
 
   <h2>Vigencia</h2>
   <p>
-    Esta política rige desde su publicación. Conservamos los datos mientras sean necesarios para las finalidades descritas y para cumplir
+    Esta política rige desde su publicación. Conservo los datos mientras sean necesarios para las finalidades descritas y para cumplir
     obligaciones legales.
   </p>
 </Legal>

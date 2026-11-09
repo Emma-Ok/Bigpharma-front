@@ -12,7 +12,7 @@ const { nombre, whatsapp } = Astro.props;
 const ruta = Astro.url.pathname;
 const enlaces = [
   { href: '/catalogo', texto: 'Catálogo', actual: ruta.startsWith('/catalogo') },
-  { href: '/#servicios', texto: 'Inyectables a domicilio', actual: false },
+  { href: '/#servicios', texto: 'Servicios', actual: false },
   { href: '/#preguntas', texto: 'Preguntas frecuentes', actual: false },
 ];
 const whatsappUrl = enlaceWhatsApp(whatsapp, MENSAJE_GENERAL);

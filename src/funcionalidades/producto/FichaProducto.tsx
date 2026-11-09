@@ -141,7 +141,7 @@ export default function FichaProducto({ producto: p, tienda, nivel, idTitulo = '
             </div>
           ) : (
             <p class="mt-1 mb-0 rounded-boton bg-celadon px-3.5 py-3 text-[15px] leading-normal text-amber-ink">
-              Para comprarlo, envíanos la foto de tu fórmula médica vigente. Te confirmamos disponibilidad y precio por
+              Para comprarlo, envíame la foto de tu fórmula médica vigente. Te confirmo disponibilidad y precio por
               WhatsApp.
             </p>
           )}

@@ -1,5 +1,5 @@
 /**
- * Escena de inyectología (sección «Aplicación de inyectables en tu casa»): jeringa de vidrio con
+ * Escena de inyectología (sección «Servicios», inyectología en casa): jeringa de vidrio con
  * émbolo, líquido y aguja, y un frasco de medicamento. Flotan y giran despacio; cada pocos segundos
  * el émbolo baja y salen gotas de la aguja. Se inclinan hacia el puntero.
  */

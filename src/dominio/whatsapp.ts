@@ -33,6 +33,8 @@ export function mensajeBusqueda(consulta: string): string {
 export const MENSAJE_INYECTOLOGIA =
   'Hola, quiero agendar una visita de inyectología a domicilio. Tengo la orden médica.';
 
+export const MENSAJE_COTIZACION = 'Hola, quiero cotizar mi fórmula. Te envío la foto.';
+
 export const MENSAJE_GENERAL = 'Hola, tengo una pregunta.';
 
 /** «+57 300 123 4567»; si el número de la hoja aún no es válido, «+57 [número]». */

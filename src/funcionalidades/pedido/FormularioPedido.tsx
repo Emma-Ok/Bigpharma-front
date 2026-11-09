@@ -164,7 +164,7 @@ export default function FormularioPedido({ lineas, whatsapp }: Props) {
         </h2>
         <div class="rounded-boton bg-celadon p-4 text-[15px] leading-relaxed whitespace-pre-wrap text-ink">{vistaPrevia}</div>
         <p class="m-0 text-sm text-muted">
-          Se abre WhatsApp con tu pedido listo. Te confirmamos el total con domicilio antes de cobrar.
+          Se abre WhatsApp con tu pedido listo. Te confirmo el total con domicilio antes de cobrar.
         </p>
       </section>
 
@@ -174,7 +174,7 @@ export default function FormularioPedido({ lineas, whatsapp }: Props) {
         </Boton>
       {enviado && (
         <p role="status" class="m-0 text-[15px] text-muted">
-          Abrimos WhatsApp con tu pedido. Si no se abrió,{' '}
+          Se abrió WhatsApp con tu pedido. Si no lo ves,{' '}
           <a href={enviado} class="font-semibold text-bottle">
             toca aquí para enviarlo
           </a>

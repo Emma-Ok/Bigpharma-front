@@ -27,7 +27,7 @@ const migas: Miga[] = [
 const descripcion =
   producto.condicionVenta === 'libre'
     ? `${producto.nombre}, ${producto.presentacion}, a ${formatearPrecio(producto.precio)}. Pídelo a domicilio por WhatsApp.`
-    : `${producto.nombre}. Medicamento con fórmula médica: envíanos tu fórmula por WhatsApp y te confirmamos disponibilidad.`;
+    : `${producto.nombre}. Medicamento con fórmula médica: envíame tu fórmula por WhatsApp y te confirmo disponibilidad.`;
 const esquemas = [migasJsonLd(migas, Astro.site!), productoJsonLd(producto, Astro.site!)].filter(
   (e): e is NonNullable<typeof e> => !!e,
 );
