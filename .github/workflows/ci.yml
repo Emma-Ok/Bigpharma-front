@@ -61,12 +61,13 @@ jobs:
     # Ambiente de GitHub con los secrets y variables del despliegue. Hoy es «qa»: despliegue de prueba, sin indexar.
     environment:
       name: qa
-      url: ${{ vars.SITIO_URL }}
+      url: ${{ vars.SITIO_URL || 'https://bigpharma-qa.emmanuel-bustamante.workers.dev' }}
     concurrency:
       group: despliegue-qa
       cancel-in-progress: false
     env:
-      SITIO_URL: ${{ vars.SITIO_URL }}
+      # La URL del worker bigpharma-qa, salvo que la variable SITIO_URL del ambiente diga otra.
+      SITIO_URL: ${{ vars.SITIO_URL || 'https://bigpharma-qa.emmanuel-bustamante.workers.dev' }}
       SITIO_PUBLICO: ${{ vars.SITIO_PUBLICO }}
       VALIDAR_HOJA: ${{ vars.VALIDAR_HOJA }}
       SHEETS_PRODUCTOS_CSV_URL: ${{ vars.SHEETS_PRODUCTOS_CSV_URL }}

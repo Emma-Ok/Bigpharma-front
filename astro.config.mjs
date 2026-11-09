@@ -7,6 +7,10 @@ import { loadEnv } from 'vite';
 import cloudflare from '@astrojs/cloudflare';
 
 const env = loadEnv(process.env.NODE_ENV ?? 'production', process.cwd(), '');
+// Un sitio público sin SITIO_URL publicaría la URL canónica y el sitemap con un dominio que no es el suyo.
+if (env.SITIO_PUBLICO === 'si' && !env.SITIO_URL) {
+  throw new Error('SITIO_PUBLICO=si necesita SITIO_URL (la URL pública del sitio, sin barra al final).');
+}
 const site = env.SITIO_URL || 'https://drogueria.example';
 
 export default defineConfig({
