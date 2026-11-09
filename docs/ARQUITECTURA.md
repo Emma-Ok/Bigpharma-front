@@ -60,7 +60,7 @@ Entre funcionalidades: catalogo → producto → pedido
 - `pedido` no importa de `producto` ni de `catalogo`; `producto` no importa de `catalogo`.
 - `portada` y `anuncios` no importan de otras funcionalidades.
 
-Todavía no hay una regla de ESLint que lo valide: se cumple a mano.
+`npm run check` lo valida: `eslint.config.js` tiene una regla `no-restricted-imports` por carpeta, con el motivo en cada mensaje. Las pruebas de `dominio/` (`__tests__/`) pueden leer los CSV con `hoja/` y `node:fs`.
 
 ## Convenciones
 
