@@ -114,6 +114,14 @@ La fila es la de la hoja (la fila 1 son los encabezados). Si Google no responde,
 - [ ] `SITIO_PUBLICO=si` y `SITIO_URL` con el dominio real (solo para el lanzamiento).
 - [ ] La política de datos y los términos revisados por un abogado (hoy son texto base).
 
+### Imagen para compartir
+
+Al pegar el enlace del sitio en WhatsApp sale una vista previa con `public/og.png` (1200×630). Toma el nombre, la profesión, la cobertura y el domicilio gratis de `datos/configuracion.csv`. Si cambian, se genera de nuevo y se sube:
+
+```sh
+docker compose --profile pruebas run --rm pruebas node scripts/generar-og.mjs
+```
+
 ## 6. Desarrollo local
 
 Todo corre en Docker (ver «Entorno» en `CLAUDE.md`):

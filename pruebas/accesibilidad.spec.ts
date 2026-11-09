@@ -76,6 +76,11 @@ test('cada página tiene title, description, canónica y un solo h1', async ({ p
     await page.goto(ruta);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', canonica);
   }
+  // Vista previa al compartir por WhatsApp: imagen absoluta de 1200×630 que existe.
+  await page.goto('/');
+  const imagen = await page.locator('meta[property="og:image"]').getAttribute('content');
+  expect(imagen).toMatch(/^https?:\/\/.+\/og\.png$/);
+  expect((await page.request.get('/og.png')).status()).toBe(200);
   await page.goto('/pedido');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
 });

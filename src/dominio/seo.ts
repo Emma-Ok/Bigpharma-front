@@ -59,7 +59,7 @@ export function farmaciaJsonLd(c: Configuracion, sitio: URL | string) {
     url: absoluta('/', sitio),
     telephone: `+${c.whatsapp}`,
     areaServed: c.zonasCobertura,
-    ...(c.profesional.foto ? { image: absoluta(c.profesional.foto, sitio) } : {}),
+    image: absoluta(c.profesional.foto ?? '/og.png', sitio),
     paymentAccepted: 'Nequi, Llave Bre-B, tarjetas, efectivo',
     currenciesAccepted: 'COP',
   };
